@@ -1,4 +1,4 @@
-﻿#pragma warning disable IDE0028
+﻿#pragma warning disable IDE0028 // Simplify collection initialization
 
 using System.Runtime.CompilerServices;
 

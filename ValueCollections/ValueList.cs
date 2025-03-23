@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿#pragma warning disable IDE0305 // Simplify collection initialization
+
+using System.Collections;
 using System.Buffers;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -32,6 +34,9 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     /// <summary>
     /// Constructs a value list with the given buffer.
     /// </summary>
+    /// <remarks>
+    /// The elements of the buffer are ignored.
+    /// </remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ValueList(Span<T> initialBuffer) {
         Buffer = initialBuffer;

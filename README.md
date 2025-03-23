@@ -29,6 +29,15 @@ Console.WriteLine(string.Join(", ", list.ToList()));
 | LargeListOfStruct      | 21,131.86 ns | 119.642 ns | 111.913 ns | 41.6565 |  131400 B |
 | LargeValueListOfStruct |  7,454.80 ns |  11.838 ns |  10.494 ns |       - |         - |
 
+## Gotchas
+
+`ValueList` should be disposed after use, otherwise the internal rented array will not be returned to the pool.
+```cs
+using ValueList<string> strings = ["a", "b", "c"];
+using ValueList<string> whitespaceStrings = strings.Where(string.IsNullOrWhiteSpace);
+using ValueList<string> shortWhitespaceStrings = whitespaceStrings.Where(str => str.Length <= 10);
+```
+
 ## Special Thanks
 
 - [linkdotnet/StringBuilder](https://github.com/linkdotnet/StringBuilder) for inspiration.

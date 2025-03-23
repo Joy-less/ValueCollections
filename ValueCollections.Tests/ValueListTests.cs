@@ -1,4 +1,6 @@
-﻿namespace ValueCollections.Tests;
+﻿using Microsoft.VisualBasic;
+
+namespace ValueCollections.Tests;
 
 public class ValueListTests {
     [Fact]
@@ -43,7 +45,7 @@ public class ValueListTests {
     }
     [Fact]
     public void Add() {
-        using ValueList<int> list = [];
+        using ValueList<int> list = new(stackalloc int[64]);
         for (int i = 0; i < 100; i++) {
             list.Add(i);
         }

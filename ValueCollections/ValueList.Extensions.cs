@@ -33,4 +33,13 @@ public static class ValueListExtensions {
         list.AddRange(valueList.AsSpan());
         return list;
     }
+    /// <summary>
+    /// Yields each element of <paramref name="valueList"/>.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static IEnumerable<T> AsEnumerable<T>(this ValueList<T> valueList) {
+        for (int index = 0; index < valueList.Count; index++) {
+            yield return valueList[index];
+        }
+    }
 }

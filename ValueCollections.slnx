@@ -1,5 +1,8 @@
 <Solution>
-  <Project Path="ValueCollections.Benchmarks/ValueCollections.Benchmarks.csproj" Id="d195eea2-7c3d-4a25-bb4b-132febf16c3f" />
+  <Folder Name="/Solution Items/">
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="ValueCollections.Benchmarks/ValueCollections.Benchmarks.csproj" />
   <Project Path="ValueCollections.Tests/ValueCollections.Tests.csproj" />
   <Project Path="ValueCollections/ValueCollections.csproj" />
 </Solution>

@@ -1,5 +1,5 @@
-﻿using System.Buffers;
-using System.Collections;
+﻿using System.Collections;
+using System.Buffers;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -312,7 +312,9 @@ public ref struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T> {
         return list;
     }
 
-    /// <summary>Enumerates the elements of a <see cref="ValueList{T}"/>.</summary>
+    /// <summary>
+    /// Enumerates the elements of a <see cref="ValueList{T}"/>.
+    /// </summary>
     [StructLayout(LayoutKind.Auto)]
     public ref struct Enumerator : IEnumerator<T> {
         private readonly ValueList<T> List;
@@ -359,5 +361,49 @@ public ref struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T> {
         public void Reset() {
             Index = -1;
         }
+    }
+}
+
+/// <summary>
+/// Static methods for <see cref="ValueList{T}"/>.
+/// </summary>
+public static class ValueList {
+    /// <summary>
+    /// Returns a <see cref="ValueList{T}"/> containing each element of <paramref name="source"/> matching <paramref name="predicate"/>.
+    /// </summary>
+    public static ValueList<T> Where<T>(this IEnumerable<T> source, Func<T, bool> predicate) {
+        ValueList<T> matches = [];
+        foreach (T element in source) {
+            if (predicate(element)) {
+                matches.Add(element);
+            }
+        }
+        return matches;
+    }
+    /// <summary>
+    /// Returns a <see cref="ValueList{T}"/> mapping each element of <paramref name="source"/> using <paramref name="selector"/>.
+    /// </summary>
+    public static ValueList<T> Select<T>(this IEnumerable<T> source, Func<T, T> selector) {
+        ValueList<T> results = source.TryGetNonEnumeratedCount(out int count)
+            ? new(count)
+            : new();
+        foreach (T element in source) {
+            results.Add(selector(element));
+        }
+        return results;
+    }
+    /// <summary>
+    /// Returns a <see cref="ValueList{T}"/> mapping each element of <paramref name="source"/> using <paramref name="selector"/>.
+    /// </summary>
+    public static ValueList<T> Select<T>(this IEnumerable<T> source, Func<T, int, T> selector) {
+        int counter = 0;
+        ValueList<T> results = source.TryGetNonEnumeratedCount(out int count)
+            ? new(count)
+            : new();
+        foreach (T element in source) {
+            results.Add(selector(element, counter));
+            counter++;
+        }
+        return results;
     }
 }

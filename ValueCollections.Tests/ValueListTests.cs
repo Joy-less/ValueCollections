@@ -50,4 +50,13 @@ public class ValueListTests {
         list.Count.ShouldBe(100);
         list.Capacity.ShouldBeGreaterThanOrEqualTo(list.Count);
     }
+    [Fact]
+    public void Where() {
+        ValueList.Where([1, 2, 3], num => num % 2 == 0).ToList().ShouldBe([2]);
+    }
+    [Fact]
+    public void Select() {
+        ValueList.Select([1, 2, 3], num => num + 1).ToList().ShouldBe([2, 3, 4]);
+        ValueList.Select([1, 2, 3], (num, index) => num + index).ToList().ShouldBe([1, 3, 5]);
+    }
 }

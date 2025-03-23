@@ -1,10 +1,10 @@
 # ValueCollections
 
-A set of collections in C# implemented as `ref struct`s to minimize heap allocations.
+A set of collections in C# implemented as `ref struct` to minimize heap allocations.
 
 ## ValueList
 
-A version of `List<T>` using spans and array pools.
+An implementation of `IList<T>` using spans and array pools.
 
 ```cs
 using ValueList<int> list = [];

@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Buffers;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 namespace ValueCollections;
 
@@ -75,7 +74,6 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
         if (ArrayFromPool is not null) {
             ArrayPool<T>.Shared.Return(ArrayFromPool);
         }
-
         this = default;
     }
 
@@ -96,7 +94,10 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     }
 
     /// <inheritdoc/>
-    readonly bool ICollection<T>.IsReadOnly => false;
+    readonly bool ICollection<T>.IsReadOnly {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        get => false;
+    }
 
     /// <summary>
     /// Returns the element at the given index.
@@ -115,12 +116,15 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
 
     /// <inheritdoc/>
     T IList<T>.this[int index] {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         readonly get => this[index];
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         set => this[index] = value;
     }
 
     /// <inheritdoc/>
     readonly T IReadOnlyList<T>.this[int index] {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get => this[index];
     }
 
@@ -350,11 +354,13 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     }
 
     /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     readonly IEnumerator<T> IEnumerable<T>.GetEnumerator() {
         return ((IEnumerable<T>)this.ToArray()).GetEnumerator();
     }
 
     /// <inheritdoc/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     readonly IEnumerator IEnumerable.GetEnumerator() {
         return this.ToArray().GetEnumerator();
     }
@@ -362,7 +368,6 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     /// <summary>
     /// Enumerates the elements of a <see cref="ValueList{T}"/>.
     /// </summary>
-    [StructLayout(LayoutKind.Auto)]
     public ref struct Enumerator : IEnumerator<T> {
         private readonly ValueList<T> List;
         private int Index;
@@ -385,9 +390,13 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
         }
 
         /// <inheritdoc/>
-        readonly object? IEnumerator.Current => Current;
+        readonly object? IEnumerator.Current {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get => Current;
+        }
 
         /// <inheritdoc/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         readonly void IDisposable.Dispose() {
         }
 
@@ -399,7 +408,8 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool MoveNext() {
-            return ++Index < List.Count;
+            Index++;
+            return Index < List.Count;
         }
 
         /// <summary>

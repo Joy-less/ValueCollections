@@ -1,5 +1,7 @@
 # ValueCollections
 
+[![NuGet](https://img.shields.io/nuget/v/ValueCollections.svg)](https://www.nuget.org/packages/ValueCollections)
+
 A set of collections in C# implemented as `ref struct` to minimize heap allocations.
 
 ## ValueList

@@ -31,6 +31,43 @@ public static class ValueListExtensions {
     public static List<T> ToList<T>(this scoped ValueList<T> valueList) {
         List<T> list = new(valueList.Count);
         list.AddRange(valueList.AsSpan());
+        //new List<T>().ToDictionary()
         return list;
+    }
+    /// <summary>
+    /// Copies the contents of <paramref name="valueList"/> to a new <see cref="HashSet{T}"/>.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static HashSet<T> ToHashSet<T>(this scoped ValueList<T> valueList) {
+        HashSet<T> hashSet = new(valueList.Count);
+        foreach (T element in valueList) {
+            hashSet.Add(element);
+        }
+        return hashSet;
+    }
+    /// <summary>
+    /// Copies the contents of <paramref name="valueList"/> to a new <see cref="Dictionary{TKey, TValue}"/> using <paramref name="keySelector"/> and <paramref name="valueSelector"/>.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Dictionary<TKey, TValue> ToDictionary<T, TKey, TValue>(this scoped ValueList<T> valueList, Func<T, TKey> keySelector, Func<T, TValue> valueSelector) where TKey : notnull {
+        Dictionary<TKey, TValue> dictionary = new(valueList.Count);
+        foreach (T element in valueList) {
+            TKey key = keySelector(element);
+            TValue value = valueSelector(element);
+            dictionary[key] = value;
+        }
+        return dictionary;
+    }
+    /// <summary>
+    /// Copies the contents of <paramref name="valueList"/> to a new <see cref="Dictionary{TKey, TValue}"/> using <paramref name="keyValuePairSelector"/>.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Dictionary<TKey, TValue> ToDictionary<T, TKey, TValue>(this scoped ValueList<T> valueList, Func<T, KeyValuePair<TKey, TValue>> keyValuePairSelector) where TKey : notnull {
+        Dictionary<TKey, TValue> dictionary = new(valueList.Count);
+        foreach (T element in valueList) {
+            KeyValuePair<TKey, TValue> keyValuePair = keyValuePairSelector(element);
+            dictionary[keyValuePair.Key] = keyValuePair.Value;
+        }
+        return dictionary;
     }
 }

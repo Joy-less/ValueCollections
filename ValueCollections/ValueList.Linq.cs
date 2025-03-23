@@ -134,6 +134,48 @@ partial struct ValueList<T> {
     }
 
     /// <summary>
+    /// Returns the elements in ascending order using the default comparer.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly ValueList<T> Order() {
+        ValueList<T> result = new(this);
+        result.Sort();
+        return result;
+    }
+
+    /// <summary>
+    /// Returns the elements in ascending order using <paramref name="comparer"/>.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly ValueList<T> Order<TComparer>(TComparer comparer) where TComparer : IComparer<T> {
+        ValueList<T> result = new(this);
+        result.Sort(comparer);
+        return result;
+    }
+
+    /// <summary>
+    /// Returns the elements in descending order using the default comparer.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly ValueList<T> OrderDescending() {
+        ValueList<T> result = new(this);
+        result.Sort();
+        result.AsSpan().Reverse();
+        return result;
+    }
+
+    /// <summary>
+    /// Returns the elements in descending order using <paramref name="comparer"/>.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly ValueList<T> OrderDescending<TComparer>(TComparer comparer) where TComparer : IComparer<T> {
+        ValueList<T> result = new(this);
+        result.Sort(comparer);
+        result.AsSpan().Reverse();
+        return result;
+    }
+
+    /// <summary>
     /// Returns whether all elements match <paramref name="predicate"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

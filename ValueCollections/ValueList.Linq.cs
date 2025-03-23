@@ -138,9 +138,9 @@ public static class ValueListLinq {
     /// Returns the first element or the default value.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T? FirstOrDefault<T>(this ValueList<T> valueList) {
+    public static T? FirstOrDefault<T>(this ValueList<T> valueList, T? defaultValue = default) {
         if (valueList.Count <= 0) {
-            return default;
+            return defaultValue;
         }
         return valueList[0];
     }
@@ -148,14 +148,14 @@ public static class ValueListLinq {
     /// Returns the first element matching <paramref name="predicate"/> or the default value.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T? FirstOrDefault<T>(this ValueList<T> valueList, Func<T, bool> predicate) {
+    public static T? FirstOrDefault<T>(this ValueList<T> valueList, Func<T, bool> predicate, T? defaultValue = default) {
         for (int index = 0; index < valueList.Count; index++) {
             T element = valueList[index];
             if (predicate(element)) {
                 return element;
             }
         }
-        return default;
+        return defaultValue;
     }
     /// <summary>
     /// Returns the last element.
@@ -183,9 +183,9 @@ public static class ValueListLinq {
     /// Returns the last element or the default value.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T? LastOrDefault<T>(this ValueList<T> valueList) {
+    public static T? LastOrDefault<T>(this ValueList<T> valueList, T? defaultValue = default) {
         if (valueList.Count <= 0) {
-            return default;
+            return defaultValue;
         }
         return valueList[^1];
     }
@@ -193,14 +193,14 @@ public static class ValueListLinq {
     /// Returns the last element matching <paramref name="predicate"/> or the default value.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T? LastOrDefault<T>(this ValueList<T> valueList, Func<T, bool> predicate) {
+    public static T? LastOrDefault<T>(this ValueList<T> valueList, Func<T, bool> predicate, T? defaultValue = default) {
         for (int index = valueList.Count - 1; index >= 0; index--) {
             T element = valueList[index];
             if (predicate(element)) {
                 return element;
             }
         }
-        return default;
+        return defaultValue;
     }
     /// <summary>
     /// Ensures the list has exactly one element and returns that element.
@@ -240,9 +240,9 @@ public static class ValueListLinq {
     /// Ensures the list has exactly one element and returns that element or the default value.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T? SingleOrDefault<T>(this ValueList<T> valueList) {
+    public static T? SingleOrDefault<T>(this ValueList<T> valueList, T? defaultValue = default) {
         if (valueList.Count != 1) {
-            return default;
+            return defaultValue;
         }
         return valueList[0];
     }
@@ -250,14 +250,14 @@ public static class ValueListLinq {
     /// Ensures the list has exactly one element and returns that element matching <paramref name="predicate"/> or the default value.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T? SingleOrDefault<T>(this ValueList<T> valueList, Func<T, bool> predicate) {
+    public static T? SingleOrDefault<T>(this ValueList<T> valueList, Func<T, bool> predicate, T? defaultValue = default) {
         bool found = false;
         T result = default!;
         for (int index = 0; index < valueList.Count; index++) {
             T element = valueList[index];
             if (predicate(element)) {
                 if (found) {
-                    return default;
+                    return defaultValue;
                 }
                 found = true;
                 result = element;
@@ -266,6 +266,6 @@ public static class ValueListLinq {
         if (found) {
             return result;
         }
-        return default;
+        return defaultValue;
     }
 }

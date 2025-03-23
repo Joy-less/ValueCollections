@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="ValueCollections.Benchmarks/ValueCollections.Benchmarks.csproj" Id="d195eea2-7c3d-4a25-bb4b-132febf16c3f" />
+  <Project Path="ValueCollections.Tests/ValueCollections.Tests.csproj" />
+  <Project Path="ValueCollections/ValueCollections.csproj" />
+</Solution>

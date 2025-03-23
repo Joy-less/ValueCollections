@@ -1,6 +1,4 @@
-﻿#pragma warning disable IDE0028 // Simplify collection initialization
-
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 
 namespace ValueCollections;
 
@@ -19,6 +17,7 @@ partial struct ValueList<T> {
         }
         return result;
     }
+
     /// <summary>
     /// Returns every element mapped using <paramref name="selector"/>.
     /// </summary>
@@ -31,6 +30,7 @@ partial struct ValueList<T> {
         }
         return result;
     }
+
     /// <summary>
     /// Returns every element mapped using <paramref name="selector"/>.
     /// </summary>
@@ -43,6 +43,33 @@ partial struct ValueList<T> {
         }
         return result;
     }
+
+    /// <summary>
+    /// Returns every element mapped to multiple elements using <paramref name="selector"/>.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly ValueList<T> SelectMany(Func<T, IEnumerable<T>> selector) {
+        ValueList<T> result = new(Count);
+        for (int index = 0; index < Count; index++) {
+            T element = this[index];
+            result.AddRange(selector(element));
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// Returns every element mapped to multiple elements using <paramref name="selector"/>.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly ValueList<T> SelectMany(Func<T, int, IEnumerable<T>> selector) {
+        ValueList<T> result = new(Count);
+        for (int index = 0; index < Count; index++) {
+            T element = this[index];
+            result.AddRange(selector(element, index));
+        }
+        return result;
+    }
+
     /// <summary>
     /// Returns the elements with <paramref name="value"/> added to the end.
     /// </summary>
@@ -52,6 +79,7 @@ partial struct ValueList<T> {
         result.Add(value);
         return result;
     }
+
     /// <summary>
     /// Returns the elements with <paramref name="value"/> inserted at the beginning.
     /// </summary>
@@ -61,6 +89,7 @@ partial struct ValueList<T> {
         result.Insert(0, value);
         return result;
     }
+
     /// <summary>
     /// Returns the elements in reverse order.
     /// </summary>
@@ -70,6 +99,7 @@ partial struct ValueList<T> {
         result.AsSpan().Reverse();
         return result;
     }
+
     /// <summary>
     /// Returns the elements of type <typeparamref name="TFilter"/>.
     /// </summary>
@@ -84,6 +114,7 @@ partial struct ValueList<T> {
         }
         return result;
     }
+
     /// <summary>
     /// Returns the elements casted to type <typeparamref name="TResult"/>.
     /// </summary>
@@ -101,6 +132,7 @@ partial struct ValueList<T> {
         }
         return result;
     }
+
     /// <summary>
     /// Returns whether all elements match <paramref name="predicate"/>.
     /// </summary>
@@ -113,6 +145,7 @@ partial struct ValueList<T> {
         }
         return true;
     }
+
     /// <summary>
     /// Returns whether any element matches <paramref name="predicate"/>.
     /// </summary>
@@ -125,6 +158,7 @@ partial struct ValueList<T> {
         }
         return false;
     }
+
     /// <summary>
     /// Returns the first element.
     /// </summary>
@@ -133,6 +167,7 @@ partial struct ValueList<T> {
     public readonly T First() {
         return this[0];
     }
+
     /// <summary>
     /// Returns the first element matching <paramref name="predicate"/>.
     /// </summary>
@@ -147,6 +182,7 @@ partial struct ValueList<T> {
         }
         throw new Exception("No elements in the value list match the predicate.");
     }
+
     /// <summary>
     /// Returns the first element or the default value.
     /// </summary>
@@ -157,6 +193,7 @@ partial struct ValueList<T> {
         }
         return this[0];
     }
+
     /// <summary>
     /// Returns the first element matching <paramref name="predicate"/> or the default value.
     /// </summary>
@@ -170,6 +207,7 @@ partial struct ValueList<T> {
         }
         return defaultValue;
     }
+
     /// <summary>
     /// Returns the last element.
     /// </summary>
@@ -178,6 +216,7 @@ partial struct ValueList<T> {
     public readonly T Last() {
         return this[^1];
     }
+
     /// <summary>
     /// Returns the last element matching <paramref name="predicate"/>.
     /// </summary>
@@ -192,6 +231,7 @@ partial struct ValueList<T> {
         }
         throw new Exception("No elements in the value list match the predicate.");
     }
+
     /// <summary>
     /// Returns the last element or the default value.
     /// </summary>
@@ -202,6 +242,7 @@ partial struct ValueList<T> {
         }
         return this[^1];
     }
+
     /// <summary>
     /// Returns the last element matching <paramref name="predicate"/> or the default value.
     /// </summary>
@@ -215,6 +256,7 @@ partial struct ValueList<T> {
         }
         return defaultValue;
     }
+
     /// <summary>
     /// Ensures the list has exactly one element and returns that element.
     /// </summary>
@@ -226,6 +268,7 @@ partial struct ValueList<T> {
         }
         return this[0];
     }
+
     /// <summary>
     /// Ensures the list has exactly one element matching <paramref name="predicate"/> and returns that element.
     /// </summary>
@@ -249,6 +292,7 @@ partial struct ValueList<T> {
         }
         throw new Exception("No elements in the value list match the predicate.");
     }
+
     /// <summary>
     /// Ensures the list has exactly one element and returns that element or the default value.
     /// </summary>
@@ -259,6 +303,7 @@ partial struct ValueList<T> {
         }
         return this[0];
     }
+
     /// <summary>
     /// Ensures the list has exactly one element and returns that element matching <paramref name="predicate"/> or the default value.
     /// </summary>

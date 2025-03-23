@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualBasic;
-
-namespace ValueCollections.Tests;
+﻿namespace ValueCollections.Tests;
 
 public class ValueListTests {
     [Fact]

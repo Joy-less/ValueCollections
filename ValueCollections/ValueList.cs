@@ -1,6 +1,4 @@
-﻿#pragma warning disable IDE0305 // Simplify collection initialization
-
-using System.Collections;
+﻿using System.Collections;
 using System.Buffers;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -236,6 +234,14 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     }
 
     /// <summary>
+    /// Returns whether <paramref name="value"/> is found in the list.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly bool Contains(T value) {
+        return IndexOf(value) >= 0;
+    }
+
+    /// <summary>
     /// Inserts <paramref name="value"/> at <paramref name="index"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -304,11 +310,19 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     }
 
     /// <summary>
-    /// Returns whether <paramref name="value"/> is found in the list.
+    /// Sorts the elements using the default comparer.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly bool Contains(T value) {
-        return IndexOf(value) >= 0;
+    public readonly void Sort() {
+        AsSpan().Sort();
+    }
+
+    /// <summary>
+    /// Sorts the elements using <paramref name="comparer"/>.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly void Sort<TComparer>(TComparer comparer) where TComparer : IComparer<T> {
+        AsSpan().Sort(comparer);
     }
 
     /// <summary>

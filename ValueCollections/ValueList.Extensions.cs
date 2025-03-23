@@ -1,8 +1,4 @@
-﻿#pragma warning disable IDE0028 // Simplify collection initialization
-#pragma warning disable IDE0305 // Simplify collection initialization
-#pragma warning disable IDE0306 // Simplify collection initialization
-
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 
 namespace ValueCollections;
 
@@ -17,6 +13,7 @@ public static class ValueListExtensions {
     public static ValueList<T> ToValueList<T>(this IEnumerable<T> enumerable) {
         return new ValueList<T>(enumerable);
     }
+
     /// <summary>
     /// Copies the contents of <paramref name="valueList"/> to a new <see cref="ValueList{T}"/>.
     /// </summary>
@@ -24,6 +21,7 @@ public static class ValueListExtensions {
     public static ValueList<T> ToValueList<T>(this scoped ValueList<T> valueList) {
         return new ValueList<T>(valueList);
     }
+
     /// <summary>
     /// Copies the contents of <paramref name="valueList"/> to a new <see cref="Array"/>.
     /// </summary>
@@ -31,6 +29,7 @@ public static class ValueListExtensions {
     public static T[] ToArray<T>(this scoped ValueList<T> valueList) {
         return valueList.AsSpan().ToArray();
     }
+
     /// <summary>
     /// Copies the contents of <paramref name="valueList"/> to a new <see cref="List{T}"/>.
     /// </summary>
@@ -40,6 +39,7 @@ public static class ValueListExtensions {
         list.AddRange(valueList.AsSpan());
         return list;
     }
+
     /// <summary>
     /// Copies the contents of <paramref name="valueList"/> to a new <see cref="HashSet{T}"/>.
     /// </summary>
@@ -51,6 +51,7 @@ public static class ValueListExtensions {
         }
         return hashSet;
     }
+
     /// <summary>
     /// Copies the contents of <paramref name="valueList"/> to a new <see cref="Dictionary{TKey, TValue}"/> using <paramref name="keySelector"/> and <paramref name="valueSelector"/>.
     /// </summary>
@@ -64,6 +65,7 @@ public static class ValueListExtensions {
         }
         return dictionary;
     }
+
     /// <summary>
     /// Copies the contents of <paramref name="valueList"/> to a new <see cref="Dictionary{TKey, TValue}"/> using <paramref name="keyValuePairSelector"/>.
     /// </summary>

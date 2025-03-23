@@ -5,6 +5,11 @@
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+
+    <!-- IDE0028: Simplify collection initialization -->
+    <!-- IDE0305: Simplify collection initialization -->
+    <!-- IDE0306: Simplify collection initialization -->
+    <NoWarn>IDE0028;IDE0305;IDE0306</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>

@@ -97,7 +97,7 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get {
             if (index < 0 || index >= BufferPosition) {
-                throw new IndexOutOfRangeException();
+                throw new IndexOutOfRangeException("The index is outside the bounds of the value list.");
             }
 
             return ref Buffer[index];
@@ -118,6 +118,9 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     /// <summary>
     /// Gets a span over the elements in the list.
     /// </summary>
+    /// <remarks>
+    /// Do not change the capacity of the list while the span is in use, as it will continue pointing to the old buffer.
+    /// </remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly Span<T> AsSpan() => Buffer[..BufferPosition];
 

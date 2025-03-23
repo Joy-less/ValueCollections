@@ -188,6 +188,7 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     /// <summary>
     /// Returns the smallest power of 2 which is greater than or equal to <paramref name="minimum"/>.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static int FindSmallestPowerOf2Above(int minimum) {
         return 1 << (int)Math.Ceiling(Math.Log2(minimum));
     }
@@ -195,6 +196,7 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     /// <summary>
     /// Returns the index of <paramref name="value"/> or -1 if not found.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly int IndexOf(T value) {
         EqualityComparer<T> comparer = EqualityComparer<T>.Default;
         for (int index = 0; index < BufferPosition; index++) {
@@ -208,6 +210,7 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     /// <summary>
     /// Returns the index of <paramref name="value"/> or -1 if not found.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly int LastIndexOf(T value) {
         EqualityComparer<T> comparer = EqualityComparer<T>.Default;
         for (int index = BufferPosition - 1; index >= 0; index--) {
@@ -221,6 +224,7 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     /// <summary>
     /// Inserts <paramref name="value"/> at <paramref name="index"/>.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Insert(int index, T value) {
         ArgumentOutOfRangeException.ThrowIfLessThan(index, 0);
         ArgumentOutOfRangeException.ThrowIfGreaterThan(index, BufferPosition);
@@ -234,6 +238,7 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     /// <summary>
     /// Removes an element at <paramref name="index"/>.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void RemoveAt(int index) {
         ArgumentOutOfRangeException.ThrowIfLessThan(index, 0);
         ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, BufferPosition);
@@ -246,6 +251,7 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     /// <summary>
     /// Finds and removes the first instance of <paramref name="value"/> from the list.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool Remove(T value) {
         int index = IndexOf(value);
         if (index < 0) {
@@ -258,6 +264,7 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     /// <summary>
     /// Removes every element matching <paramref name="predicate"/> from the list.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public int RemoveWhere(Func<T, bool> predicate) {
         int counter = 0;
         int index = 0;
@@ -276,6 +283,7 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     /// <summary>
     /// Removes every element.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Clear() {
         Buffer[..BufferPosition].Clear();
         BufferPosition = 0;
@@ -284,6 +292,7 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     /// <summary>
     /// Returns whether <paramref name="value"/> is found in the list.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly bool Contains(T value) {
         return IndexOf(value) >= 0;
     }
@@ -291,6 +300,7 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     /// <summary>
     /// Copies every element to <paramref name="destination"/>.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly void CopyTo(scoped Span<T> destination) {
         Buffer[..BufferPosition].CopyTo(destination);
     }
@@ -298,6 +308,7 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     /// <summary>
     /// Copies every element to <paramref name="destination"/> at <paramref name="destinationIndex"/>.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly void CopyTo(T[] destination, int destinationIndex) {
         CopyTo(destination.AsSpan(destinationIndex));
     }
@@ -305,6 +316,7 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     /// <summary>
     /// Returns an enumerator that iterates over the elements of the list.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly Enumerator GetEnumerator() {
         return new Enumerator(this);
     }
@@ -365,6 +377,7 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
         /// <summary>
         /// Sets the enumerator to its initial position, which is before the first element in the list.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Reset() {
             Index = -1;
         }

@@ -8,7 +8,7 @@ partial struct ValueList<T> {
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly ValueList<T> Where(Func<T, bool> predicate) {
-        ValueList<T> result = new();
+        ValueList<T> result = new(Count);
         for (int index = 0; index < Count; index++) {
             T element = this[index];
             if (predicate(element)) {
@@ -105,7 +105,7 @@ partial struct ValueList<T> {
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly ValueList<TFilter> OfType<TFilter>() {
-        ValueList<TFilter> result = new();
+        ValueList<TFilter> result = new(Count);
         for (int index = 0; index < Count; index++) {
             T element = this[index];
             if (element is TFilter elementOfTFilter) {

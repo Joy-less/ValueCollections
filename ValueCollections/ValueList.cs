@@ -11,7 +11,7 @@ namespace ValueCollections;
 /// <remarks>
 /// You should dispose it after use to ensure the rented buffer is returned to the array pool.
 /// </remarks>
-public ref struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T> {
+public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T> {
     private Span<T> Buffer;
     private int BufferPosition;
     private T[]? ArrayFromPool;
@@ -38,14 +38,24 @@ public ref struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T> {
         Buffer = initialBuffer;
     }
     /// <summary>
-    /// Constructs a value list with elements from the given buffer.
+    /// Constructs a value list with the given elements.
     /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #if NET9_0_OR_GREATER
     [OverloadResolutionPriority(-1)]
 #endif
-    public ValueList(ReadOnlySpan<T> initialBuffer) {
-        AddRange(initialBuffer);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public ValueList(ReadOnlySpan<T> initialElements) {
+        AddRange(initialElements);
+    }
+    /// <summary>
+    /// Constructs a value list with the given elements.
+    /// </summary>
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-2)]
+#endif
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public ValueList(IEnumerable<T> initialElements) {
+        AddRange(initialElements);
     }
 
     /// <summary>
@@ -187,9 +197,22 @@ public ref struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T> {
     /// </summary>
     public readonly int IndexOf(T value) {
         EqualityComparer<T> comparer = EqualityComparer<T>.Default;
-        for (int i = 0; i < BufferPosition; i++) {
-            if (comparer.Equals(Buffer[i], value)) {
-                return i;
+        for (int index = 0; index < BufferPosition; index++) {
+            if (comparer.Equals(Buffer[index], value)) {
+                return index;
+            }
+        }
+        return -1;
+    }
+
+    /// <summary>
+    /// Returns the index of <paramref name="value"/> or -1 if not found.
+    /// </summary>
+    public readonly int LastIndexOf(T value) {
+        EqualityComparer<T> comparer = EqualityComparer<T>.Default;
+        for (int index = BufferPosition - 1; index >= 0; index--) {
+            if (comparer.Equals(Buffer[index], value)) {
+                return index;
             }
         }
         return -1;
@@ -288,28 +311,12 @@ public ref struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T> {
 
     /// <inheritdoc/>
     readonly IEnumerator<T> IEnumerable<T>.GetEnumerator() {
-        return ((IEnumerable<T>)ToArray()).GetEnumerator();
+        return ((IEnumerable<T>)this.ToArray()).GetEnumerator();
     }
 
     /// <inheritdoc/>
     readonly IEnumerator IEnumerable.GetEnumerator() {
-        return ToArray().GetEnumerator();
-    }
-
-    /// <summary>
-    /// Copies the contents of the list to a new array.
-    /// </summary>
-    public readonly T[] ToArray() {
-        return AsSpan().ToArray();
-    }
-
-    /// <summary>
-    /// Copies the contents of the list to a new <see cref="List{T}"/>.
-    /// </summary>
-    public readonly List<T> ToList() {
-        List<T> list = new(Count);
-        list.AddRange(AsSpan());
-        return list;
+        return this.ToArray().GetEnumerator();
     }
 
     /// <summary>
@@ -361,49 +368,5 @@ public ref struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T> {
         public void Reset() {
             Index = -1;
         }
-    }
-}
-
-/// <summary>
-/// Static methods for <see cref="ValueList{T}"/>.
-/// </summary>
-public static class ValueList {
-    /// <summary>
-    /// Returns a <see cref="ValueList{T}"/> containing each element of <paramref name="source"/> matching <paramref name="predicate"/>.
-    /// </summary>
-    public static ValueList<T> Where<T>(this IEnumerable<T> source, Func<T, bool> predicate) {
-        ValueList<T> matches = [];
-        foreach (T element in source) {
-            if (predicate(element)) {
-                matches.Add(element);
-            }
-        }
-        return matches;
-    }
-    /// <summary>
-    /// Returns a <see cref="ValueList{T}"/> mapping each element of <paramref name="source"/> using <paramref name="selector"/>.
-    /// </summary>
-    public static ValueList<T> Select<T>(this IEnumerable<T> source, Func<T, T> selector) {
-        ValueList<T> results = source.TryGetNonEnumeratedCount(out int count)
-            ? new(count)
-            : new();
-        foreach (T element in source) {
-            results.Add(selector(element));
-        }
-        return results;
-    }
-    /// <summary>
-    /// Returns a <see cref="ValueList{T}"/> mapping each element of <paramref name="source"/> using <paramref name="selector"/>.
-    /// </summary>
-    public static ValueList<T> Select<T>(this IEnumerable<T> source, Func<T, int, T> selector) {
-        int counter = 0;
-        ValueList<T> results = source.TryGetNonEnumeratedCount(out int count)
-            ? new(count)
-            : new();
-        foreach (T element in source) {
-            results.Add(selector(element, counter));
-            counter++;
-        }
-        return results;
     }
 }

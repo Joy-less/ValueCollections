@@ -52,11 +52,13 @@ public class ValueListTests {
     }
     [Fact]
     public void Where() {
-        ValueList.Where([1, 2, 3], num => num % 2 == 0).ToList().ShouldBe([2]);
+        List<int> list = [1, 2, 3];
+        list.ToValueList().Where(num => num % 2 == 0).ToList().ShouldBe([2]);
     }
     [Fact]
     public void Select() {
-        ValueList.Select([1, 2, 3], num => num + 1).ToList().ShouldBe([2, 3, 4]);
-        ValueList.Select([1, 2, 3], (num, index) => num + index).ToList().ShouldBe([1, 3, 5]);
+        List<int> list = [1, 2, 3];
+        list.ToValueList().Select(num => num + 1).ToList().ShouldBe([2, 3, 4]);
+        list.ToValueList().Select((num, index) => num + index).ToList().ShouldBe([1, 3, 5]);
     }
 }

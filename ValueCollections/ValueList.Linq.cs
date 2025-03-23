@@ -189,6 +189,14 @@ partial struct ValueList<T> {
     }
 
     /// <summary>
+    /// Returns whether there are any elements.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly bool Any() {
+        return Count > 0;
+    }
+
+    /// <summary>
     /// Returns whether any element matches <paramref name="predicate"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

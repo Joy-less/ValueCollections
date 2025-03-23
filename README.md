@@ -26,3 +26,7 @@ Console.WriteLine(string.Join(", ", list.ToList()));
 | SmallValueListOfClass  |     18.36 ns |   0.037 ns |   0.033 ns |       - |         - |
 | LargeListOfStruct      | 21,131.86 ns | 119.642 ns | 111.913 ns | 41.6565 |  131400 B |
 | LargeValueListOfStruct |  7,454.80 ns |  11.838 ns |  10.494 ns |       - |         - |
+
+## Special Thanks
+
+- [linkdotnet/StringBuilder](https://github.com/linkdotnet/StringBuilder) for inspiration.

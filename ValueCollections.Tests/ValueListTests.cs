@@ -61,4 +61,10 @@ public class ValueListTests {
         list.ToValueList().Select(num => num + 1).ToList().ShouldBe([2, 3, 4]);
         list.ToValueList().Select((num, index) => num + index).ToList().ShouldBe([1, 3, 5]);
     }
+    [Fact]
+    public void Except() {
+        List<int> list = [1, 2, 3];
+        list.ToValueList().Except(2).ToList().ShouldBe([1, 3]);
+        list.ToValueList().Except([2, 1]).ToList().ShouldBe([3]);
+    }
 }

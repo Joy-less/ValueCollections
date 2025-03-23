@@ -120,7 +120,7 @@ partial struct ValueList<T> {
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly ValueList<TResult> Cast<TResult>() {
-        ValueList<TResult> result = new();
+        ValueList<TResult> result = new(Count);
         for (int index = 0; index < Count; index++) {
             T element = this[index];
             if (element is TResult elementOfTResult) {
@@ -128,6 +128,68 @@ partial struct ValueList<T> {
             }
             else {
                 result.Add((TResult)(object?)element!);
+            }
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// Returns every element except <paramref name="value"/> using the default comparer.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly ValueList<T> Except(T value) {
+        EqualityComparer<T> comparer = EqualityComparer<T>.Default;
+        ValueList<T> result = new(Count);
+        for (int index = 0; index < Count; index++) {
+            T element = this[index];
+            if (!comparer.Equals(element, value)) {
+                result.Add(element);
+            }
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// Returns every element except elements in <paramref name="values"/> using the default comparer.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly ValueList<T> Except(scoped ReadOnlySpan<T> values) {
+        EqualityComparer<T> comparer = EqualityComparer<T>.Default;
+        ValueList<T> result = new(Count);
+        for (int index = 0; index < Count; index++) {
+            T element = this[index];
+            bool shouldAdd = true;
+            foreach (T value in values) {
+                if (comparer.Equals(element, value)) {
+                    shouldAdd = false;
+                    break;
+                }
+            }
+            if (shouldAdd) {
+                result.Add(element);
+            }
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// Returns every element except elements in <paramref name="values"/> using the default comparer.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly ValueList<T> Except(IEnumerable<T> values) {
+        EqualityComparer<T> comparer = EqualityComparer<T>.Default;
+        ValueList<T> result = new(Count);
+        for (int index = 0; index < Count; index++) {
+            T element = this[index];
+            bool shouldAdd = true;
+            foreach (T value in values) {
+                if (comparer.Equals(element, value)) {
+                    shouldAdd = false;
+                    break;
+                }
+            }
+            if (shouldAdd) {
+                result.Add(element);
             }
         }
         return result;

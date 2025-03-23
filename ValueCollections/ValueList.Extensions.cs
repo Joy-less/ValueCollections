@@ -22,9 +22,7 @@ public static class ValueListExtensions {
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ValueList<T> ToValueList<T>(this scoped ValueList<T> valueList) {
-        ValueList<T> newValueList = new(0);
-        newValueList.AddRange(valueList.AsSpan());
-        return newValueList;
+        return new ValueList<T>(valueList);
     }
     /// <summary>
     /// Copies the contents of <paramref name="valueList"/> to a new <see cref="Array"/>.
@@ -40,7 +38,6 @@ public static class ValueListExtensions {
     public static List<T> ToList<T>(this scoped ValueList<T> valueList) {
         List<T> list = new(valueList.Count);
         list.AddRange(valueList.AsSpan());
-        //new List<T>().ToDictionary()
         return list;
     }
     /// <summary>

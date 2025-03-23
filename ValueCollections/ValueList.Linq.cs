@@ -1,106 +1,106 @@
-﻿using System.Runtime.CompilerServices;
+﻿#pragma warning disable IDE0028
+
+using System.Runtime.CompilerServices;
 
 namespace ValueCollections;
 
 partial struct ValueList<T> {
     /// <summary>
-    /// Removes every element not matching <paramref name="predicate"/>.
+    /// Returns every element matching <paramref name="predicate"/>.
     /// </summary>
-    /// <remarks>
-    /// This method affects the original list.
-    /// </remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueList<T> Where(Func<T, bool> predicate) {
-        int index = 0;
-        while (index < Count) {
-            if (!predicate(this[index])) {
-                RemoveAt(index);
-            }
-            else {
-                index++;
+    public readonly ValueList<T> Where(Func<T, bool> predicate) {
+        ValueList<T> result = new();
+        for (int index = 0; index < Count; index++) {
+            T element = this[index];
+            if (predicate(element)) {
+                result.Add(element);
             }
         }
-        return this;
+        return result;
     }
     /// <summary>
-    /// Transforms each element using <paramref name="selector"/>.
+    /// Returns every element mapped using <paramref name="selector"/>.
     /// </summary>
-    /// <remarks>
-    /// This method affects the original list.
-    /// </remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueList<T> Select(Func<T, T> selector) {
+    public readonly ValueList<T> Select(Func<T, T> selector) {
+        ValueList<T> result = new(Count);
         for (int index = 0; index < Count; index++) {
-            this[index] = selector(this[index]);
+            T element = this[index];
+            result.Add(selector(element));
         }
-        return this;
+        return result;
     }
     /// <summary>
-    /// Transforms each element using <paramref name="selector"/>.
+    /// Returns every element mapped using <paramref name="selector"/>.
     /// </summary>
-    /// <remarks>
-    /// This method affects the original list.
-    /// </remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueList<T> Select(Func<T, int, T> selector) {
+    public readonly ValueList<T> Select(Func<T, int, T> selector) {
+        ValueList<T> result = new(Count);
         for (int index = 0; index < Count; index++) {
-            this[index] = selector(this[index], index);
+            T element = this[index];
+            result.Add(selector(element, index));
         }
-        return this;
+        return result;
     }
     /// <summary>
-    /// Adds an element to the list.
+    /// Returns the elements with <paramref name="value"/> added to the end.
     /// </summary>
-    /// <remarks>
-    /// This method affects the original list.
-    /// </remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueList<T> Append(T value) {
-        Add(value);
-        return this;
+    public readonly ValueList<T> Append(T value) {
+        ValueList<T> result = new(this);
+        result.Add(value);
+        return result;
     }
     /// <summary>
-    /// Inserts an element at the beginning of the list.
+    /// Returns the elements with <paramref name="value"/> inserted at the beginning.
     /// </summary>
-    /// <remarks>
-    /// This method affects the original list.
-    /// </remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueList<T> Prepend(T value) {
-        Insert(0, value);
-        return this;
+    public readonly ValueList<T> Prepend(T value) {
+        ValueList<T> result = new(this);
+        result.Insert(0, value);
+        return result;
     }
     /// <summary>
-    /// Reverses the order of the elements of the list.
+    /// Returns the elements in reverse order.
     /// </summary>
-    /// <remarks>
-    /// This method affects the original list.
-    /// </remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly ValueList<T> Reverse() {
-        AsSpan().Reverse();
-        return this;
+        ValueList<T> result = new(this);
+        result.AsSpan().Reverse();
+        return result;
     }
     /// <summary>
-    /// Removes each element which is not of type <typeparamref name="TFilter"/>.
+    /// Returns the elements of type <typeparamref name="TFilter"/>.
     /// </summary>
-    /// <remarks>
-    /// This method affects the original list.
-    /// </remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueList<T> OfType<TFilter>() {
-        int index = 0;
-        while (index < Count) {
-            if (this[index] is not TFilter) {
-                RemoveAt(index);
-            }
-            else {
-                index++;
+    public readonly ValueList<TFilter> OfType<TFilter>() {
+        ValueList<TFilter> result = new();
+        for (int index = 0; index < Count; index++) {
+            T element = this[index];
+            if (element is TFilter elementOfTFilter) {
+                result.Add(elementOfTFilter);
             }
         }
-        return this;
+        return result;
     }
-
+    /// <summary>
+    /// Returns the elements casted to type <typeparamref name="TResult"/>.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly ValueList<TResult> Cast<TResult>() {
+        ValueList<TResult> result = new();
+        for (int index = 0; index < Count; index++) {
+            T element = this[index];
+            if (element is TResult elementOfTResult) {
+                result.Add(elementOfTResult);
+            }
+            else {
+                result.Add((TResult)(object?)element!);
+            }
+        }
+        return result;
+    }
     /// <summary>
     /// Returns whether all elements match <paramref name="predicate"/>.
     /// </summary>

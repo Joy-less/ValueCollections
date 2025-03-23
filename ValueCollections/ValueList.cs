@@ -17,11 +17,10 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     private T[]? ArrayFromPool;
 
     /// <summary>
-    /// Constructs a value list with a default capacity of 32.
+    /// Constructs a value list with a default capacity of 0.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ValueList() {
-        EnsureCapacity(32);
     }
     /// <summary>
     /// Constructs a value list with the given capacity.
@@ -44,7 +43,7 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     [OverloadResolutionPriority(-1)]
 #endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueList(ReadOnlySpan<T> initialElements) {
+    public ValueList(scoped ReadOnlySpan<T> initialElements) {
         AddRange(initialElements);
     }
     /// <summary>
@@ -56,6 +55,13 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ValueList(IEnumerable<T> initialElements) {
         AddRange(initialElements);
+    }
+    /// <summary>
+    /// Constructs a value list with the given elements.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public ValueList(scoped ValueList<T> initialElements) {
+        AddRange(initialElements.AsSpan());
     }
 
     /// <summary>
@@ -119,7 +125,7 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     /// Gets a span over the elements in the list.
     /// </summary>
     /// <remarks>
-    /// Do not change the capacity of the list while the span is in use, as it will continue pointing to the old buffer.
+    /// Do not change the capacity of the list while the span is in use, because the span will continue pointing to the old buffer.
     /// </remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly Span<T> AsSpan() => Buffer[..BufferPosition];

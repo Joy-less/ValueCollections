@@ -92,7 +92,7 @@ public static class ValueListLinq {
     /// Returns whether all elements match <paramref name="predicate"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool All<T>(this ValueList<T> valueList, Func<T, bool> predicate) {
+    public static bool All<T>(this scoped ValueList<T> valueList, Func<T, bool> predicate) {
         for (int index = 0; index < valueList.Count; index++) {
             if (!predicate(valueList[index])) {
                 return false;
@@ -104,7 +104,7 @@ public static class ValueListLinq {
     /// Returns whether any element matches <paramref name="predicate"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool Any<T>(this ValueList<T> valueList, Func<T, bool> predicate) {
+    public static bool Any<T>(this scoped ValueList<T> valueList, Func<T, bool> predicate) {
         for (int index = 0; index < valueList.Count; index++) {
             if (predicate(valueList[index])) {
                 return true;
@@ -117,7 +117,7 @@ public static class ValueListLinq {
     /// </summary>
     /// <exception cref="IndexOutOfRangeException"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T First<T>(this ValueList<T> valueList) {
+    public static T First<T>(this scoped ValueList<T> valueList) {
         return valueList[0];
     }
     /// <summary>
@@ -125,7 +125,7 @@ public static class ValueListLinq {
     /// </summary>
     /// <exception cref="Exception"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T First<T>(this ValueList<T> valueList, Func<T, bool> predicate) {
+    public static T First<T>(this scoped ValueList<T> valueList, Func<T, bool> predicate) {
         for (int index = 0; index < valueList.Count; index++) {
             T element = valueList[index];
             if (predicate(element)) {
@@ -138,7 +138,7 @@ public static class ValueListLinq {
     /// Returns the first element or the default value.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T? FirstOrDefault<T>(this ValueList<T> valueList, T? defaultValue = default) {
+    public static T? FirstOrDefault<T>(this scoped ValueList<T> valueList, T? defaultValue = default) {
         if (valueList.Count <= 0) {
             return defaultValue;
         }
@@ -148,7 +148,7 @@ public static class ValueListLinq {
     /// Returns the first element matching <paramref name="predicate"/> or the default value.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T? FirstOrDefault<T>(this ValueList<T> valueList, Func<T, bool> predicate, T? defaultValue = default) {
+    public static T? FirstOrDefault<T>(this scoped ValueList<T> valueList, Func<T, bool> predicate, T? defaultValue = default) {
         for (int index = 0; index < valueList.Count; index++) {
             T element = valueList[index];
             if (predicate(element)) {
@@ -162,7 +162,7 @@ public static class ValueListLinq {
     /// </summary>
     /// <exception cref="IndexOutOfRangeException"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T Last<T>(this ValueList<T> valueList) {
+    public static T Last<T>(this scoped ValueList<T> valueList) {
         return valueList[^1];
     }
     /// <summary>
@@ -183,7 +183,7 @@ public static class ValueListLinq {
     /// Returns the last element or the default value.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T? LastOrDefault<T>(this ValueList<T> valueList, T? defaultValue = default) {
+    public static T? LastOrDefault<T>(this scoped ValueList<T> valueList, T? defaultValue = default) {
         if (valueList.Count <= 0) {
             return defaultValue;
         }
@@ -193,7 +193,7 @@ public static class ValueListLinq {
     /// Returns the last element matching <paramref name="predicate"/> or the default value.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T? LastOrDefault<T>(this ValueList<T> valueList, Func<T, bool> predicate, T? defaultValue = default) {
+    public static T? LastOrDefault<T>(this scoped ValueList<T> valueList, Func<T, bool> predicate, T? defaultValue = default) {
         for (int index = valueList.Count - 1; index >= 0; index--) {
             T element = valueList[index];
             if (predicate(element)) {
@@ -207,7 +207,7 @@ public static class ValueListLinq {
     /// </summary>
     /// <exception cref="IndexOutOfRangeException"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T Single<T>(this ValueList<T> valueList) {
+    public static T Single<T>(this scoped ValueList<T> valueList) {
         if (valueList.Count != 1) {
             throw new IndexOutOfRangeException("The value list does not contain exactly one element.");
         }
@@ -218,7 +218,7 @@ public static class ValueListLinq {
     /// </summary>
     /// <exception cref="Exception"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T Single<T>(this ValueList<T> valueList, Func<T, bool> predicate) {
+    public static T Single<T>(this scoped ValueList<T> valueList, Func<T, bool> predicate) {
         bool found = false;
         T result = default!;
         for (int index = 0; index < valueList.Count; index++) {
@@ -240,7 +240,7 @@ public static class ValueListLinq {
     /// Ensures the list has exactly one element and returns that element or the default value.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T? SingleOrDefault<T>(this ValueList<T> valueList, T? defaultValue = default) {
+    public static T? SingleOrDefault<T>(this scoped ValueList<T> valueList, T? defaultValue = default) {
         if (valueList.Count != 1) {
             return defaultValue;
         }
@@ -250,7 +250,7 @@ public static class ValueListLinq {
     /// Ensures the list has exactly one element and returns that element matching <paramref name="predicate"/> or the default value.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T? SingleOrDefault<T>(this ValueList<T> valueList, Func<T, bool> predicate, T? defaultValue = default) {
+    public static T? SingleOrDefault<T>(this scoped ValueList<T> valueList, Func<T, bool> predicate, T? defaultValue = default) {
         bool found = false;
         T result = default!;
         for (int index = 0; index < valueList.Count; index++) {

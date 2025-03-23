@@ -21,14 +21,14 @@ public static class ValueListExtensions {
     /// Copies the contents of <paramref name="valueList"/> to a new <see cref="Array"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static T[] ToArray<T>(this ValueList<T> valueList) {
+    public static T[] ToArray<T>(this scoped ValueList<T> valueList) {
         return valueList.AsSpan().ToArray();
     }
     /// <summary>
     /// Copies the contents of <paramref name="valueList"/> to a new <see cref="List{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static List<T> ToList<T>(this ValueList<T> valueList) {
+    public static List<T> ToList<T>(this scoped ValueList<T> valueList) {
         List<T> list = new(valueList.Count);
         list.AddRange(valueList.AsSpan());
         return list;

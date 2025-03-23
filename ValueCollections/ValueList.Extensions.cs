@@ -18,6 +18,15 @@ public static class ValueListExtensions {
         return new ValueList<T>(enumerable);
     }
     /// <summary>
+    /// Copies the contents of <paramref name="valueList"/> to a new <see cref="ValueList{T}"/>.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ValueList<T> ToValueList<T>(this scoped ValueList<T> valueList) {
+        ValueList<T> newValueList = new(0);
+        newValueList.AddRange(valueList.AsSpan());
+        return newValueList;
+    }
+    /// <summary>
     /// Copies the contents of <paramref name="valueList"/> to a new <see cref="Array"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

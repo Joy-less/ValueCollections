@@ -9,25 +9,27 @@ A set of collections in C# implemented as `ref struct` to minimize heap allocati
 An implementation of `IList<T>` using spans and array pools.
 
 ```cs
-using ValueList<int> list = [];
+using ValueList<int> numbers = [];
 
-for (int i = 0; i < 100; i++) {
-    list.Add(i);
+for (int n = 0; n < 100; n++) {
+    numbers.Add(n);
 }
 
-Console.WriteLine(string.Join(", ", list.ToList()));
+using ValueList<int> evenNumbers = numbers.Where(number => number % 2 == 0);
+
+Console.WriteLine(string.Join(", ", evenNumbers.ToList()));
 ```
 
 ## Benchmarks
 
-| Method                 | Mean         | Error      | StdDev     | Gen0    | Allocated |
-|----------------------- |-------------:|-----------:|-----------:|--------:|----------:|
-| SmallListOfStruct      |     17.92 ns |   0.122 ns |   0.114 ns |  0.0255 |      80 B |
-| SmallValueListOfStruct |     15.14 ns |   0.050 ns |   0.047 ns |       - |         - |
-| SmallListOfClass       |     25.69 ns |   0.077 ns |   0.069 ns |  0.0306 |      96 B |
-| SmallValueListOfClass  |     18.36 ns |   0.037 ns |   0.033 ns |       - |         - |
-| LargeListOfStruct      | 21,131.86 ns | 119.642 ns | 111.913 ns | 41.6565 |  131400 B |
-| LargeValueListOfStruct |  7,454.80 ns |  11.838 ns |  10.494 ns |       - |         - |
+| Method                 | Mean         | Error     | StdDev    | Gen0    | Allocated |
+|----------------------- |-------------:|----------:|----------:|--------:|----------:|
+| SmallListOfStruct      |     17.71 ns |  0.103 ns |  0.091 ns |  0.0255 |      80 B |
+| SmallValueListOfStruct |     14.50 ns |  0.038 ns |  0.034 ns |       - |         - |
+| SmallListOfClass       |     25.31 ns |  0.153 ns |  0.135 ns |  0.0306 |      96 B |
+| SmallValueListOfClass  |     17.22 ns |  0.047 ns |  0.044 ns |       - |         - |
+| LargeListOfStruct      | 20,962.48 ns | 99.370 ns | 92.951 ns | 41.6565 |  131400 B |
+| LargeValueListOfStruct |  9,663.62 ns | 37.740 ns | 33.455 ns |       - |         - |
 
 ## Gotchas
 

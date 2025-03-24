@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Collections;
+using System.Runtime.CompilerServices;
 
 namespace ValueCollections;
 
@@ -37,15 +38,14 @@ public static class ValueListExtensions {
     }
 
     /// <summary>
-    /// Copies the contents of <paramref name="valueList"/> matching <paramref name="predicate"/> to a new <see cref="ValueList{T}"/>.
+    /// Copies the contents of <paramref name="enumerable"/> of type <typeparamref name="T"/> to a new <see cref="ValueList{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ValueList<T> ToValueListWhere<T>(this ValueList<T> valueList, Func<T, bool> predicate) {
-        ValueList<T> result = new(valueList.Count);
-        for (int index = 0; index < valueList.Count; index++) {
-            T element = valueList[index];
-            if (predicate(element)) {
-                result.Add(element);
+    public static ValueList<T> ToValueListOfType<T>(this IEnumerable enumerable) {
+        ValueList<T> result = enumerable is IList iList ? new(iList.Count) : new();
+        foreach (T element in enumerable) {
+            if (element is T elementOfT) {
+                result.Add(elementOfT);
             }
         }
         return result;

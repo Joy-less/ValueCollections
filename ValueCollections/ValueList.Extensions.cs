@@ -23,6 +23,35 @@ public static class ValueListExtensions {
     }
 
     /// <summary>
+    /// Copies the contents of <paramref name="enumerable"/> matching <paramref name="predicate"/> to a new <see cref="ValueList{T}"/>.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ValueList<T> ToValueListWhere<T>(this IEnumerable<T> enumerable, Func<T, bool> predicate) {
+        ValueList<T> result = enumerable.TryGetNonEnumeratedCount(out int count) ? new(count) : new();
+        foreach (T element in enumerable) {
+            if (predicate(element)) {
+                result.Add(element);
+            }
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// Copies the contents of <paramref name="valueList"/> matching <paramref name="predicate"/> to a new <see cref="ValueList{T}"/>.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ValueList<T> ToValueListWhere<T>(this ValueList<T> valueList, Func<T, bool> predicate) {
+        ValueList<T> result = new(valueList.Count);
+        for (int index = 0; index < valueList.Count; index++) {
+            T element = valueList[index];
+            if (predicate(element)) {
+                result.Add(element);
+            }
+        }
+        return result;
+    }
+
+    /// <summary>
     /// Copies the contents of <paramref name="valueList"/> to a new <see cref="Array"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

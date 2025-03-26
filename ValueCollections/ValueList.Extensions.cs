@@ -28,7 +28,7 @@ public static class ValueListExtensions {
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ValueList<T> ToValueListWhere<T>(this IEnumerable<T> enumerable, Func<T, bool> predicate) {
-        ValueList<T> result = enumerable.TryGetNonEnumeratedCount(out int count) ? new(count) : new();
+        ValueList<T> result = new();
         foreach (T element in enumerable) {
             if (predicate(element)) {
                 result.Add(element);
@@ -42,7 +42,7 @@ public static class ValueListExtensions {
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ValueList<T> ToValueListOfType<T>(this IEnumerable enumerable) {
-        ValueList<T> result = enumerable is IList iList ? new(iList.Count) : new();
+        ValueList<T> result = new();
         foreach (T element in enumerable) {
             if (element is T elementOfT) {
                 result.Add(elementOfT);

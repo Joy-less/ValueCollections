@@ -8,7 +8,7 @@ partial struct ValueList<T> {
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly ValueList<T> Where(Func<T, bool> predicate) {
-        ValueList<T> result = new(Count);
+        ValueList<T> result = new();
         for (int index = 0; index < Count; index++) {
             T element = this[index];
             if (predicate(element)) {
@@ -49,7 +49,7 @@ partial struct ValueList<T> {
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly ValueList<T> SelectMany(Func<T, IEnumerable<T>> selector) {
-        ValueList<T> result = new(Count);
+        ValueList<T> result = new();
         for (int index = 0; index < Count; index++) {
             T element = this[index];
             result.AddRange(selector(element));
@@ -62,7 +62,7 @@ partial struct ValueList<T> {
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly ValueList<T> SelectMany(Func<T, int, IEnumerable<T>> selector) {
-        ValueList<T> result = new(Count);
+        ValueList<T> result = new();
         for (int index = 0; index < Count; index++) {
             T element = this[index];
             result.AddRange(selector(element, index));
@@ -105,7 +105,7 @@ partial struct ValueList<T> {
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly ValueList<TFilter> OfType<TFilter>() {
-        ValueList<TFilter> result = new(Count);
+        ValueList<TFilter> result = new();
         for (int index = 0; index < Count; index++) {
             T element = this[index];
             if (element is TFilter elementOfTFilter) {
@@ -155,7 +155,7 @@ partial struct ValueList<T> {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly ValueList<T> Except(scoped ReadOnlySpan<T> values) {
         EqualityComparer<T> comparer = EqualityComparer<T>.Default;
-        ValueList<T> result = new(Count);
+        ValueList<T> result = new();
         for (int index = 0; index < Count; index++) {
             T element = this[index];
             bool shouldAdd = true;
@@ -178,7 +178,7 @@ partial struct ValueList<T> {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly ValueList<T> Except(IEnumerable<T> values) {
         EqualityComparer<T> comparer = EqualityComparer<T>.Default;
-        ValueList<T> result = new(Count);
+        ValueList<T> result = new();
         for (int index = 0; index < Count; index++) {
             T element = this[index];
             bool shouldAdd = true;

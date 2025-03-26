@@ -176,6 +176,20 @@ partial struct ValueList<T> {
     /// Returns every element except elements in <paramref name="values"/> using the default comparer.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-1)]
+#endif
+    public readonly ValueList<T> Except(ReadOnlyMemory<T> values) {
+        return Except(values.Span);
+    }
+
+    /// <summary>
+    /// Returns every element except elements in <paramref name="values"/> using the default comparer.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-2)]
+#endif
     public readonly ValueList<T> Except(IEnumerable<T> values) {
         EqualityComparer<T> comparer = EqualityComparer<T>.Default;
         ValueList<T> result = new();

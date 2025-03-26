@@ -252,6 +252,48 @@ partial struct ValueList<T> {
     }
 
     /// <summary>
+    /// Returns the elements in ascending order using the key selector and the default comparer.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly ValueList<T> OrderBy<TKey>(Func<T, TKey> keySelector) {
+        ValueList<T> result = new(this);
+        result.Sort(new KeySelectorComparer<TKey, Comparer<TKey>>(keySelector, Comparer<TKey>.Default));
+        return result;
+    }
+
+    /// <summary>
+    /// Returns the elements in ascending order using the key selector and the default comparer.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly ValueList<T> OrderBy<TKey, TComparer>(Func<T, TKey> keySelector, TComparer comparer) where TComparer : IComparer<TKey> {
+        ValueList<T> result = new(this);
+        result.Sort(new KeySelectorComparer<TKey, TComparer>(keySelector, comparer));
+        return result;
+    }
+
+    /// <summary>
+    /// Returns the elements in descending order using the key selector and the default comparer.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly ValueList<T> OrderByDescending<TKey>(Func<T, TKey> keySelector) {
+        ValueList<T> result = new(this);
+        result.Sort(new KeySelectorComparer<TKey, Comparer<TKey>>(keySelector, Comparer<TKey>.Default));
+        result.AsSpan().Reverse();
+        return result;
+    }
+
+    /// <summary>
+    /// Returns the elements in descending order using the key selector and the default comparer.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public readonly ValueList<T> OrderByDescending<TKey, TComparer>(Func<T, TKey> keySelector, TComparer comparer) where TComparer : IComparer<TKey> {
+        ValueList<T> result = new(this);
+        result.Sort(new KeySelectorComparer<TKey, TComparer>(keySelector, comparer));
+        result.AsSpan().Reverse();
+        return result;
+    }
+
+    /// <summary>
     /// Returns whether all elements match <paramref name="predicate"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -451,5 +493,16 @@ partial struct ValueList<T> {
             return result;
         }
         return defaultValue;
+    }
+
+    private readonly struct KeySelectorComparer<TKey, TComparer>(Func<T, TKey> keySelector, TComparer comparer) : IComparer<T> where TComparer : IComparer<TKey> {
+        public Func<T, TKey> KeySelector { get; } = keySelector;
+        public TComparer Comparer { get; } = comparer;
+
+        public readonly int Compare(T? x, T? y) {
+            TKey xKey = KeySelector(x!);
+            TKey yKey = KeySelector(y!);
+            return Comparer.Compare(xKey, yKey);
+        }
     }
 }

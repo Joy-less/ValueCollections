@@ -67,4 +67,12 @@ public class ValueListTests {
         list.ToValueList().Except(2).ToList().ShouldBe([1, 3]);
         list.ToValueList().Except([2, 1]).ToList().ShouldBe([3]);
     }
+    [Fact]
+    public void OrderBy() {
+        List<int> list = [4, 2, 5, 1, 3];
+        list.ToValueList().Order().ToList().ShouldBe([1, 2, 3, 4, 5]);
+        list.ToValueList().OrderDescending().ToList().ShouldBe([5, 4, 3, 2, 1]);
+        list.ToValueList().OrderBy(element => 10 - element).ToList().ShouldBe([5, 4, 3, 2, 1]);
+        list.ToValueList().OrderByDescending(element => 10 - element).ToList().ShouldBe([1, 2, 3, 4, 5]);
+    }
 }

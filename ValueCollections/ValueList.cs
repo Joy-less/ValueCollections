@@ -13,7 +13,7 @@ namespace ValueCollections;
 public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T> {
     private Span<T> Buffer;
     private int BufferPosition;
-    private T[]? ArrayFromPool;
+    private T[]? RentedArray;
 
     /// <summary>
     /// Constructs a value list with a default capacity of 0.
@@ -81,8 +81,8 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Dispose() {
-        if (ArrayFromPool is not null) {
-            ArrayPool<T>.Shared.Return(ArrayFromPool);
+        if (RentedArray is not null) {
+            ArrayPool<T>.Shared.Return(RentedArray);
         }
         this = default;
     }
@@ -98,9 +98,28 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     /// <summary>
     /// Returns the current maximum capacity before the span must be resized.
     /// </summary>
-    public readonly int Capacity {
+    public int Capacity {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => Buffer.Length;
+        readonly get => Buffer.Length;
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        set {
+            if (value == Capacity) {
+                return;
+            }
+
+            T[] rented = ArrayPool<T>.Shared.Rent(value);
+
+            if (BufferPosition > 0) {
+                Buffer.CopyTo(rented);
+            }
+
+            if (RentedArray is not null) {
+                ArrayPool<T>.Shared.Return(RentedArray);
+            }
+
+            Buffer = rented;
+            RentedArray = rented;
+        }
     }
 
     /// <inheritdoc/>
@@ -203,26 +222,15 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     }
 
     /// <summary>
-    /// Ensure's the list's capacity is at least <paramref name="newCapacity"/>, renting a larger buffer if not.
+    /// Ensure's the list's capacity is at least <paramref name="newCapacity"/>, renting a larger buffer if not.<br/>
+    /// This is useful when adding a predetermined number of items to the list.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void EnsureCapacity(int newCapacity) {
         if (Capacity >= newCapacity) {
             return;
         }
-
-        T[] rented = ArrayPool<T>.Shared.Rent(FindSmallestPowerOf2Above(newCapacity));
-
-        if (BufferPosition > 0) {
-            Buffer.CopyTo(rented);
-        }
-
-        if (ArrayFromPool is not null) {
-            ArrayPool<T>.Shared.Return(ArrayFromPool);
-        }
-
-        Buffer = rented;
-        ArrayFromPool = rented;
+        Capacity = FindSmallestPowerOf2Above(newCapacity);
     }
 
     /// <summary>
@@ -231,6 +239,18 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static int FindSmallestPowerOf2Above(int minimum) {
         return 1 << (int)Math.Ceiling(Math.Log2(minimum));
+    }
+
+    /// <summary>
+    /// Ensures the list's capacity is equal its count, renting a smaller buffer if not.<br/>
+    /// This is useful for reducing memory overhead when it is known that no more elements will be added to the list.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void TrimExcess() {
+        if (Count >= Capacity) {
+            return;
+        }
+        Capacity = Count;
     }
 
     /// <summary>

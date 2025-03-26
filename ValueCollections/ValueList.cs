@@ -55,6 +55,16 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     [OverloadResolutionPriority(-2)]
 #endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public ValueList(ReadOnlyMemory<T> initialElements) {
+        AddRange(initialElements);
+    }
+    /// <summary>
+    /// Constructs a value list with the given elements.
+    /// </summary>
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-3)]
+#endif
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ValueList(IEnumerable<T> initialElements) {
         AddRange(initialElements);
     }
@@ -151,6 +161,32 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     /// Adds multiple elements to the list.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void AddRange(scoped ReadOnlySpan<T> values) {
+        EnsureCapacity(BufferPosition + values.Length);
+        foreach (T value in values) {
+            Buffer[BufferPosition] = value;
+            BufferPosition++;
+        }
+    }
+
+    /// <summary>
+    /// Adds multiple elements to the list.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-1)]
+#endif
+    public void AddRange(ReadOnlyMemory<T> values) {
+        AddRange(values.Span);
+    }
+
+    /// <summary>
+    /// Adds multiple elements to the list.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-2)]
+#endif
     public void AddRange(IEnumerable<T> values) {
         if (values.TryGetNonEnumeratedCount(out int count)) {
             EnsureCapacity(BufferPosition + count);
@@ -163,18 +199,6 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
             foreach (T value in values) {
                 Add(value);
             }
-        }
-    }
-
-    /// <summary>
-    /// Adds multiple elements to the list.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void AddRange(scoped ReadOnlySpan<T> values) {
-        EnsureCapacity(BufferPosition + values.Length);
-        foreach (T value in values) {
-            Buffer[BufferPosition] = value;
-            BufferPosition++;
         }
     }
 

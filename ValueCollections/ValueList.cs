@@ -258,7 +258,7 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     }
 
     /// <summary>
-    /// Ensures the list's capacity is equal its count, renting a smaller buffer if not.<br/>
+    /// Ensures the list's capacity is equal to its count, renting a smaller buffer if not.<br/>
     /// This is useful for reducing memory overhead when it is known that no more elements will be added to the list.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

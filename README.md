@@ -59,7 +59,7 @@ Console.WriteLine(string.Join(", ", numbers.ToArray())); // 1, 2, 3, 4, 5, 6, 7
 
 ## Gotchas
 
-`ValueList` should be disposed after use, otherwise the internal rented array will not be returned to the pool.
+Value collections should be disposed after use, otherwise the internal rented array will not be returned to the pool.
 ```cs
 using ValueList<string> strings = ["a", "b", "c"];
 using ValueList<string> whitespaceStrings = strings.Where(string.IsNullOrWhiteSpace);

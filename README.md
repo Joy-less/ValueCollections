@@ -11,13 +11,30 @@ An implementation of `IList<T>` using spans and array pools.
 ```cs
 using ValueList<int> numbers = [];
 
-for (int n = 0; n < 100; n++) {
+for (int n = 0; n < 10; n++) {
     numbers.Add(n);
 }
 
 using ValueList<int> evenNumbers = numbers.Where(number => number % 2 == 0);
 
-Console.WriteLine(string.Join(", ", evenNumbers.ToList()));
+Console.WriteLine(string.Join(", ", evenNumbers.ToList())); // 0, 2, 4, 6, 8
+```
+
+## ValueHashSet
+
+An implementation of `ISet<T>` using spans and array pools.
+
+```cs
+using ValueHashSet<int> numbers = [];
+
+for (int n = 1; n <= 5; n++) {
+    numbers.Add(n);
+}
+for (int n = 3; n <= 7; n++) {
+    numbers.Add(n);
+}
+
+Console.WriteLine(string.Join(", ", numbers.ToArray())); // 1, 2, 3, 4, 5, 6, 7
 ```
 
 ## Benchmarks

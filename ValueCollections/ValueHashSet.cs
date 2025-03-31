@@ -204,8 +204,7 @@ public ref partial struct ValueHashSet<T> : IDisposable, ISet<T>, IReadOnlySet<T
     public void AddRange(scoped ReadOnlySpan<T> values) {
         EnsureCapacity(BufferPosition + values.Length);
         foreach (T value in values) {
-            Buffer[BufferPosition] = value;
-            BufferPosition++;
+            Add(value);
         }
     }
 
@@ -231,8 +230,7 @@ public ref partial struct ValueHashSet<T> : IDisposable, ISet<T>, IReadOnlySet<T
         if (values.TryGetNonEnumeratedCount(out int count)) {
             EnsureCapacity(BufferPosition + count);
             foreach (T value in values) {
-                Buffer[BufferPosition] = value;
-                BufferPosition++;
+                Add(value);
             }
         }
         else {

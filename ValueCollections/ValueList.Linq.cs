@@ -10,7 +10,7 @@ partial struct ValueList<T> {
     public readonly ValueList<T> Where(Func<T, bool> predicate) {
         ValueList<T> result = new();
         for (int index = 0; index < Count; index++) {
-            T element = this[index];
+            T element = Buffer[index];
             if (predicate(element)) {
                 result.Add(element);
             }
@@ -25,7 +25,7 @@ partial struct ValueList<T> {
     public readonly ValueList<T> Select(Func<T, T> selector) {
         ValueList<T> result = new(Count);
         for (int index = 0; index < Count; index++) {
-            T element = this[index];
+            T element = Buffer[index];
             result.Add(selector(element));
         }
         return result;
@@ -38,7 +38,7 @@ partial struct ValueList<T> {
     public readonly ValueList<T> Select(Func<T, int, T> selector) {
         ValueList<T> result = new(Count);
         for (int index = 0; index < Count; index++) {
-            T element = this[index];
+            T element = Buffer[index];
             result.Add(selector(element, index));
         }
         return result;
@@ -51,7 +51,7 @@ partial struct ValueList<T> {
     public readonly ValueList<T> SelectMany(Func<T, IEnumerable<T>> selector) {
         ValueList<T> result = new();
         for (int index = 0; index < Count; index++) {
-            T element = this[index];
+            T element = Buffer[index];
             result.AddRange(selector(element));
         }
         return result;
@@ -64,7 +64,7 @@ partial struct ValueList<T> {
     public readonly ValueList<T> SelectMany(Func<T, int, IEnumerable<T>> selector) {
         ValueList<T> result = new();
         for (int index = 0; index < Count; index++) {
-            T element = this[index];
+            T element = Buffer[index];
             result.AddRange(selector(element, index));
         }
         return result;
@@ -107,7 +107,7 @@ partial struct ValueList<T> {
     public readonly ValueList<TFilter> OfType<TFilter>() {
         ValueList<TFilter> result = new();
         for (int index = 0; index < Count; index++) {
-            T element = this[index];
+            T element = Buffer[index];
             if (element is TFilter elementOfTFilter) {
                 result.Add(elementOfTFilter);
             }
@@ -122,7 +122,7 @@ partial struct ValueList<T> {
     public readonly ValueList<TResult> Cast<TResult>() {
         ValueList<TResult> result = new(Count);
         for (int index = 0; index < Count; index++) {
-            T element = this[index];
+            T element = Buffer[index];
             if (element is TResult elementOfTResult) {
                 result.Add(elementOfTResult);
             }
@@ -141,7 +141,7 @@ partial struct ValueList<T> {
         EqualityComparer<T> comparer = EqualityComparer<T>.Default;
         ValueList<T> result = new(Count);
         for (int index = 0; index < Count; index++) {
-            T element = this[index];
+            T element = Buffer[index];
             if (!comparer.Equals(element, value)) {
                 result.Add(element);
             }
@@ -157,7 +157,7 @@ partial struct ValueList<T> {
         EqualityComparer<T> comparer = EqualityComparer<T>.Default;
         ValueList<T> result = new();
         for (int index = 0; index < Count; index++) {
-            T element = this[index];
+            T element = Buffer[index];
             bool shouldAdd = true;
             foreach (T value in values) {
                 if (comparer.Equals(element, value)) {
@@ -194,7 +194,7 @@ partial struct ValueList<T> {
         EqualityComparer<T> comparer = EqualityComparer<T>.Default;
         ValueList<T> result = new();
         for (int index = 0; index < Count; index++) {
-            T element = this[index];
+            T element = Buffer[index];
             bool shouldAdd = true;
             foreach (T value in values) {
                 if (comparer.Equals(element, value)) {
@@ -299,7 +299,7 @@ partial struct ValueList<T> {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly bool All(Func<T, bool> predicate) {
         for (int index = 0; index < Count; index++) {
-            if (!predicate(this[index])) {
+            if (!predicate(Buffer[index])) {
                 return false;
             }
         }
@@ -320,7 +320,7 @@ partial struct ValueList<T> {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly bool Any(Func<T, bool> predicate) {
         for (int index = 0; index < Count; index++) {
-            if (predicate(this[index])) {
+            if (predicate(Buffer[index])) {
                 return true;
             }
         }
@@ -333,7 +333,7 @@ partial struct ValueList<T> {
     /// <exception cref="IndexOutOfRangeException"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly T First() {
-        return this[0];
+        return Buffer[0];
     }
 
     /// <summary>
@@ -343,7 +343,7 @@ partial struct ValueList<T> {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly T First(Func<T, bool> predicate) {
         for (int index = 0; index < Count; index++) {
-            T element = this[index];
+            T element = Buffer[index];
             if (predicate(element)) {
                 return element;
             }
@@ -359,7 +359,7 @@ partial struct ValueList<T> {
         if (Count <= 0) {
             return defaultValue;
         }
-        return this[0];
+        return Buffer[0];
     }
 
     /// <summary>
@@ -368,7 +368,7 @@ partial struct ValueList<T> {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly T? FirstOrDefault(Func<T, bool> predicate, T? defaultValue = default) {
         for (int index = 0; index < Count; index++) {
-            T element = this[index];
+            T element = Buffer[index];
             if (predicate(element)) {
                 return element;
             }
@@ -382,7 +382,7 @@ partial struct ValueList<T> {
     /// <exception cref="IndexOutOfRangeException"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly T Last() {
-        return this[^1];
+        return Buffer[^1];
     }
 
     /// <summary>
@@ -392,7 +392,7 @@ partial struct ValueList<T> {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly T Last(Func<T, bool> predicate) {
         for (int index = Count - 1; index >= 0; index--) {
-            T element = this[index];
+            T element = Buffer[index];
             if (predicate(element)) {
                 return element;
             }
@@ -408,7 +408,7 @@ partial struct ValueList<T> {
         if (Count <= 0) {
             return defaultValue;
         }
-        return this[^1];
+        return Buffer[^1];
     }
 
     /// <summary>
@@ -417,7 +417,7 @@ partial struct ValueList<T> {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly T? LastOrDefault(Func<T, bool> predicate, T? defaultValue = default) {
         for (int index = Count - 1; index >= 0; index--) {
-            T element = this[index];
+            T element = Buffer[index];
             if (predicate(element)) {
                 return element;
             }
@@ -434,7 +434,7 @@ partial struct ValueList<T> {
         if (Count != 1) {
             throw new IndexOutOfRangeException("The value list does not contain exactly one element.");
         }
-        return this[0];
+        return Buffer[0];
     }
 
     /// <summary>
@@ -446,7 +446,7 @@ partial struct ValueList<T> {
         bool found = false;
         T result = default!;
         for (int index = 0; index < Count; index++) {
-            T element = this[index];
+            T element = Buffer[index];
             if (predicate(element)) {
                 if (found) {
                     throw new IndexOutOfRangeException("The value list contains more than one element matching the predicate.");
@@ -469,7 +469,7 @@ partial struct ValueList<T> {
         if (Count != 1) {
             return defaultValue;
         }
-        return this[0];
+        return Buffer[0];
     }
 
     /// <summary>
@@ -480,7 +480,7 @@ partial struct ValueList<T> {
         bool found = false;
         T result = default!;
         for (int index = 0; index < Count; index++) {
-            T element = this[index];
+            T element = Buffer[index];
             if (predicate(element)) {
                 if (found) {
                     return defaultValue;

@@ -16,11 +16,11 @@ public ref partial struct ValueHashSet<T> : IDisposable, ISet<T>, IReadOnlySet<T
     /// </summary>
     public IEqualityComparer<T> Comparer { get; } = EqualityComparer<T>.Default;
 
-    internal Span<T> Buffer { get; set; }
-    internal int BufferPosition { get; set; }
-    internal T[]? RentedBuffer { get; set; }
-    internal Span<int> HashCodes { get; set; }
-    internal int[]? RentedHashCodes { get; set; }
+    private Span<T> Buffer;
+    private int BufferPosition;
+    private T[]? RentedBuffer;
+    private Span<int> HashCodes;
+    private int[]? RentedHashCodes;
 
     /// <summary>
     /// Constructs a value hash set with a default capacity of 0.

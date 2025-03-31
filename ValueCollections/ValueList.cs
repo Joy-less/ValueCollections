@@ -11,9 +11,9 @@ namespace ValueCollections;
 /// You should dispose it after use to ensure the rented buffer is returned to the array pool.
 /// </remarks>
 public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T> {
-    internal Span<T> Buffer { get; set; }
-    internal int BufferPosition { get; set; }
-    internal T[]? RentedBuffer { get; set; }
+    private Span<T> Buffer;
+    private int BufferPosition;
+    private T[]? RentedBuffer;
 
     /// <summary>
     /// Constructs a value list with a default capacity of 0.

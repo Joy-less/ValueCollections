@@ -24,12 +24,21 @@ Console.WriteLine(string.Join(", ", evenNumbers.ToList()));
 
 | Method                 | Mean         | Error     | StdDev    | Gen0    | Allocated |
 |----------------------- |-------------:|----------:|----------:|--------:|----------:|
-| SmallListOfStruct      |     17.71 ns |  0.103 ns |  0.091 ns |  0.0255 |      80 B |
-| SmallValueListOfStruct |     14.50 ns |  0.038 ns |  0.034 ns |       - |         - |
-| SmallListOfClass       |     25.31 ns |  0.153 ns |  0.135 ns |  0.0306 |      96 B |
-| SmallValueListOfClass  |     17.22 ns |  0.047 ns |  0.044 ns |       - |         - |
-| LargeListOfStruct      | 20,962.48 ns | 99.370 ns | 92.951 ns | 41.6565 |  131400 B |
-| LargeValueListOfStruct |  9,663.62 ns | 37.740 ns | 33.455 ns |       - |         - |
+| SmallListOfStruct      |     16.85 ns |  0.122 ns |  0.108 ns |  0.0255 |      80 B |
+| SmallValueListOfStruct |     14.72 ns |  0.072 ns |  0.064 ns |       - |         - |
+| SmallListOfClass       |     24.52 ns |  0.152 ns |  0.135 ns |  0.0306 |      96 B |
+| SmallValueListOfClass  |     18.70 ns |  0.070 ns |  0.062 ns |       - |         - |
+| LargeListOfStruct      | 20,468.89 ns | 83.070 ns | 77.704 ns | 41.6565 |  131400 B |
+| LargeValueListOfStruct |  9,432.68 ns | 33.047 ns | 27.596 ns |       - |         - |
+
+| Method                    | Mean          | Error        | StdDev       | Gen0    | Gen1    | Gen2    | Allocated |
+|-------------------------- |--------------:|-------------:|-------------:|--------:|--------:|--------:|----------:|
+| SmallHashSetOfStruct      |      94.20 ns |     0.662 ns |     0.620 ns |  0.1070 |       - |       - |     336 B |
+| SmallValueHashSetOfStruct |     137.42 ns |     0.616 ns |     0.577 ns |       - |       - |       - |         - |
+| SmallHashSetOfClass       |     130.56 ns |     0.762 ns |     0.675 ns |  0.1173 |       - |       - |     368 B |
+| SmallValueListOfClass     |     163.45 ns |     0.554 ns |     0.518 ns |       - |       - |       - |         - |
+| LargeHashSetOfStruct      | 186,989.50 ns | 1,425.253 ns | 1,263.450 ns | 95.2148 | 95.2148 | 95.2148 |  538656 B |
+| LargeValueHashSetOfStruct | 227,245.29 ns |   603.642 ns |   564.647 ns |       - |       - |       - |         - |
 
 ## Gotchas
 

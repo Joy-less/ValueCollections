@@ -32,6 +32,14 @@ public static class ValueListExtensions {
     }
 
     /// <summary>
+    /// Copies the contents of <paramref name="valueHashSet"/> to a new <see cref="ValueList{T}"/>.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ValueList<T> ToValueList<T>(this scoped ValueHashSet<T> valueHashSet) {
+        return new ValueList<T>(valueHashSet);
+    }
+
+    /// <summary>
     /// Copies the contents of <paramref name="enumerable"/> matching <paramref name="predicate"/> to a new <see cref="ValueList{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

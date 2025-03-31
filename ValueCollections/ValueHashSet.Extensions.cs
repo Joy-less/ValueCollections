@@ -24,19 +24,19 @@ public static class ValueSetExtensions {
     }
 
     /// <summary>
-    /// Copies the contents of <paramref name="valueList"/> to a new <see cref="ValueHashSet{T}"/>.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ValueHashSet<T> ToValueHashSet<T>(this scoped ValueList<T> valueList) {
-        return new ValueHashSet<T>(valueList);
-    }
-
-    /// <summary>
     /// Copies the contents of <paramref name="valueHashSet"/> to a new <see cref="ValueHashSet{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ValueHashSet<T> ToValueHashSet<T>(this scoped ValueHashSet<T> valueHashSet) {
         return new ValueHashSet<T>(valueHashSet);
+    }
+
+    /// <summary>
+    /// Copies the contents of <paramref name="valueList"/> to a new <see cref="ValueHashSet{T}"/>.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ValueHashSet<T> ToValueHashSet<T>(this scoped ValueList<T> valueList) {
+        return new ValueHashSet<T>(valueList);
     }
 
     /// <summary>

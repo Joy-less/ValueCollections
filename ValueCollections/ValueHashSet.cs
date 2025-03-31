@@ -5,34 +5,42 @@ using System.Runtime.CompilerServices;
 namespace ValueCollections;
 
 /// <summary>
-/// A version of <see cref="List{T}"/> which minimizes as many heap allocations as possible.
+/// A version of <see cref="HashSet{T}"/> which minimizes as many heap allocations as possible.
 /// </summary>
 /// <remarks>
 /// You should dispose it after use to ensure the rented buffer is returned to the array pool.
 /// </remarks>
-public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T> {
+public ref partial struct ValueHashSet<T> : IDisposable, ISet<T>, IReadOnlySet<T> {
+    /// <summary>
+    /// A comparer used to differentiate the keys of the hash set.
+    /// </summary>
+    public IEqualityComparer<T> Comparer { get; } = EqualityComparer<T>.Default;
+
     internal Span<T> Buffer { get; set; }
     internal int BufferPosition { get; set; }
     internal T[]? RentedBuffer { get; set; }
+    internal Span<int> HashCodes { get; set; }
+    internal int[]? RentedHashCodes { get; set; }
 
     /// <summary>
     /// Constructs a value list with a default capacity of 0.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueList() {
+    public ValueHashSet() {
+
     }
     /// <summary>
     /// Constructs a value list with the given capacity.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueList(int capacity) {
+    public ValueHashSet(int capacity) {
         EnsureCapacity(capacity);
     }
     /// <summary>
     /// Constructs a value list with the given elements.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueList(scoped Span<T> initialElements) {
+    public ValueHashSet(scoped Span<T> initialElements) {
         AddRange(initialElements);
     }
     /// <summary>
@@ -42,7 +50,7 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     [OverloadResolutionPriority(-1)]
 #endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueList(scoped ReadOnlySpan<T> initialElements) {
+    public ValueHashSet(scoped ReadOnlySpan<T> initialElements) {
         AddRange(initialElements);
     }
     /// <summary>
@@ -52,7 +60,7 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     [OverloadResolutionPriority(-2)]
 #endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueList(ReadOnlyMemory<T> initialElements) {
+    public ValueHashSet(ReadOnlyMemory<T> initialElements) {
         AddRange(initialElements);
     }
     /// <summary>
@@ -62,32 +70,32 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     [OverloadResolutionPriority(-3)]
 #endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueList(IEnumerable<T> initialElements) {
+    public ValueHashSet(IEnumerable<T> initialElements) {
         AddRange(initialElements);
     }
     /// <summary>
     /// Constructs a value list with the given elements.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueList(scoped ValueList<T> initialElements) {
+    public ValueHashSet(scoped ValueList<T> initialElements) {
         AddRange(initialElements.AsSpan());
     }
     /// <summary>
     /// Constructs a value list with the given elements.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueList(scoped ValueHashSet<T> initialElements) {
+    public ValueHashSet(scoped ValueHashSet<T> initialElements) {
         AddRange(initialElements.AsSpan());
     }
 
     /// <summary>
-    /// Constructs a value list from the given buffer.
+    /// Constructs a value hash set from the given buffer.
     /// </summary>
     /// <remarks>
     /// The elements in the buffer are ignored. This is useful if you want to use the <see langword="stackalloc"/> keyword.
     /// </remarks>
-    public static ValueList<T> FromBuffer(Span<T> Buffer) {
-        return new ValueList<T>() {
+    public static ValueHashSet<T> FromBuffer(Span<T> Buffer) {
+        return new ValueHashSet<T>() {
             Buffer = Buffer,
         };
     }
@@ -99,6 +107,9 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     public void Dispose() {
         if (RentedBuffer is not null) {
             ArrayPool<T>.Shared.Return(RentedBuffer);
+        }
+        if (RentedHashCodes is not null) {
+            ArrayPool<int>.Shared.Return(RentedHashCodes);
         }
         this = default;
     }
@@ -124,17 +135,24 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
             }
 
             T[] rentedBuffer = ArrayPool<T>.Shared.Rent(value);
+            int[] rentedHashCodes = ArrayPool<int>.Shared.Rent(value);
 
             if (BufferPosition > 0) {
                 Buffer.CopyTo(rentedBuffer);
+                HashCodes.CopyTo(rentedHashCodes);
             }
 
             if (RentedBuffer is not null) {
                 ArrayPool<T>.Shared.Return(RentedBuffer);
             }
+            if (RentedHashCodes is not null) {
+                ArrayPool<int>.Shared.Return(RentedHashCodes);
+            }
 
             Buffer = rentedBuffer;
             RentedBuffer = rentedBuffer;
+            HashCodes = rentedHashCodes;
+            RentedHashCodes = rentedHashCodes;
         }
     }
 
@@ -145,51 +163,27 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     }
 
     /// <summary>
-    /// Returns the element at the given index.
-    /// </summary>
-    /// <exception cref="IndexOutOfRangeException"/>
-    public readonly ref T this[int index] {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get {
-            if (index < 0 || index >= BufferPosition) {
-                throw new IndexOutOfRangeException("The index is outside the bounds of the value list.");
-            }
-
-            return ref Buffer[index];
-        }
-    }
-
-    /// <inheritdoc/>
-    T IList<T>.this[int index] {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        readonly get => this[index];
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        set => this[index] = value;
-    }
-
-    /// <inheritdoc/>
-    readonly T IReadOnlyList<T>.this[int index] {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => this[index];
-    }
-
-    /// <summary>
     /// Gets a span over the elements in the list.
     /// </summary>
     /// <remarks>
-    /// Do not change the capacity of the list while the span is in use, because the span will continue pointing to the old buffer.
+    /// Do not change the capacity of the list while the span is in use, because the span will continue pointing to the old buffer.<br/>
+    /// The span is read-only to ensures the elements are synchronized with the hash codes.
     /// </remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly Span<T> AsSpan() => Buffer[..BufferPosition];
+    public readonly ReadOnlySpan<T> AsSpan() => Buffer[..BufferPosition];
 
     /// <summary>
     /// Adds an element to the list.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void Add(T value) {
-        EnsureCapacity(BufferPosition + 1);
-        Buffer[BufferPosition] = value;
-        BufferPosition++;
+    public bool Add(T value) {
+        if (TryFindIndex(value, out int index)) {
+            return false;
+        }
+        else {
+            Insert(index, value);
+            return true;
+        }
     }
 
     /// <summary>
@@ -270,66 +264,11 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     }
 
     /// <summary>
-    /// Returns the index of <paramref name="value"/> or -1 if not found.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly int IndexOf(T value) {
-        EqualityComparer<T> comparer = EqualityComparer<T>.Default;
-        for (int index = 0; index < BufferPosition; index++) {
-            if (comparer.Equals(Buffer[index], value)) {
-                return index;
-            }
-        }
-        return -1;
-    }
-
-    /// <summary>
-    /// Returns the index of <paramref name="value"/> or -1 if not found.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly int LastIndexOf(T value) {
-        EqualityComparer<T> comparer = EqualityComparer<T>.Default;
-        for (int index = BufferPosition - 1; index >= 0; index--) {
-            if (comparer.Equals(Buffer[index], value)) {
-                return index;
-            }
-        }
-        return -1;
-    }
-
-    /// <summary>
     /// Returns whether <paramref name="value"/> is found in the list.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly bool Contains(T value) {
-        return IndexOf(value) >= 0;
-    }
-
-    /// <summary>
-    /// Inserts <paramref name="value"/> at <paramref name="index"/>.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void Insert(int index, T value) {
-        ArgumentOutOfRangeException.ThrowIfLessThan(index, 0);
-        ArgumentOutOfRangeException.ThrowIfGreaterThan(index, BufferPosition);
-
-        EnsureCapacity(BufferPosition + 1);
-        Buffer[index..BufferPosition].CopyTo(Buffer[(index + 1)..]);
-        Buffer[index] = value;
-        BufferPosition++;
-    }
-
-    /// <summary>
-    /// Removes an element at <paramref name="index"/>.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void RemoveAt(int index) {
-        ArgumentOutOfRangeException.ThrowIfLessThan(index, 0);
-        ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, BufferPosition);
-
-        Buffer[(index + 1)..].CopyTo(Buffer[index..]);
-        Buffer[BufferPosition] = default!;
-        BufferPosition--;
+        return TryFindIndex(value, out _);
     }
 
     /// <summary>
@@ -337,12 +276,13 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool Remove(T value) {
-        int index = IndexOf(value);
-        if (index < 0) {
+        if (TryFindIndex(value, out int index)) {
+            RemoveAt(index);
+            return true;
+        }
+        else {
             return false;
         }
-        RemoveAt(index);
-        return true;
     }
 
     /// <summary>
@@ -371,22 +311,6 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     public void Clear() {
         Buffer[..BufferPosition].Clear();
         BufferPosition = 0;
-    }
-
-    /// <summary>
-    /// Sorts the elements using the default comparer.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly void Sort() {
-        AsSpan().Sort();
-    }
-
-    /// <summary>
-    /// Sorts the elements using <paramref name="comparer"/>.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly void Sort<TComparer>(TComparer comparer) where TComparer : IComparer<T> {
-        AsSpan().Sort(comparer);
     }
 
     /// <summary>
@@ -425,19 +349,107 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
         return this.ToArray().GetEnumerator();
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private readonly int GetHashCode(T value) {
+        return value is null ? 0 : Comparer.GetHashCode(value);
+    }
+
+    /// <summary>
+    /// Finds the starting index of <paramref name="hashCode"/> using a binary search.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private readonly int FindStartingIndexFromHashCode(int hashCode) {
+        int leftPointer = 0;
+        int rightPointer = BufferPosition - 1;
+
+        while (true) {
+            int midPointer = (leftPointer + rightPointer) / 2;
+
+            if (leftPointer < rightPointer) {
+                return midPointer;
+            }
+
+            if (HashCodes[midPointer] < hashCode) {
+                leftPointer = midPointer + 1;
+            }
+            else if (HashCodes[midPointer] > hashCode) {
+                rightPointer = midPointer - 1;
+            }
+            else {
+                return midPointer;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Returns the index of <paramref name="value"/> or -1 if not found.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private readonly bool TryFindIndex(T value, out int index) {
+        int hashCode = GetHashCode(value);
+
+        int startIndex = FindStartingIndexFromHashCode(hashCode);
+
+        for (index = startIndex; index < BufferPosition; index++) {
+            int existingHashCode = HashCodes[index];
+            if (existingHashCode != hashCode) {
+                break;
+            }
+            T existingValue = Buffer[index];
+            if (Comparer.Equals(existingValue, value)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Inserts <paramref name="value"/> at <paramref name="index"/>.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void Insert(int index, T value) {
+        ArgumentOutOfRangeException.ThrowIfLessThan(index, 0);
+        ArgumentOutOfRangeException.ThrowIfGreaterThan(index, BufferPosition);
+
+        int hashCode = GetHashCode(value);
+
+        EnsureCapacity(BufferPosition + 1);
+        Buffer[index..BufferPosition].CopyTo(Buffer[(index + 1)..]);
+        HashCodes[index..BufferPosition].CopyTo(HashCodes[(index + 1)..]);
+        Buffer[index] = value;
+        HashCodes[index] = hashCode;
+        BufferPosition++;
+    }
+
+    /// <summary>
+    /// Removes an entry at <paramref name="index"/>.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private void RemoveAt(int index) {
+        ArgumentOutOfRangeException.ThrowIfLessThan(index, 0);
+        ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, BufferPosition);
+
+        Buffer[(index + 1)..].CopyTo(Buffer[index..]);
+        HashCodes[(index + 1)..].CopyTo(HashCodes[index..]);
+        Buffer[BufferPosition] = default!;
+        HashCodes[BufferPosition] = default!;
+        BufferPosition--;
+    }
+
     /// <summary>
     /// Enumerates the elements of a <see cref="ValueList{T}"/>.
     /// </summary>
     public ref struct Enumerator : IEnumerator<T> {
-        private readonly ValueList<T> List;
+        private readonly ValueHashSet<T> HashSet;
         private int Index;
 
         /// <summary>
-        /// Constructs a new enumerator over the elements of <paramref name="list"/>.
+        /// Constructs a new enumerator over the elements of <paramref name="hashSet"/>.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal Enumerator(ValueList<T> list) {
-            List = list;
+        internal Enumerator(ValueHashSet<T> hashSet) {
+            HashSet = hashSet;
             Index = -1;
         }
 
@@ -446,7 +458,7 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
         /// </summary>
         public readonly T Current {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => List[Index];
+            get => HashSet.Buffer[Index];
         }
 
         /// <inheritdoc/>
@@ -469,7 +481,7 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool MoveNext() {
             Index++;
-            return Index < List.Count;
+            return Index < HashSet.Count;
         }
 
         /// <summary>

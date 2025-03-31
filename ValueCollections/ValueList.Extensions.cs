@@ -16,6 +16,14 @@ public static class ValueListExtensions {
     }
 
     /// <summary>
+    /// Copies the contents of <paramref name="span"/> to a new <see cref="ValueList{T}"/>.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ValueList<T> ToValueList<T>(this scoped ReadOnlySpan<T> span) {
+        return new ValueList<T>(span);
+    }
+
+    /// <summary>
     /// Copies the contents of <paramref name="valueList"/> to a new <see cref="ValueList{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

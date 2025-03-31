@@ -12,7 +12,7 @@ public class ValueHashSetTests {
     public void ConstructorsTest() {
         new ValueHashSet<string>().ToList().ShouldBe([], ignoreOrder: true);
         new ValueHashSet<string>(4).Capacity.ShouldBeGreaterThanOrEqualTo(4);
-        ValueHashSet<char>.FromBuffer(stackalloc char[3]).Capacity.ShouldBe(3);
+        ValueHashSet<char>.FromBuffer(stackalloc char[3], stackalloc int[3]).Capacity.ShouldBe(3);
         new ValueHashSet<char>("abc").ToList().ShouldBe(['a', 'b', 'c'], ignoreOrder: true);
     }
     [Fact]

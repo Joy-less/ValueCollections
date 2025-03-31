@@ -94,9 +94,14 @@ public ref partial struct ValueHashSet<T> : IDisposable, ISet<T>, IReadOnlySet<T
     /// <remarks>
     /// The elements in the buffer are ignored. This is useful if you want to use the <see langword="stackalloc"/> keyword.
     /// </remarks>
-    public static ValueHashSet<T> FromBuffer(Span<T> Buffer) {
+    public static ValueHashSet<T> FromBuffer(Span<T> buffer, Span<int> hashCodesBuffer) {
+        if (buffer.Length != hashCodesBuffer.Length) {
+            throw new ArgumentException($"{nameof(buffer)}.Length should equal {nameof(hashCodesBuffer)}.Length");
+        }
+
         return new ValueHashSet<T>() {
-            Buffer = Buffer,
+            Buffer = buffer,
+            HashCodes = hashCodesBuffer,
         };
     }
 

@@ -86,9 +86,9 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     /// <remarks>
     /// The elements in the buffer are ignored. This is useful if you want to use the <see langword="stackalloc"/> keyword.
     /// </remarks>
-    public static ValueList<T> FromBuffer(Span<T> Buffer) {
+    public static ValueList<T> FromBuffer(Span<T> buffer) {
         return new ValueList<T>() {
-            Buffer = Buffer,
+            Buffer = buffer,
         };
     }
 

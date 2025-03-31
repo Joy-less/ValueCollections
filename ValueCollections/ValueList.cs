@@ -198,7 +198,7 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void AddRange(scoped ReadOnlySpan<T> values) {
         EnsureCapacity(BufferPosition + values.Length);
-        values.CopyTo(Buffer);
+        values.CopyTo(Buffer[BufferPosition..]);
         BufferPosition += values.Length;
     }
 

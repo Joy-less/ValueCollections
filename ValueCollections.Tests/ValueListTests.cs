@@ -60,6 +60,7 @@ public class ValueListTests {
         List<int> list = [1, 2, 3];
         list.ToValueList().Select(num => num + 1).ToList().ShouldBe([2, 3, 4]);
         list.ToValueList().Select((num, index) => num + index).ToList().ShouldBe([1, 3, 5]);
+        list.ToValueList().Select((num, index) => num / 2.0).ToList().ShouldBe([0.5, 1.0, 1.5]);
     }
     [Fact]
     public void Except() {

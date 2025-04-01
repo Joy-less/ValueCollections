@@ -9,27 +9,27 @@ partial struct ValueHashSet<T> {
         return this.ToValueList().Where(predicate);
     }
 
-    /// <inheritdoc cref="ValueList{T}.Select(Func{T, T})"/>
+    /// <inheritdoc cref="ValueList{T}.Select{TResult}(Func{T, TResult})"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly ValueList<T> Select(Func<T, T> selector) {
+    public readonly ValueList<TResult> Select<TResult>(Func<T, TResult> selector) {
         return this.ToValueList().Select(selector);
     }
 
-    /// <inheritdoc cref="ValueList{T}.Select(Func{T, int, T})"/>
+    /// <inheritdoc cref="ValueList{T}.Select{TResult}(Func{T, int, TResult})"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly ValueList<T> Select(Func<T, int, T> selector) {
+    public readonly ValueList<TResult> Select<TResult>(Func<T, int, TResult> selector) {
         return this.ToValueList().Select(selector);
     }
 
-    /// <inheritdoc cref="ValueList{T}.SelectMany(Func{T, IEnumerable{T}})"/>
+    /// <inheritdoc cref="ValueList{T}.SelectMany{TResult}(Func{T, IEnumerable{TResult}})"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly ValueList<T> SelectMany(Func<T, IEnumerable<T>> selector) {
+    public readonly ValueList<TResult> SelectMany<TResult>(Func<T, IEnumerable<TResult>> selector) {
         return this.ToValueList().SelectMany(selector);
     }
 
-    /// <inheritdoc cref="ValueList{T}.SelectMany(Func{T, int, IEnumerable{T}})"/>
+    /// <inheritdoc cref="ValueList{T}.SelectMany{TResult}(Func{T, int, IEnumerable{TResult}})"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly ValueList<T> SelectMany(Func<T, int, IEnumerable<T>> selector) {
+    public readonly ValueList<TResult> SelectMany<TResult>(Func<T, int, IEnumerable<TResult>> selector) {
         return this.ToValueList().SelectMany(selector);
     }
 

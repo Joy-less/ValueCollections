@@ -22,8 +22,8 @@ partial struct ValueList<T> {
     /// Returns every element mapped using <paramref name="selector"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly ValueList<T> Select(Func<T, T> selector) {
-        ValueList<T> result = new(Count);
+    public readonly ValueList<TResult> Select<TResult>(Func<T, TResult> selector) {
+        ValueList<TResult> result = new(Count);
         for (int index = 0; index < Count; index++) {
             T element = Buffer[index];
             result.Add(selector(element));
@@ -35,8 +35,8 @@ partial struct ValueList<T> {
     /// Returns every element mapped using <paramref name="selector"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly ValueList<T> Select(Func<T, int, T> selector) {
-        ValueList<T> result = new(Count);
+    public readonly ValueList<TResult> Select<TResult>(Func<T, int, TResult> selector) {
+        ValueList<TResult> result = new(Count);
         for (int index = 0; index < Count; index++) {
             T element = Buffer[index];
             result.Add(selector(element, index));
@@ -48,8 +48,8 @@ partial struct ValueList<T> {
     /// Returns every element mapped to multiple elements using <paramref name="selector"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly ValueList<T> SelectMany(Func<T, IEnumerable<T>> selector) {
-        ValueList<T> result = new();
+    public readonly ValueList<TResult> SelectMany<TResult>(Func<T, IEnumerable<TResult>> selector) {
+        ValueList<TResult> result = new();
         for (int index = 0; index < Count; index++) {
             T element = Buffer[index];
             result.AddRange(selector(element));
@@ -61,8 +61,8 @@ partial struct ValueList<T> {
     /// Returns every element mapped to multiple elements using <paramref name="selector"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly ValueList<T> SelectMany(Func<T, int, IEnumerable<T>> selector) {
-        ValueList<T> result = new();
+    public readonly ValueList<TResult> SelectMany<TResult>(Func<T, int, IEnumerable<TResult>> selector) {
+        ValueList<TResult> result = new();
         for (int index = 0; index < Count; index++) {
             T element = Buffer[index];
             result.AddRange(selector(element, index));

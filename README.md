@@ -39,23 +39,32 @@ Console.WriteLine(string.Join(", ", numbers.ToArray())); // 1, 2, 3, 4, 5, 6, 7
 
 ## Benchmarks
 
-| Method                 | Mean         | Error     | StdDev    | Gen0    | Allocated |
-|----------------------- |-------------:|----------:|----------:|--------:|----------:|
-| SmallListOfStruct      |     16.85 ns |  0.122 ns |  0.108 ns |  0.0255 |      80 B |
-| SmallValueListOfStruct |     14.72 ns |  0.072 ns |  0.064 ns |       - |         - |
-| SmallListOfClass       |     24.52 ns |  0.152 ns |  0.135 ns |  0.0306 |      96 B |
-| SmallValueListOfClass  |     18.70 ns |  0.070 ns |  0.062 ns |       - |         - |
-| LargeListOfStruct      | 20,468.89 ns | 83.070 ns | 77.704 ns | 41.6565 |  131400 B |
-| LargeValueListOfStruct |  9,432.68 ns | 33.047 ns | 27.596 ns |       - |         - |
+| Method                 | Mean         | Error      | StdDev     | Gen0    | Allocated |
+|----------------------- |-------------:|-----------:|-----------:|--------:|----------:|
+| SmallListOfStruct      |     16.96 ns |   0.139 ns |   0.130 ns |  0.0255 |      80 B |
+| SmallValueListOfStruct |     17.28 ns |   0.064 ns |   0.060 ns |       - |         - |
+| SmallListOfClass       |     24.76 ns |   0.374 ns |   0.350 ns |  0.0306 |      96 B |
+| SmallValueListOfClass  |     21.49 ns |   0.193 ns |   0.180 ns |       - |         - |
+| LargeListOfStruct      | 21,227.63 ns | 170.160 ns | 159.168 ns | 41.6565 |  131400 B |
+| LargeValueListOfStruct |  9,559.52 ns | 126.272 ns | 118.115 ns |       - |       2 B |
 
-| Method                    | Mean          | Error        | StdDev       | Gen0    | Gen1    | Gen2    | Allocated |
-|-------------------------- |--------------:|-------------:|-------------:|--------:|--------:|--------:|----------:|
-| SmallHashSetOfStruct      |      94.20 ns |     0.662 ns |     0.620 ns |  0.1070 |       - |       - |     336 B |
-| SmallValueHashSetOfStruct |     137.42 ns |     0.616 ns |     0.577 ns |       - |       - |       - |         - |
-| SmallHashSetOfClass       |     130.56 ns |     0.762 ns |     0.675 ns |  0.1173 |       - |       - |     368 B |
-| SmallValueHashSetOfClass  |     163.45 ns |     0.554 ns |     0.518 ns |       - |       - |       - |         - |
-| LargeHashSetOfStruct      | 186,989.50 ns | 1,425.253 ns | 1,263.450 ns | 95.2148 | 95.2148 | 95.2148 |  538656 B |
-| LargeValueHashSetOfStruct | 227,245.29 ns |   603.642 ns |   564.647 ns |       - |       - |       - |         - |
+| Method                    | Mean          | Error        | StdDev       | Gen0     | Gen1     | Gen2    | Allocated |
+|-------------------------- |--------------:|-------------:|-------------:|---------:|---------:|--------:|----------:|
+| SmallHashSetOfStruct      |      93.25 ns |     0.644 ns |     0.538 ns |   0.1070 |        - |       - |     336 B |
+| SmallValueHashSetOfStruct |     140.43 ns |     1.252 ns |     1.171 ns |        - |        - |       - |         - |
+| SmallHashSetOfClass       |     134.52 ns |     1.164 ns |     1.089 ns |   0.1173 |        - |       - |     368 B |
+| SmallValueHashSetOfClass  |     192.37 ns |     0.353 ns |     0.330 ns |        - |        - |       - |         - |
+| LargeHashSetOfStruct      | 229,623.24 ns | 1,678.047 ns | 1,487.545 ns | 460.2051 | 460.2051 | 76.9043 |  538650 B |
+| LargeValueHashSetOfStruct | 228,776.38 ns |   709.610 ns |   629.051 ns |        - |        - |       - |      32 B |
+
+| Method                        | Mean         | Error       | StdDev      | Gen0     | Gen1     | Gen2     | Allocated |
+|------------------------------ |-------------:|------------:|------------:|---------:|---------:|---------:|----------:|
+| SmallDictionaryOfStructs      |     100.6 ns |     0.60 ns |     0.56 ns |   0.1223 |        - |        - |     384 B |
+| SmallValueDictionaryOfStructs |     124.9 ns |     0.68 ns |     0.64 ns |        - |        - |        - |         - |
+| SmallDictionaryOfClasses      |     154.5 ns |     1.68 ns |     1.31 ns |   0.1478 |        - |        - |     464 B |
+| SmallValueDictionaryOfClasses |     216.0 ns |     0.69 ns |     0.61 ns |        - |        - |        - |         - |
+| LargeDictionaryOfStructs      | 217,012.6 ns |   496.10 ns |   439.78 ns | 367.6758 | 367.6758 | 105.2246 |  673203 B |
+| LargeValueDictionaryOfStructs | 286,426.3 ns | 1,705.62 ns | 1,511.99 ns |        - |        - |        - |     193 B |
 
 ## Gotchas
 

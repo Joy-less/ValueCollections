@@ -6,6 +6,7 @@ namespace ValueCollections.Benchmarks;
 public class Program {
     public static void Main() {
         BenchmarkSwitcher.FromAssemblies(AppDomain.CurrentDomain.GetAssemblies()).Run();
+        Console.ReadLine();
     }
 }
 

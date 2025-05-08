@@ -37,6 +37,19 @@ for (int n = 3; n <= 7; n++) {
 Console.WriteLine(string.Join(", ", numbers.ToArray())); // 1, 2, 3, 4, 5, 6, 7
 ```
 
+## ValueDictionary
+
+An implementation of `IDctionary<TKey, TValue>` using spans and array pools.
+
+```cs
+using ValueDictionary<string, string> strings = [];
+
+strings.Add("food", "pizza");
+strings.Add("drink", "cola");
+
+Console.WriteLine(string.Join(", ", strings.ToArray())); // [food, pizza], [drink, cola]
+```
+
 ## Benchmarks
 
 | Method                 | Mean         | Error      | StdDev     | Gen0    | Allocated |

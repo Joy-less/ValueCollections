@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Buffers;
 using System.Runtime.CompilerServices;
 
@@ -59,7 +59,7 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     /// Constructs a value list with the given elements.
     /// </summary>
 #if NET9_0_OR_GREATER
-    [OverloadResolutionPriority(-3)]
+    [OverloadResolutionPriority(-5)]
 #endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ValueList(IEnumerable<T> initialElements) {
@@ -68,6 +68,9 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     /// <summary>
     /// Constructs a value list with the given elements.
     /// </summary>
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-3)]
+#endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ValueList(scoped ValueList<T> initialElements) {
         AddRange(initialElements.AsSpan());
@@ -75,6 +78,9 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     /// <summary>
     /// Constructs a value list with the given elements.
     /// </summary>
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-4)]
+#endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ValueList(scoped ValueHashSet<T> initialElements) {
         AddRange(initialElements.AsSpan());

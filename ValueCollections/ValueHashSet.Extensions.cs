@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Runtime.CompilerServices;
 
 namespace ValueCollections;
@@ -40,6 +40,16 @@ public static class ValueSetExtensions {
     }
 
     /// <summary>
+    /// Copies the contents of <paramref name="valueDictionary"/> to a new <see cref="ValueHashSet{T}"/>.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ValueHashSet<KeyValuePair<TKey, TValue>> ToValueHashSet<TKey, TValue>(this scoped ValueDictionary<TKey, TValue> valueDictionary) {
+        ValueHashSet<KeyValuePair<TKey, TValue>> valueHashSet = new();
+        valueHashSet.AddRange(valueDictionary.AsSpan());
+        return valueHashSet;
+    }
+
+    /// <summary>
     /// Copies the contents of <paramref name="enumerable"/> matching <paramref name="predicate"/> to a new <see cref="ValueList{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -59,7 +69,7 @@ public static class ValueSetExtensions {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ValueHashSet<T> ToValueHashSetOfType<T>(this IEnumerable enumerable) {
         ValueHashSet<T> result = new();
-        foreach (T element in enumerable) {
+        foreach (object? element in enumerable) {
             if (element is T elementOfT) {
                 result.Add(elementOfT);
             }
@@ -101,9 +111,9 @@ public static class ValueSetExtensions {
     /// Copies the contents of <paramref name="valueHashSet"/> to a new <see cref="Dictionary{TKey, TValue}"/> using <paramref name="keySelector"/> and <paramref name="valueSelector"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Dictionary<TKey, TValue> ToDictionary<T, TKey, TValue>(this scoped ValueHashSet<T> valueHashSet, Func<T, TKey> keySelector, Func<T, TValue> valueSelector) where TKey : notnull {
+    public static Dictionary<TKey, TValue> ToDictionary<TSource, TKey, TValue>(this scoped ValueHashSet<TSource> valueHashSet, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector) where TKey : notnull {
         Dictionary<TKey, TValue> dictionary = new(valueHashSet.Count);
-        foreach (T element in valueHashSet) {
+        foreach (TSource element in valueHashSet) {
             TKey key = keySelector(element);
             TValue value = valueSelector(element);
             dictionary[key] = value;
@@ -115,9 +125,9 @@ public static class ValueSetExtensions {
     /// Copies the contents of <paramref name="valueHashSet"/> to a new <see cref="Dictionary{TKey, TValue}"/> using <paramref name="keyValuePairSelector"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Dictionary<TKey, TValue> ToDictionary<T, TKey, TValue>(this scoped ValueHashSet<T> valueHashSet, Func<T, KeyValuePair<TKey, TValue>> keyValuePairSelector) where TKey : notnull {
+    public static Dictionary<TKey, TValue> ToDictionary<TSource, TKey, TValue>(this scoped ValueHashSet<TSource> valueHashSet, Func<TSource, KeyValuePair<TKey, TValue>> keyValuePairSelector) where TKey : notnull {
         Dictionary<TKey, TValue> dictionary = new(valueHashSet.Count);
-        foreach (T element in valueHashSet) {
+        foreach (TSource element in valueHashSet) {
             KeyValuePair<TKey, TValue> keyValuePair = keyValuePairSelector(element);
             dictionary[keyValuePair.Key] = keyValuePair.Value;
         }

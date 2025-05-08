@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Buffers;
 using System.Runtime.CompilerServices;
 
@@ -67,7 +67,7 @@ public ref partial struct ValueHashSet<T> : IDisposable, ISet<T>, IReadOnlySet<T
     /// Constructs a value hash set with the given elements.
     /// </summary>
 #if NET9_0_OR_GREATER
-    [OverloadResolutionPriority(-3)]
+    [OverloadResolutionPriority(-5)]
 #endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ValueHashSet(IEnumerable<T> initialElements) {
@@ -76,6 +76,9 @@ public ref partial struct ValueHashSet<T> : IDisposable, ISet<T>, IReadOnlySet<T
     /// <summary>
     /// Constructs a value hash set with the given elements.
     /// </summary>
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-3)]
+#endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ValueHashSet(scoped ValueList<T> initialElements) {
         AddRange(initialElements.AsSpan());
@@ -83,6 +86,9 @@ public ref partial struct ValueHashSet<T> : IDisposable, ISet<T>, IReadOnlySet<T
     /// <summary>
     /// Constructs a value hash set with the given elements.
     /// </summary>
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-4)]
+#endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ValueHashSet(scoped ValueHashSet<T> initialElements) {
         AddRange(initialElements.AsSpan());
@@ -94,6 +100,7 @@ public ref partial struct ValueHashSet<T> : IDisposable, ISet<T>, IReadOnlySet<T
     /// <remarks>
     /// The elements in the buffer are ignored. This is useful if you want to use the <see langword="stackalloc"/> keyword.
     /// </remarks>
+    /// <exception cref="ArgumentException"/>
     public static ValueHashSet<T> FromBuffer(Span<T> buffer, Span<int> hashCodesBuffer) {
         if (buffer.Length != hashCodesBuffer.Length) {
             throw new ArgumentException($"{nameof(buffer)}.Length should equal {nameof(hashCodesBuffer)}.Length");
@@ -106,7 +113,7 @@ public ref partial struct ValueHashSet<T> : IDisposable, ISet<T>, IReadOnlySet<T
     }
 
     /// <summary>
-    /// Disposes the instance and returns the rented buffer to the array pool if needed.
+    /// Disposes the instance and returns the rented buffers to the array pool if needed.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Dispose() {
@@ -172,7 +179,7 @@ public ref partial struct ValueHashSet<T> : IDisposable, ISet<T>, IReadOnlySet<T
     /// </summary>
     /// <remarks>
     /// Do not change the capacity of the hash set while the span is in use, because the span will continue pointing to the old buffer.<br/>
-    /// The span is read-only to ensures the elements are synchronized with the hash codes.
+    /// The span is read-only to ensure the elements are synchronized with the hash codes.
     /// </remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly ReadOnlySpan<T> AsSpan() => Buffer[..BufferPosition];
@@ -185,10 +192,8 @@ public ref partial struct ValueHashSet<T> : IDisposable, ISet<T>, IReadOnlySet<T
         if (TryFindIndex(value, out int index)) {
             return false;
         }
-        else {
-            Insert(index, value);
-            return true;
-        }
+        Insert(index, value);
+        return true;
     }
 
     /// <inheritdoc/>
@@ -241,7 +246,7 @@ public ref partial struct ValueHashSet<T> : IDisposable, ISet<T>, IReadOnlySet<T
     }
 
     /// <summary>
-    /// Ensure's the list's capacity is at least <paramref name="newCapacity"/>, renting a larger buffer if not.<br/>
+    /// Ensure's the hash set's capacity is at least <paramref name="newCapacity"/>, renting a larger buffer if not.<br/>
     /// This is useful when adding a predetermined number of items to the hash set.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -261,7 +266,7 @@ public ref partial struct ValueHashSet<T> : IDisposable, ISet<T>, IReadOnlySet<T
     }
 
     /// <summary>
-    /// Ensures the list's capacity is equal to its count, renting a smaller buffer if not.<br/>
+    /// Ensures the hash set's capacity is equal to its count, renting a smaller buffer if not.<br/>
     /// This is useful for reducing memory overhead when it is known that no more elements will be added to the hash set.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -289,9 +294,7 @@ public ref partial struct ValueHashSet<T> : IDisposable, ISet<T>, IReadOnlySet<T
             RemoveAt(index);
             return true;
         }
-        else {
-            return false;
-        }
+        return false;
     }
 
     /// <summary>
@@ -602,7 +605,7 @@ public ref partial struct ValueHashSet<T> : IDisposable, ISet<T>, IReadOnlySet<T
     /// Calculates a hash code for <paramref name="value"/> using <see cref="Comparer"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private readonly int GetHashCode(T value) {
+    private readonly int GetHashCode(T? value) {
         return value is null ? 0 : Comparer.GetHashCode(value);
     }
 

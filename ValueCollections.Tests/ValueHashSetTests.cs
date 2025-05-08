@@ -1,4 +1,4 @@
-﻿namespace ValueCollections.Tests;
+namespace ValueCollections.Tests;
 
 public class ValueHashSetTests {
     [Fact]

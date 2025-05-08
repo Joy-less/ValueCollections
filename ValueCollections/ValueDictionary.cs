@@ -505,8 +505,8 @@ public ref partial struct ValueDictionary<TKey, TValue> : IDisposable, IDictiona
     /// <summary>
     /// Returns a hash set of keys in the dictionary.
     /// </summary>
-    public readonly ValueHashSet<TKey> Keys {
-        get => throw new NotImplementedException(); // TODO
+    public readonly ValueList<TKey> Keys {
+        get => Select(entry => entry.Key);
     }
 
     /// <inheritdoc/>
@@ -522,8 +522,8 @@ public ref partial struct ValueDictionary<TKey, TValue> : IDisposable, IDictiona
     /// <summary>
     /// Returns a hash set of keys in the dictionary.
     /// </summary>
-    public readonly ValueHashSet<TValue> Values {
-        get => throw new NotImplementedException(); // TODO
+    public readonly ValueList<TValue> Values {
+        get => Select(entry => entry.Value);
     }
 
     /// <inheritdoc/>

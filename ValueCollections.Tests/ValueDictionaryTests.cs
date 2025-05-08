@@ -30,8 +30,6 @@ public class ValueDictionaryTests {
     [Fact]
     public void Where() {
         List<KeyValuePair<int, char>> list = [new(1, 'a'), new(2, 'b'), new(3, 'c')];
-        list.ToValueDictionary()
-            .ToDictionary() // TODO: remove
-        .Where(entry => entry.Key % 2 == 0).ToList().ShouldBe([new(2, 'b')]);
+        list.ToValueDictionary().Where(entry => entry.Key % 2 == 0).ToList().ShouldBe([new(2, 'b')]);
     }
 }

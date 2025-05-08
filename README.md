@@ -39,7 +39,7 @@ Console.WriteLine(string.Join(", ", numbers.ToArray())); // 1, 2, 3, 4, 5, 6, 7
 
 ## ValueDictionary
 
-An implementation of `IDctionary<TKey, TValue>` using spans and array pools.
+An implementation of `IDictionary<TKey, TValue>` using spans and array pools.
 
 ```cs
 using ValueDictionary<string, string> strings = [];

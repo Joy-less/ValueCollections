@@ -1,4 +1,4 @@
-﻿using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 
 namespace ValueCollections.Benchmarks;
@@ -70,7 +70,7 @@ public class HashSetBenchmarks {
         _ = hashSet.Contains("3");
     }
     [Benchmark]
-    public void SmallValueListOfClass() {
+    public void SmallValueHashSetOfClass() {
         using ValueHashSet<string> hashSet = ["1", "2", "3", "4", "5"];
         _ = hashSet.Contains("3");
     }
@@ -90,5 +90,47 @@ public class HashSetBenchmarks {
             hashSet.Add(i);
         }
         _ = hashSet.Count;
+    }
+}
+
+[MemoryDiagnoser]
+public class DictionaryBenchmarks {
+    [Benchmark]
+    public void SmallDictionaryOfStructs() {
+        Dictionary<int, int> dictionary = new() { [1] = -1, [2] = -2, [3] = -3, [4] = -4, [5] = -5 };
+        _ = dictionary.ContainsKey(3);
+    }
+    [Benchmark]
+    public void SmallValueDictionaryOfStructs() {
+        using ValueDictionary<int, int> dictionary = new() { [1] = -1, [2] = -2, [3] = -3, [4] = -4, [5] = -5 };
+        _ = dictionary.ContainsKey(3);
+    }
+
+    [Benchmark]
+    public void SmallDictionaryOfClasses() {
+        Dictionary<string, string> dictionary = new() { ["1"] = "-1", ["2"] = "-2", ["3"] = "-3", ["4"] = "-4", ["5"] = "-5" };
+        _ = dictionary.ContainsKey("3");
+    }
+    [Benchmark]
+    public void SmallValueDictionaryOfClasses() {
+        using ValueDictionary<string, string> dictionary = new() { ["1"] = "-1", ["2"] = "-2", ["3"] = "-3", ["4"] = "-4", ["5"] = "-5" };
+        _ = dictionary.ContainsKey("3");
+    }
+
+    [Benchmark]
+    public void LargeDictionaryOfStructs() {
+        Dictionary<int, int> dictionary = [];
+        for (int i = 0; i < 10_000; i++) {
+            dictionary.Add(i, -i);
+        }
+        _ = dictionary.Count;
+    }
+    [Benchmark]
+    public void LargeValueDictionaryOfStructs() {
+        using ValueDictionary<int, int> dictionary = [];
+        for (int i = 0; i < 10_000; i++) {
+            dictionary.Add(i, -i);
+        }
+        _ = dictionary.Count;
     }
 }

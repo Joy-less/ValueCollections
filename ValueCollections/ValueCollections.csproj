@@ -25,7 +25,7 @@
     <PackageProjectUrl>https://github.com/Joy-less/ValueCollections</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/Joy-less/ValueCollections</RepositoryUrl>
-    <PackageTags>collection, list, value list, ref struct, span, array pool</PackageTags>
+    <PackageTags>collection, list, value list, ref struct, span, array pool, hash set, dictionary</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
   </PropertyGroup>

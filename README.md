@@ -53,7 +53,7 @@ Console.WriteLine(string.Join(", ", numbers.ToArray())); // 1, 2, 3, 4, 5, 6, 7
 | SmallHashSetOfStruct      |      94.20 ns |     0.662 ns |     0.620 ns |  0.1070 |       - |       - |     336 B |
 | SmallValueHashSetOfStruct |     137.42 ns |     0.616 ns |     0.577 ns |       - |       - |       - |         - |
 | SmallHashSetOfClass       |     130.56 ns |     0.762 ns |     0.675 ns |  0.1173 |       - |       - |     368 B |
-| SmallValueListOfClass     |     163.45 ns |     0.554 ns |     0.518 ns |       - |       - |       - |         - |
+| SmallValueHashSetOfClass  |     163.45 ns |     0.554 ns |     0.518 ns |       - |       - |       - |         - |
 | LargeHashSetOfStruct      | 186,989.50 ns | 1,425.253 ns | 1,263.450 ns | 95.2148 | 95.2148 | 95.2148 |  538656 B |
 | LargeValueHashSetOfStruct | 227,245.29 ns |   603.642 ns |   564.647 ns |       - |       - |       - |         - |
 

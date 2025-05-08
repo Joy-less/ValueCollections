@@ -59,7 +59,7 @@ public static class ValueDictionaryExtensions {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ValueDictionary<TKey, TValue> ToValueDictionaryOfType<TKey, TValue>(this IEnumerable enumerable) {
         ValueDictionary<TKey, TValue> result = new();
-        foreach (object element in enumerable) {
+        foreach (object? element in enumerable) {
             if (element is KeyValuePair<TKey, TValue> entry) {
                 result[entry.Key] = entry.Value;
             }

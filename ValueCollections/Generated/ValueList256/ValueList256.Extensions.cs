@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Runtime.CompilerServices;
 
-namespace ValueCollections;
+namespace ValueCollections.FixedSize;
 
 /// <summary>
 /// Extension methods for <see cref="ValueList256{T}"/>.

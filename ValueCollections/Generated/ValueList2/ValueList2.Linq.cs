@@ -1,6 +1,6 @@
 using System.Runtime.CompilerServices;
 
-namespace ValueCollections;
+namespace ValueCollections.FixedSize;
 
 partial struct ValueList2<T> {
     /// <summary>

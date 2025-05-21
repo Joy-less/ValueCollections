@@ -1,3 +1,5 @@
+using ValueCollections.FixedSize;
+
 namespace ValueCollections.Tests;
 
 public class ValueList128Tests {

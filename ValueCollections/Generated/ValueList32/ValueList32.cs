@@ -2,7 +2,7 @@ using System.Collections;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace ValueCollections;
+namespace ValueCollections.FixedSize;
 
 /// <summary>
 /// A version of <see cref="List{T}"/> which has a fixed capacity of 128 elements.

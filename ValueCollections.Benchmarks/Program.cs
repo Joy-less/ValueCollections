@@ -1,5 +1,6 @@
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
+using ValueCollections.FixedSize;
 
 namespace ValueCollections.Benchmarks;
 
@@ -13,125 +14,143 @@ public class Program {
 [MemoryDiagnoser]
 public class ListBenchmarks {
     [Benchmark]
-    public void SmallListOfStruct() {
+    public int SmallListOfStruct() {
         List<int> list = [1, 2, 3, 4, 5];
-        _ = list.IndexOf(3);
+        return list.IndexOf(3);
     }
     [Benchmark]
-    public void SmallValueListOfStruct() {
+    public int SmallValueListOfStruct() {
         using ValueList<int> list = [1, 2, 3, 4, 5];
-        _ = list.IndexOf(3);
+        return list.IndexOf(3);
+    }
+    [Benchmark]
+    public int SmallValueList128OfStruct() {
+        ValueList128<int> list = [1, 2, 3, 4, 5];
+        return list.IndexOf(3);
     }
 
     [Benchmark]
-    public void SmallListOfClass() {
+    public int SmallListOfClass() {
         List<string> list = ["1", "2", "3", "4", "5"];
-        _ = list.IndexOf("3");
+        return list.IndexOf("3");
     }
     [Benchmark]
-    public void SmallValueListOfClass() {
+    public int SmallValueListOfClass() {
         using ValueList<string> list = ["1", "2", "3", "4", "5"];
-        _ = list.IndexOf("3");
+        return list.IndexOf("3");
+    }
+    [Benchmark]
+    public int SmallValueList128OfClass() {
+        ValueList128<string> list = ["1", "2", "3", "4", "5"];
+        return list.IndexOf("3");
     }
 
     [Benchmark]
-    public void LargeListOfStruct() {
+    public int LargeListOfStruct() {
         List<int> list = [];
         for (int i = 0; i < 10_000; i++) {
             list.Add(i);
         }
-        _ = list.Count;
+        return list.Count;
     }
     [Benchmark]
-    public void LargeValueListOfStruct() {
+    public int LargeValueListOfStruct() {
         using ValueList<int> list = [];
         for (int i = 0; i < 10_000; i++) {
             list.Add(i);
         }
-        _ = list.Count;
+        return list.Count;
+    }
+    [Benchmark]
+    public int LargeValueList128OfStruct() {
+        ValueList128<int> list = [];
+        for (int i = 0; i < 10_000; i++) {
+            list.Add(i);
+        }
+        return list.Count;
     }
 }
 
 [MemoryDiagnoser]
 public class HashSetBenchmarks {
     [Benchmark]
-    public void SmallHashSetOfStruct() {
+    public bool SmallHashSetOfStruct() {
         HashSet<int> hashSet = [1, 2, 3, 4, 5];
-        _ = hashSet.Contains(3);
+        return hashSet.Contains(3);
     }
     [Benchmark]
-    public void SmallValueHashSetOfStruct() {
+    public bool SmallValueHashSetOfStruct() {
         using ValueHashSet<int> hashSet = [1, 2, 3, 4, 5];
-        _ = hashSet.Contains(3);
+        return hashSet.Contains(3);
     }
 
     [Benchmark]
-    public void SmallHashSetOfClass() {
+    public bool SmallHashSetOfClass() {
         HashSet<string> hashSet = ["1", "2", "3", "4", "5"];
-        _ = hashSet.Contains("3");
+        return hashSet.Contains("3");
     }
     [Benchmark]
-    public void SmallValueHashSetOfClass() {
+    public bool SmallValueHashSetOfClass() {
         using ValueHashSet<string> hashSet = ["1", "2", "3", "4", "5"];
-        _ = hashSet.Contains("3");
+        return hashSet.Contains("3");
     }
 
     [Benchmark]
-    public void LargeHashSetOfStruct() {
+    public int LargeHashSetOfStruct() {
         HashSet<int> hashSet = [];
         for (int i = 0; i < 10_000; i++) {
             hashSet.Add(i);
         }
-        _ = hashSet.Count;
+        return hashSet.Count;
     }
     [Benchmark]
-    public void LargeValueHashSetOfStruct() {
+    public int LargeValueHashSetOfStruct() {
         using ValueHashSet<int> hashSet = [];
         for (int i = 0; i < 10_000; i++) {
             hashSet.Add(i);
         }
-        _ = hashSet.Count;
+        return hashSet.Count;
     }
 }
 
 [MemoryDiagnoser]
 public class DictionaryBenchmarks {
     [Benchmark]
-    public void SmallDictionaryOfStructs() {
+    public bool SmallDictionaryOfStructs() {
         Dictionary<int, int> dictionary = new() { [1] = -1, [2] = -2, [3] = -3, [4] = -4, [5] = -5 };
-        _ = dictionary.ContainsKey(3);
+        return dictionary.ContainsKey(3);
     }
     [Benchmark]
-    public void SmallValueDictionaryOfStructs() {
+    public bool SmallValueDictionaryOfStructs() {
         using ValueDictionary<int, int> dictionary = new() { [1] = -1, [2] = -2, [3] = -3, [4] = -4, [5] = -5 };
-        _ = dictionary.ContainsKey(3);
+        return dictionary.ContainsKey(3);
     }
 
     [Benchmark]
-    public void SmallDictionaryOfClasses() {
+    public bool SmallDictionaryOfClasses() {
         Dictionary<string, string> dictionary = new() { ["1"] = "-1", ["2"] = "-2", ["3"] = "-3", ["4"] = "-4", ["5"] = "-5" };
-        _ = dictionary.ContainsKey("3");
+        return dictionary.ContainsKey("3");
     }
     [Benchmark]
-    public void SmallValueDictionaryOfClasses() {
+    public bool SmallValueDictionaryOfClasses() {
         using ValueDictionary<string, string> dictionary = new() { ["1"] = "-1", ["2"] = "-2", ["3"] = "-3", ["4"] = "-4", ["5"] = "-5" };
-        _ = dictionary.ContainsKey("3");
+        return dictionary.ContainsKey("3");
     }
 
     [Benchmark]
-    public void LargeDictionaryOfStructs() {
+    public int LargeDictionaryOfStructs() {
         Dictionary<int, int> dictionary = [];
         for (int i = 0; i < 10_000; i++) {
             dictionary.Add(i, -i);
         }
-        _ = dictionary.Count;
+        return dictionary.Count;
     }
     [Benchmark]
-    public void LargeValueDictionaryOfStructs() {
+    public int LargeValueDictionaryOfStructs() {
         using ValueDictionary<int, int> dictionary = [];
         for (int i = 0; i < 10_000; i++) {
             dictionary.Add(i, -i);
         }
-        _ = dictionary.Count;
+        return dictionary.Count;
     }
 }

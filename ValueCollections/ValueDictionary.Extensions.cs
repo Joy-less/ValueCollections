@@ -40,6 +40,14 @@ public static class ValueDictionaryExtensions {
     }
 
     /// <summary>
+    /// Copies the contents of <paramref name="valueList"/> to a new <see cref="ValueDictionary{TKey, TValue}"/>.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ValueDictionary<TKey, TValue> ToValueDictionary<TKey, TValue>(this ValueList128<KeyValuePair<TKey, TValue>> valueList) {
+        return new ValueDictionary<TKey, TValue>(valueList);
+    }
+
+    /// <summary>
     /// Copies the contents of <paramref name="enumerable"/> matching <paramref name="predicate"/> to a new <see cref="ValueList{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

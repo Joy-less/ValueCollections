@@ -95,24 +95,24 @@ public ref partial struct ValueDictionary<TKey, TValue> : IDisposable, IDictiona
         AddRange(initialEntries.AsSpan());
     }
     /// <summary>
-    /// Constructs a value dictionary with the given entries.
+    /// Constructs a value dictionary with the given elements.
     /// </summary>
 #if NET9_0_OR_GREATER
     [OverloadResolutionPriority(-5)]
 #endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueDictionary(scoped ValueHashSet<KeyValuePair<TKey, TValue>> initialEntries) {
-        AddRange(initialEntries.AsSpan());
+    public ValueDictionary(ValueList128<KeyValuePair<TKey, TValue>> initialElements) {
+        AddRange(initialElements.AsSpan());
     }
     /// <summary>
-    /// Constructs a value dictionary with the given elements.
+    /// Constructs a value dictionary with the given entries.
     /// </summary>
 #if NET9_0_OR_GREATER
     [OverloadResolutionPriority(-6)]
 #endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueDictionary(ValueList128<KeyValuePair<TKey, TValue>> initialElements) {
-        AddRange(initialElements.AsSpan());
+    public ValueDictionary(scoped ValueHashSet<KeyValuePair<TKey, TValue>> initialEntries) {
+        AddRange(initialEntries.AsSpan());
     }
 
     /// <summary>

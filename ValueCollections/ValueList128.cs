@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Buffers;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -133,8 +132,11 @@ public partial struct ValueList128<T> : IList<T>, IReadOnlyList<T> {
     /// <summary>
     /// Gets a span over the elements in the list.
     /// </summary>
+    /// <remarks>
+    /// <b>WARNING:</b> The returned span is a copy, so modifying it will not affect the original list!
+    /// </remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly ReadOnlySpan<T> AsSpan() => Buffer.AsSpan()[..BufferPosition];
+    public readonly Span<T> AsSpan() => Buffer.AsSpan()[..BufferPosition];
 
     /// <summary>
     /// Adds an element to the list.

@@ -40,6 +40,14 @@ public static class ValueSetExtensions {
     }
 
     /// <summary>
+    /// Copies the contents of <paramref name="valueList"/> to a new <see cref="ValueHashSet{T}"/>.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static ValueHashSet<T> ToValueHashSet<T>(this ValueList128<T> valueList) {
+        return new ValueHashSet<T>(valueList);
+    }
+
+    /// <summary>
     /// Copies the contents of <paramref name="valueDictionary"/> to a new <see cref="ValueHashSet{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

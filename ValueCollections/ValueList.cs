@@ -82,7 +82,7 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     [OverloadResolutionPriority(-4)]
 #endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueList(scoped ValueHashSet<T> initialElements) {
+    public ValueList(ValueList128<T> initialElements) {
         AddRange(initialElements.AsSpan());
     }
     /// <summary>
@@ -92,7 +92,7 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     [OverloadResolutionPriority(-5)]
 #endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueList(ValueList128<T> initialElements) {
+    public ValueList(scoped ValueHashSet<T> initialElements) {
         AddRange(initialElements.AsSpan());
     }
 

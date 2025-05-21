@@ -8,6 +8,13 @@ namespace ValueCollections;
 /// </summary>
 public static class ValueList128Extensions {
     /// <summary>
+    /// Gets a span over the elements in the list.
+    /// </summary>
+    public static Span<T> AsSpan<T>(this ref ValueList128<T> valueList) {
+        return valueList.Buffer[..valueList.BufferPosition];
+    }
+
+    /// <summary>
     /// Copies the contents of <paramref name="enumerable"/> to a new <see cref="ValueList{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

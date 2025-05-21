@@ -8,8 +8,8 @@ namespace ValueCollections;
 /// A version of <see cref="List{T}"/> which has a fixed capacity of 128 elements.
 /// </summary>
 public partial struct ValueList128<T> : IList<T>, IReadOnlyList<T> {
-    private InlineBuffer Buffer;
-    private int BufferPosition;
+    internal InlineBuffer Buffer;
+    internal int BufferPosition;
 
     /// <summary>
     /// The fixed capacity of the value list.
@@ -128,15 +128,6 @@ public partial struct ValueList128<T> : IList<T>, IReadOnlyList<T> {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get => this[index];
     }
-
-    /// <summary>
-    /// Gets a span over the elements in the list.
-    /// </summary>
-    /// <remarks>
-    /// <b>WARNING:</b> The returned span is a copy, so modifying it will not affect the original list!
-    /// </remarks>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly Span<T> AsSpan() => Buffer.AsSpan()[..BufferPosition];
 
     /// <summary>
     /// Adds an element to the list.
@@ -360,16 +351,12 @@ public partial struct ValueList128<T> : IList<T>, IReadOnlyList<T> {
     /// A fixed-size sequential buffer.
     /// </summary>
     [InlineArray(length: Capacity)]
-    private struct InlineBuffer {
-        private T Element0;
+    internal struct InlineBuffer {
+        public T Element0;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Span<T> AsSpan() {
             return MemoryMarshal.CreateSpan(ref Element0, Capacity);
-        }
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void FromSpan(ReadOnlySpan<T> span) {
-            Element0 = MemoryMarshal.GetReference(span);
         }
     }
 

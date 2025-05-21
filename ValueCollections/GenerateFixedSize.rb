@@ -33,8 +33,10 @@ begin
                 full_renamed_file = File.join(output_dir, renamed_file)
                 File.rename(File.join(output_dir, file), full_renamed_file)
                 # Find & replace file contents
-                File.write(full_renamed_file, File.read(full_renamed_file).gsub(generate_entry[:name] + generate_input.to_s, generate_entry[:name] + generate_output.to_s))
-                File.write(full_renamed_file, File.read(full_renamed_file).gsub("Capacity = " + generate_input.to_s, "Capacity = " + generate_output.to_s))
+                File.write(full_renamed_file, File.read(full_renamed_file)
+                    .gsub(generate_entry[:name] + generate_input.to_s, generate_entry[:name] + generate_output.to_s)
+                    .gsub("Capacity = " + generate_input.to_s, "Capacity = " + generate_output.to_s)
+                )
             end
         end
     end

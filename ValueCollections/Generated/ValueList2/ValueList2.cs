@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 
 namespace ValueCollections.FixedSize;
 
@@ -353,11 +352,6 @@ public partial struct ValueList2<T> : IList<T>, IReadOnlyList<T> {
     [InlineArray(length: Capacity)]
     internal struct InlineBuffer {
         public T Element0;
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Span<T> AsSpan() {
-            return MemoryMarshal.CreateSpan(ref Element0, Capacity);
-        }
     }
 
     /// <summary>

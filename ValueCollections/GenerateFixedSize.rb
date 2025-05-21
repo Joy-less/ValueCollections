@@ -2,7 +2,7 @@ GENERATE_LIST = [
     {
         name: 'ValueList',
         input: 1,
-        outputs: [2, 3, 4, 8, 16, 32, 64, 128, 256, 512, 1024],
+        outputs: [2, 3, 4, 8, 16, 32, 64, 128, 256, 512],
     },
 ]
 INPUT_DIR = '.'

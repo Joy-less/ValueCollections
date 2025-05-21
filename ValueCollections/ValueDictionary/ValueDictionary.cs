@@ -545,44 +545,17 @@ public ref partial struct ValueDictionary<TKey, TValue> : IDisposable, IDictiona
     }
 
     /// <summary>
-    /// Finds the starting index of <paramref name="hashCode"/> using a binary search.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private readonly int FindStartingIndexFromHashCode(int hashCode) {
-        int leftPointer = 0;
-        int rightPointer = BufferPosition - 1;
-
-        while (true) {
-            if (leftPointer > rightPointer) {
-                return leftPointer;
-            }
-
-            int midPointer = (leftPointer + rightPointer) / 2;
-
-            if (HashCodes[midPointer] < hashCode) {
-                leftPointer = midPointer + 1;
-            }
-            else if (HashCodes[midPointer] > hashCode) {
-                rightPointer = midPointer - 1;
-            }
-            else {
-                // Move to first entry with same hash code
-                while (midPointer >= 1 && HashCodes[midPointer - 1] == hashCode) {
-                    midPointer--;
-                }
-                return midPointer;
-            }
-        }
-    }
-
-    /// <summary>
     /// Returns the index of <paramref name="key"/> or -1 if not found.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private readonly bool TryFindIndex(TKey key, out int index) {
         int hashCode = GetHashCode(key);
 
-        int startIndex = FindStartingIndexFromHashCode(hashCode);
+        int startIndex = HashCodes.BinarySearch(hashCode);
+        if (startIndex < 0) {
+            index = default;
+            return false;
+        }
 
         for (index = startIndex; index < BufferPosition; index++) {
             int existingHashCode = HashCodes[index];

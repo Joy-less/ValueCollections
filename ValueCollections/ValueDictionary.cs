@@ -104,6 +104,16 @@ public ref partial struct ValueDictionary<TKey, TValue> : IDisposable, IDictiona
     public ValueDictionary(scoped ValueHashSet<KeyValuePair<TKey, TValue>> initialEntries) {
         AddRange(initialEntries.AsSpan());
     }
+    /// <summary>
+    /// Constructs a value dictionary with the given elements.
+    /// </summary>
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-6)]
+#endif
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public ValueDictionary(ValueList128<KeyValuePair<TKey, TValue>> initialElements) {
+        AddRange(initialElements.AsSpan());
+    }
 
     /// <summary>
     /// Constructs a value dictionary from the given buffer.

@@ -82,16 +82,6 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     [OverloadResolutionPriority(-4)]
 #endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueList(ValueList128<T> initialElements) {
-        AddRange(initialElements.AsSpan());
-    }
-    /// <summary>
-    /// Constructs a value list with the given elements.
-    /// </summary>
-#if NET9_0_OR_GREATER
-    [OverloadResolutionPriority(-5)]
-#endif
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ValueList(scoped ValueHashSet<T> initialElements) {
         AddRange(initialElements.AsSpan());
     }

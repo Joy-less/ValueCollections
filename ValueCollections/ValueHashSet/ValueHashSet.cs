@@ -90,16 +90,6 @@ public ref partial struct ValueHashSet<T> : IDisposable, ISet<T>, IReadOnlySet<T
     [OverloadResolutionPriority(-4)]
 #endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueHashSet(ValueList128<T> initialElements) {
-        AddRange(initialElements.AsSpan());
-    }
-    /// <summary>
-    /// Constructs a value hash set with the given elements.
-    /// </summary>
-#if NET9_0_OR_GREATER
-    [OverloadResolutionPriority(-5)]
-#endif
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ValueHashSet(scoped ValueHashSet<T> initialElements) {
         AddRange(initialElements.AsSpan());
     }

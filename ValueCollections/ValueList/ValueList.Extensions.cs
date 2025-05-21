@@ -32,14 +32,6 @@ public static class ValueListExtensions {
     }
 
     /// <summary>
-    /// Copies the contents of <paramref name="valueList"/> to a new <see cref="ValueList{T}"/>.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static ValueList<T> ToValueList<T>(this ValueList128<T> valueList) {
-        return new ValueList<T>(valueList);
-    }
-
-    /// <summary>
     /// Copies the contents of <paramref name="valueHashSet"/> to a new <see cref="ValueList{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

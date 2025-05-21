@@ -66,32 +66,34 @@ Console.WriteLine(string.Join(", ", strings.ToArray())); // [food, pizza], [drin
 
 ## Benchmarks
 
-| Method                 | Mean         | Error      | StdDev     | Gen0    | Allocated |
-|----------------------- |-------------:|-----------:|-----------:|--------:|----------:|
-| SmallListOfStruct      |     16.96 ns |   0.139 ns |   0.130 ns |  0.0255 |      80 B |
-| SmallValueListOfStruct |     17.28 ns |   0.064 ns |   0.060 ns |       - |         - |
-| SmallListOfClass       |     24.76 ns |   0.374 ns |   0.350 ns |  0.0306 |      96 B |
-| SmallValueListOfClass  |     21.49 ns |   0.193 ns |   0.180 ns |       - |         - |
-| LargeListOfStruct      | 21,227.63 ns | 170.160 ns | 159.168 ns | 41.6565 |  131400 B |
-| LargeValueListOfStruct |  9,559.52 ns | 126.272 ns | 118.115 ns |       - |       2 B |
+| Method                   | Mean         | Error      | StdDev     | Gen0    | Allocated |
+|------------------------- |-------------:|-----------:|-----------:|--------:|----------:|
+| SmallListOfStruct        |     17.57 ns |   0.204 ns |   0.181 ns |  0.0255 |      80 B |
+| SmallValueListOfStruct   |     15.68 ns |   0.099 ns |   0.092 ns |       - |         - |
+| SmallValueList32OfStruct |     13.75 ns |   0.054 ns |   0.047 ns |       - |         - |
+| SmallListOfClass         |     24.54 ns |   0.255 ns |   0.226 ns |  0.0306 |      96 B |
+| SmallValueListOfClass    |     20.17 ns |   0.077 ns |   0.072 ns |       - |         - |
+| SmallValueList32OfClass  |     23.62 ns |   0.133 ns |   0.118 ns |       - |         - |
+| LargeListOfStruct        | 20,617.90 ns | 169.942 ns | 150.649 ns | 41.6565 |  131400 B |
+| LargeValueListOfStruct   |  9,473.77 ns |  43.585 ns |  40.770 ns |       - |         - |
 
-| Method                    | Mean          | Error        | StdDev       | Gen0     | Gen1     | Gen2    | Allocated |
-|-------------------------- |--------------:|-------------:|-------------:|---------:|---------:|--------:|----------:|
-| SmallHashSetOfStruct      |      93.25 ns |     0.644 ns |     0.538 ns |   0.1070 |        - |       - |     336 B |
-| SmallValueHashSetOfStruct |     140.43 ns |     1.252 ns |     1.171 ns |        - |        - |       - |         - |
-| SmallHashSetOfClass       |     134.52 ns |     1.164 ns |     1.089 ns |   0.1173 |        - |       - |     368 B |
-| SmallValueHashSetOfClass  |     192.37 ns |     0.353 ns |     0.330 ns |        - |        - |       - |         - |
-| LargeHashSetOfStruct      | 229,623.24 ns | 1,678.047 ns | 1,487.545 ns | 460.2051 | 460.2051 | 76.9043 |  538650 B |
-| LargeValueHashSetOfStruct | 228,776.38 ns |   709.610 ns |   629.051 ns |        - |        - |       - |      32 B |
+| Method                    | Mean          | Error        | StdDev       | Gen0    | Gen1    | Gen2    | Allocated |
+|-------------------------- |--------------:|-------------:|-------------:|--------:|--------:|--------:|----------:|
+| SmallHashSetOfStruct      |      92.44 ns |     1.886 ns |     2.097 ns |  0.1070 |       - |       - |     336 B |
+| SmallValueHashSetOfStruct |     159.45 ns |     0.612 ns |     0.542 ns |       - |       - |       - |         - |
+| SmallHashSetOfClass       |     131.35 ns |     1.075 ns |     1.005 ns |  0.1173 |       - |       - |     368 B |
+| SmallValueHashSetOfClass  |     170.13 ns |     0.646 ns |     0.540 ns |       - |       - |       - |         - |
+| LargeHashSetOfStruct      | 178,224.06 ns |   958.507 ns |   800.397 ns | 95.2148 | 95.2148 | 95.2148 |  538656 B |
+| LargeValueHashSetOfStruct | 227,838.63 ns | 1,594.403 ns | 1,413.397 ns |       - |       - |       - |         - |
 
 | Method                        | Mean         | Error       | StdDev      | Gen0     | Gen1     | Gen2     | Allocated |
 |------------------------------ |-------------:|------------:|------------:|---------:|---------:|---------:|----------:|
-| SmallDictionaryOfStructs      |     100.6 ns |     0.60 ns |     0.56 ns |   0.1223 |        - |        - |     384 B |
-| SmallValueDictionaryOfStructs |     124.9 ns |     0.68 ns |     0.64 ns |        - |        - |        - |         - |
-| SmallDictionaryOfClasses      |     154.5 ns |     1.68 ns |     1.31 ns |   0.1478 |        - |        - |     464 B |
-| SmallValueDictionaryOfClasses |     216.0 ns |     0.69 ns |     0.61 ns |        - |        - |        - |         - |
-| LargeDictionaryOfStructs      | 217,012.6 ns |   496.10 ns |   439.78 ns | 367.6758 | 367.6758 | 105.2246 |  673203 B |
-| LargeValueDictionaryOfStructs | 286,426.3 ns | 1,705.62 ns | 1,511.99 ns |        - |        - |        - |     193 B |
+| SmallDictionaryOfStructs      |     101.2 ns |     1.04 ns |     0.98 ns |   0.1223 |        - |        - |     384 B |
+| SmallValueDictionaryOfStructs |     114.8 ns |     0.26 ns |     0.24 ns |        - |        - |        - |         - |
+| SmallDictionaryOfClasses      |     152.4 ns |     1.27 ns |     1.18 ns |   0.1478 |        - |        - |     464 B |
+| SmallValueDictionaryOfClasses |     203.0 ns |     0.89 ns |     0.79 ns |        - |        - |        - |         - |
+| LargeDictionaryOfStructs      | 229,800.1 ns | 3,274.30 ns | 2,902.59 ns | 124.7559 | 124.7559 | 124.7559 |  673106 B |
+| LargeValueDictionaryOfStructs | 288,403.7 ns | 1,601.55 ns | 1,498.09 ns |        - |        - |        - |         - |
 
 ## Gotchas
 

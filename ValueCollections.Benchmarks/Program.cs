@@ -24,8 +24,8 @@ public class ListBenchmarks {
         return list.IndexOf(3);
     }
     [Benchmark]
-    public int SmallValueList128OfStruct() {
-        ValueList128<int> list = [1, 2, 3, 4, 5];
+    public int SmallValueList32OfStruct() {
+        ValueList32<int> list = [1, 2, 3, 4, 5];
         return list.IndexOf(3);
     }
 
@@ -40,8 +40,8 @@ public class ListBenchmarks {
         return list.IndexOf("3");
     }
     [Benchmark]
-    public int SmallValueList128OfClass() {
-        ValueList128<string> list = ["1", "2", "3", "4", "5"];
+    public int SmallValueList32OfClass() {
+        ValueList32<string> list = ["1", "2", "3", "4", "5"];
         return list.IndexOf("3");
     }
 
@@ -56,14 +56,6 @@ public class ListBenchmarks {
     [Benchmark]
     public int LargeValueListOfStruct() {
         using ValueList<int> list = [];
-        for (int i = 0; i < 10_000; i++) {
-            list.Add(i);
-        }
-        return list.Count;
-    }
-    [Benchmark]
-    public int LargeValueList128OfStruct() {
-        ValueList128<int> list = [];
         for (int i = 0; i < 10_000; i++) {
             list.Add(i);
         }

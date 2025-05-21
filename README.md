@@ -2,7 +2,7 @@
 
 [![NuGet](https://img.shields.io/nuget/v/ValueCollections.svg)](https://www.nuget.org/packages/ValueCollections)
 
-A set of collections in C# implemented as `ref struct` to minimize heap allocations.
+A set of collections in C# implemented as `struct` to minimize heap allocations.
 
 ## ValueList
 
@@ -18,6 +18,20 @@ for (int n = 0; n < 10; n++) {
 using ValueList<int> evenNumbers = numbers.Where(number => number % 2 == 0);
 
 Console.WriteLine(string.Join(", ", evenNumbers.ToList())); // 0, 2, 4, 6, 8
+```
+
+## ValueList (Fixed Size)
+
+An implementation of `IList<T>` using a fixed-size inlined array.
+
+```cs
+ValueList128<int> numbers = [];
+
+for (int n = 0; n < 10; n++) {
+    numbers.Add(n);
+}
+
+Console.WriteLine(string.Join(", ", numbers.Where(number => number % 2 == 0))); // 0, 2, 4, 6, 8
 ```
 
 ## ValueHashSet

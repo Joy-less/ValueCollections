@@ -499,6 +499,7 @@ partial struct ValueList32<T> {
         public Func<T, TKey> KeySelector { get; } = keySelector;
         public TComparer Comparer { get; } = comparer;
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly int Compare(T? x, T? y) {
             TKey xKey = KeySelector(x!);
             TKey yKey = KeySelector(y!);

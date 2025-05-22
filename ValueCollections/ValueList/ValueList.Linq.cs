@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 
 namespace ValueCollections;
 
@@ -499,6 +499,7 @@ partial struct ValueList<T> {
         public Func<T, TKey> KeySelector { get; } = keySelector;
         public TComparer Comparer { get; } = comparer;
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public readonly int Compare(T? x, T? y) {
             TKey xKey = KeySelector(x!);
             TKey yKey = KeySelector(y!);

@@ -35,7 +35,7 @@ begin
                 # Find & replace file contents
                 File.write(full_renamed_file, File.read(full_renamed_file)
                     .gsub(generate_entry[:name] + generate_input.to_s, generate_entry[:name] + generate_output.to_s)
-                    .gsub("Capacity = " + generate_input.to_s, "Capacity = " + generate_output.to_s)
+                    .gsub("Capacity = " + generate_input.to_s + ";", "Capacity = " + generate_output.to_s + ";")
                 )
             end
         end

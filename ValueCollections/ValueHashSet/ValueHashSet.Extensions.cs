@@ -11,6 +11,9 @@ public static class ValueSetExtensions {
     /// Copies the contents of <paramref name="enumerable"/> to a new <see cref="ValueHashSet{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-5)]
+#endif
     public static ValueHashSet<T> ToValueHashSet<T>(this IEnumerable<T> enumerable) {
         return new ValueHashSet<T>(enumerable);
     }
@@ -24,9 +27,23 @@ public static class ValueSetExtensions {
     }
 
     /// <summary>
+    /// Copies the contents of <paramref name="memory"/> to a new <see cref="ValueHashSet{T}"/>.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-1)]
+#endif
+    public static ValueHashSet<T> ToValueHashSet<T>(this ReadOnlyMemory<T> memory) {
+        return new ValueHashSet<T>(memory);
+    }
+
+    /// <summary>
     /// Copies the contents of <paramref name="valueHashSet"/> to a new <see cref="ValueHashSet{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-2)]
+#endif
     public static ValueHashSet<T> ToValueHashSet<T>(this scoped ValueHashSet<T> valueHashSet) {
         return new ValueHashSet<T>(valueHashSet);
     }
@@ -35,6 +52,9 @@ public static class ValueSetExtensions {
     /// Copies the contents of <paramref name="valueList"/> to a new <see cref="ValueHashSet{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-3)]
+#endif
     public static ValueHashSet<T> ToValueHashSet<T>(this scoped ValueList<T> valueList) {
         return new ValueHashSet<T>(valueList);
     }
@@ -43,6 +63,9 @@ public static class ValueSetExtensions {
     /// Copies the contents of <paramref name="valueDictionary"/> to a new <see cref="ValueHashSet{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-4)]
+#endif
     public static ValueHashSet<KeyValuePair<TKey, TValue>> ToValueHashSet<TKey, TValue>(this scoped ValueDictionary<TKey, TValue> valueDictionary) {
         ValueHashSet<KeyValuePair<TKey, TValue>> valueHashSet = new();
         valueHashSet.AddRange(valueDictionary.AsSpan());

@@ -41,7 +41,7 @@ public ref partial struct ValueDictionary<TKey, TValue> : IDisposable, IDictiona
     /// Constructs a value dictionary with the given entries.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueDictionary(scoped Span<KeyValuePair<TKey, TValue>> initialEntries) {
+    public ValueDictionary(scoped ReadOnlySpan<KeyValuePair<TKey, TValue>> initialEntries) {
         AddRange(initialEntries);
     }
     /// <summary>
@@ -51,16 +51,6 @@ public ref partial struct ValueDictionary<TKey, TValue> : IDisposable, IDictiona
     [OverloadResolutionPriority(-1)]
 #endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueDictionary(scoped ReadOnlySpan<KeyValuePair<TKey, TValue>> initialEntries) {
-        AddRange(initialEntries);
-    }
-    /// <summary>
-    /// Constructs a value dictionary with the given entries.
-    /// </summary>
-#if NET9_0_OR_GREATER
-    [OverloadResolutionPriority(-2)]
-#endif
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ValueDictionary(ReadOnlyMemory<KeyValuePair<TKey, TValue>> initialEntries) {
         AddRange(initialEntries);
     }
@@ -68,7 +58,7 @@ public ref partial struct ValueDictionary<TKey, TValue> : IDisposable, IDictiona
     /// Constructs a value dictionary with the given entries.
     /// </summary>
 #if NET9_0_OR_GREATER
-    [OverloadResolutionPriority(-6)]
+    [OverloadResolutionPriority(-5)]
 #endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ValueDictionary(IEnumerable<KeyValuePair<TKey, TValue>> initialEntries) {
@@ -78,7 +68,7 @@ public ref partial struct ValueDictionary<TKey, TValue> : IDisposable, IDictiona
     /// Constructs a value dictionary with the given entries.
     /// </summary>
 #if NET9_0_OR_GREATER
-    [OverloadResolutionPriority(-3)]
+    [OverloadResolutionPriority(-2)]
 #endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ValueDictionary(scoped ValueDictionary<TKey, TValue> initialEntries) {
@@ -88,7 +78,7 @@ public ref partial struct ValueDictionary<TKey, TValue> : IDisposable, IDictiona
     /// Constructs a value dictionary with the given entries.
     /// </summary>
 #if NET9_0_OR_GREATER
-    [OverloadResolutionPriority(-4)]
+    [OverloadResolutionPriority(-3)]
 #endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ValueDictionary(scoped ValueList<KeyValuePair<TKey, TValue>> initialEntries) {
@@ -98,7 +88,7 @@ public ref partial struct ValueDictionary<TKey, TValue> : IDisposable, IDictiona
     /// Constructs a value dictionary with the given entries.
     /// </summary>
 #if NET9_0_OR_GREATER
-    [OverloadResolutionPriority(-5)]
+    [OverloadResolutionPriority(-4)]
 #endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ValueDictionary(scoped ValueHashSet<KeyValuePair<TKey, TValue>> initialEntries) {

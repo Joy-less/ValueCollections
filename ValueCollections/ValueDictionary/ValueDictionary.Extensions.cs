@@ -11,6 +11,9 @@ public static class ValueDictionaryExtensions {
     /// Copies the contents of <paramref name="enumerable"/> to a new <see cref="ValueDictionary{TKey, TValue}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-4)]
+#endif
     public static ValueDictionary<TKey, TValue> ToValueDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> enumerable) {
         return new ValueDictionary<TKey, TValue>(enumerable);
     }
@@ -24,9 +27,23 @@ public static class ValueDictionaryExtensions {
     }
 
     /// <summary>
+    /// Copies the contents of <paramref name="memory"/> to a new <see cref="ValueDictionary{TKey, TValue}"/>.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-1)]
+#endif
+    public static ValueDictionary<TKey, TValue> ToValueDictionary<TKey, TValue>(this ReadOnlyMemory<KeyValuePair<TKey, TValue>> memory) {
+        return new ValueDictionary<TKey, TValue>(memory);
+    }
+
+    /// <summary>
     /// Copies the contents of <paramref name="valueDictionary"/> to a new <see cref="ValueDictionary{TKey, TValue}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-2)]
+#endif
     public static ValueDictionary<TKey, TValue> ToValueDictionary<TKey, TValue>(this scoped ValueDictionary<TKey, TValue> valueDictionary) {
         return new ValueDictionary<TKey, TValue>(valueDictionary);
     }
@@ -35,6 +52,9 @@ public static class ValueDictionaryExtensions {
     /// Copies the contents of <paramref name="valueList"/> to a new <see cref="ValueDictionary{TKey, TValue}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-3)]
+#endif
     public static ValueDictionary<TKey, TValue> ToValueDictionary<TKey, TValue>(this scoped ValueList<KeyValuePair<TKey, TValue>> valueList) {
         return new ValueDictionary<TKey, TValue>(valueList);
     }

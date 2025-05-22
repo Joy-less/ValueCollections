@@ -40,7 +40,7 @@ public ref partial struct ValueHashSet<T> : IDisposable, ISet<T>, IReadOnlySet<T
     /// Constructs a value hash set with the given elements.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueHashSet(scoped Span<T> initialElements) {
+    public ValueHashSet(scoped ReadOnlySpan<T> initialElements) {
         AddRange(initialElements);
     }
     /// <summary>
@@ -50,16 +50,6 @@ public ref partial struct ValueHashSet<T> : IDisposable, ISet<T>, IReadOnlySet<T
     [OverloadResolutionPriority(-1)]
 #endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueHashSet(scoped ReadOnlySpan<T> initialElements) {
-        AddRange(initialElements);
-    }
-    /// <summary>
-    /// Constructs a value hash set with the given elements.
-    /// </summary>
-#if NET9_0_OR_GREATER
-    [OverloadResolutionPriority(-2)]
-#endif
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ValueHashSet(ReadOnlyMemory<T> initialElements) {
         AddRange(initialElements);
     }
@@ -67,7 +57,7 @@ public ref partial struct ValueHashSet<T> : IDisposable, ISet<T>, IReadOnlySet<T
     /// Constructs a value hash set with the given elements.
     /// </summary>
 #if NET9_0_OR_GREATER
-    [OverloadResolutionPriority(-5)]
+    [OverloadResolutionPriority(-4)]
 #endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ValueHashSet(IEnumerable<T> initialElements) {
@@ -77,7 +67,7 @@ public ref partial struct ValueHashSet<T> : IDisposable, ISet<T>, IReadOnlySet<T
     /// Constructs a value hash set with the given elements.
     /// </summary>
 #if NET9_0_OR_GREATER
-    [OverloadResolutionPriority(-3)]
+    [OverloadResolutionPriority(-2)]
 #endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ValueHashSet(scoped ValueList<T> initialElements) {
@@ -87,7 +77,7 @@ public ref partial struct ValueHashSet<T> : IDisposable, ISet<T>, IReadOnlySet<T
     /// Constructs a value hash set with the given elements.
     /// </summary>
 #if NET9_0_OR_GREATER
-    [OverloadResolutionPriority(-4)]
+    [OverloadResolutionPriority(-3)]
 #endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ValueHashSet(scoped ValueHashSet<T> initialElements) {

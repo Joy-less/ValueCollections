@@ -11,7 +11,7 @@ public static class ValueList8Extensions {
     /// Gets a span over the elements in the list.
     /// </summary>
     public static Span<T> AsSpan<T>(this ref ValueList8<T> valueList) {
-        return valueList.Buffer[..valueList.BufferPosition];
+        return ValueList8<T>.AsSpan(ref valueList);
     }
 
     /// <summary>

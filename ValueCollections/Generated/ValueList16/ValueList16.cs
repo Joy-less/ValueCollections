@@ -7,8 +7,8 @@ namespace ValueCollections.FixedSize;
 /// A version of <see cref="List{T}"/> which has a fixed capacity of 128 elements.
 /// </summary>
 public partial struct ValueList16<T> : IList<T>, IReadOnlyList<T> {
-    internal InlineBuffer Buffer;
-    internal int BufferPosition;
+    private InlineBuffer Buffer;
+    private int BufferPosition;
 
     /// <summary>
     /// The fixed capacity of the value list.
@@ -347,10 +347,17 @@ public partial struct ValueList16<T> : IList<T>, IReadOnlyList<T> {
     }
 
     /// <summary>
+    /// Gets a span over the elements in the list.
+    /// </summary>
+    public static Span<T> AsSpan(ref ValueList16<T> valueList) {
+        return valueList.Buffer[..valueList.BufferPosition];
+    }
+
+    /// <summary>
     /// A fixed-size sequential buffer.
     /// </summary>
     [InlineArray(length: Capacity)]
-    internal struct InlineBuffer {
+    private struct InlineBuffer {
         public T Element0;
     }
 

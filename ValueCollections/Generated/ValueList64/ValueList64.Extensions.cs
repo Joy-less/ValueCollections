@@ -11,7 +11,7 @@ public static class ValueList64Extensions {
     /// Gets a span over the elements in the list.
     /// </summary>
     public static Span<T> AsSpan<T>(this ref ValueList64<T> valueList) {
-        return valueList.Buffer[..valueList.BufferPosition];
+        return ValueList64<T>.AsSpan(ref valueList);
     }
 
     /// <summary>

@@ -19,6 +19,9 @@ public static class ValueList128Extensions {
     /// Copies the contents of <paramref name="enumerable"/> to a new <see cref="ValueList{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-6)]
+#endif
     public static ValueList128<T> ToValueList128<T>(this IEnumerable<T> enumerable) {
         return new ValueList128<T>(enumerable);
     }
@@ -32,9 +35,23 @@ public static class ValueList128Extensions {
     }
 
     /// <summary>
+    /// Copies the contents of <paramref name="memory"/> to a new <see cref="ValueList{T}"/>.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-1)]
+#endif
+    public static ValueList128<T> ToValueList128<T>(this ReadOnlyMemory<T> memory) {
+        return new ValueList128<T>(memory);
+    }
+
+    /// <summary>
     /// Copies the contents of <paramref name="valueList"/> to a new <see cref="ValueList{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-2)]
+#endif
     public static ValueList128<T> ToValueList128<T>(this ValueList128<T> valueList) {
         return new ValueList128<T>(valueList);
     }
@@ -43,6 +60,9 @@ public static class ValueList128Extensions {
     /// Copies the contents of <paramref name="valueList"/> to a new <see cref="ValueList{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-3)]
+#endif
     public static ValueList128<T> ToValueList128<T>(this ValueList<T> valueList) {
         return new ValueList128<T>(valueList);
     }
@@ -51,6 +71,9 @@ public static class ValueList128Extensions {
     /// Copies the contents of <paramref name="valueHashSet"/> to a new <see cref="ValueList{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-4)]
+#endif
     public static ValueList128<T> ToValueList128<T>(this scoped ValueHashSet<T> valueHashSet) {
         return new ValueList128<T>(valueHashSet);
     }
@@ -59,6 +82,9 @@ public static class ValueList128Extensions {
     /// Copies the contents of <paramref name="valueDictionary"/> to a new <see cref="ValueList{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-5)]
+#endif
     public static ValueList128<KeyValuePair<TKey, TValue>> ToValueList128<TKey, TValue>(this scoped ValueDictionary<TKey, TValue> valueDictionary) {
         ValueList128<KeyValuePair<TKey, TValue>> valueList = new();
         valueList.AddRange(valueDictionary.AsSpan());

@@ -19,6 +19,9 @@ public static class ValueList64Extensions {
     /// Copies the contents of <paramref name="enumerable"/> to a new <see cref="ValueList{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-6)]
+#endif
     public static ValueList64<T> ToValueList64<T>(this IEnumerable<T> enumerable) {
         return new ValueList64<T>(enumerable);
     }
@@ -32,9 +35,23 @@ public static class ValueList64Extensions {
     }
 
     /// <summary>
+    /// Copies the contents of <paramref name="memory"/> to a new <see cref="ValueList{T}"/>.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-1)]
+#endif
+    public static ValueList64<T> ToValueList64<T>(this ReadOnlyMemory<T> memory) {
+        return new ValueList64<T>(memory);
+    }
+
+    /// <summary>
     /// Copies the contents of <paramref name="valueList"/> to a new <see cref="ValueList{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-2)]
+#endif
     public static ValueList64<T> ToValueList64<T>(this ValueList64<T> valueList) {
         return new ValueList64<T>(valueList);
     }
@@ -43,6 +60,9 @@ public static class ValueList64Extensions {
     /// Copies the contents of <paramref name="valueList"/> to a new <see cref="ValueList{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-3)]
+#endif
     public static ValueList64<T> ToValueList64<T>(this ValueList<T> valueList) {
         return new ValueList64<T>(valueList);
     }
@@ -51,6 +71,9 @@ public static class ValueList64Extensions {
     /// Copies the contents of <paramref name="valueHashSet"/> to a new <see cref="ValueList{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-4)]
+#endif
     public static ValueList64<T> ToValueList64<T>(this scoped ValueHashSet<T> valueHashSet) {
         return new ValueList64<T>(valueHashSet);
     }
@@ -59,6 +82,9 @@ public static class ValueList64Extensions {
     /// Copies the contents of <paramref name="valueDictionary"/> to a new <see cref="ValueList{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-5)]
+#endif
     public static ValueList64<KeyValuePair<TKey, TValue>> ToValueList64<TKey, TValue>(this scoped ValueDictionary<TKey, TValue> valueDictionary) {
         ValueList64<KeyValuePair<TKey, TValue>> valueList = new();
         valueList.AddRange(valueDictionary.AsSpan());

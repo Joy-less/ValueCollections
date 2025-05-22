@@ -19,6 +19,9 @@ public static class ValueList4Extensions {
     /// Copies the contents of <paramref name="enumerable"/> to a new <see cref="ValueList{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-6)]
+#endif
     public static ValueList4<T> ToValueList4<T>(this IEnumerable<T> enumerable) {
         return new ValueList4<T>(enumerable);
     }
@@ -32,9 +35,23 @@ public static class ValueList4Extensions {
     }
 
     /// <summary>
+    /// Copies the contents of <paramref name="memory"/> to a new <see cref="ValueList{T}"/>.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-1)]
+#endif
+    public static ValueList4<T> ToValueList4<T>(this ReadOnlyMemory<T> memory) {
+        return new ValueList4<T>(memory);
+    }
+
+    /// <summary>
     /// Copies the contents of <paramref name="valueList"/> to a new <see cref="ValueList{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-2)]
+#endif
     public static ValueList4<T> ToValueList4<T>(this ValueList4<T> valueList) {
         return new ValueList4<T>(valueList);
     }
@@ -43,6 +60,9 @@ public static class ValueList4Extensions {
     /// Copies the contents of <paramref name="valueList"/> to a new <see cref="ValueList{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-3)]
+#endif
     public static ValueList4<T> ToValueList4<T>(this ValueList<T> valueList) {
         return new ValueList4<T>(valueList);
     }
@@ -51,6 +71,9 @@ public static class ValueList4Extensions {
     /// Copies the contents of <paramref name="valueHashSet"/> to a new <see cref="ValueList{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-4)]
+#endif
     public static ValueList4<T> ToValueList4<T>(this scoped ValueHashSet<T> valueHashSet) {
         return new ValueList4<T>(valueHashSet);
     }
@@ -59,6 +82,9 @@ public static class ValueList4Extensions {
     /// Copies the contents of <paramref name="valueDictionary"/> to a new <see cref="ValueList{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-5)]
+#endif
     public static ValueList4<KeyValuePair<TKey, TValue>> ToValueList4<TKey, TValue>(this scoped ValueDictionary<TKey, TValue> valueDictionary) {
         ValueList4<KeyValuePair<TKey, TValue>> valueList = new();
         valueList.AddRange(valueDictionary.AsSpan());

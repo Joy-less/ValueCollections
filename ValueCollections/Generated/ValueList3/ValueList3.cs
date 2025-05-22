@@ -25,7 +25,7 @@ public partial struct ValueList3<T> : IList<T>, IReadOnlyList<T> {
     /// Constructs a value list with the given elements.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueList3(scoped Span<T> initialElements) {
+    public ValueList3(scoped ReadOnlySpan<T> initialElements) {
         AddRange(initialElements);
     }
     /// <summary>
@@ -35,16 +35,6 @@ public partial struct ValueList3<T> : IList<T>, IReadOnlyList<T> {
     [OverloadResolutionPriority(-1)]
 #endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueList3(scoped ReadOnlySpan<T> initialElements) {
-        AddRange(initialElements);
-    }
-    /// <summary>
-    /// Constructs a value list with the given elements.
-    /// </summary>
-#if NET9_0_OR_GREATER
-    [OverloadResolutionPriority(-2)]
-#endif
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ValueList3(ReadOnlyMemory<T> initialElements) {
         AddRange(initialElements);
     }
@@ -52,7 +42,7 @@ public partial struct ValueList3<T> : IList<T>, IReadOnlyList<T> {
     /// Constructs a value list with the given elements.
     /// </summary>
 #if NET9_0_OR_GREATER
-    [OverloadResolutionPriority(-5)]
+    [OverloadResolutionPriority(-4)]
 #endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ValueList3(IEnumerable<T> initialElements) {
@@ -62,7 +52,7 @@ public partial struct ValueList3<T> : IList<T>, IReadOnlyList<T> {
     /// Constructs a value list with the given elements.
     /// </summary>
 #if NET9_0_OR_GREATER
-    [OverloadResolutionPriority(-3)]
+    [OverloadResolutionPriority(-2)]
 #endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ValueList3(scoped ValueList<T> initialElements) {
@@ -72,7 +62,7 @@ public partial struct ValueList3<T> : IList<T>, IReadOnlyList<T> {
     /// Constructs a value list with the given elements.
     /// </summary>
 #if NET9_0_OR_GREATER
-    [OverloadResolutionPriority(-4)]
+    [OverloadResolutionPriority(-3)]
 #endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ValueList3(scoped ValueHashSet<T> initialElements) {

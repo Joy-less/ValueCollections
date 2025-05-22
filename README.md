@@ -22,7 +22,7 @@ Console.WriteLine(string.Join(", ", evenNumbers.ToList())); // 0, 2, 4, 6, 8
 
 ## ValueList (Fixed Size)
 
-A set of implementations of `IList<T>` using a fixed-size inlined array.
+A set of implementations of `IList<T>` using fixed-size inlined arrays.
 
 Supported for capacities of `[1, 2, 3, 4, 8, 16, 32, 64, 128, 256, 512]`.
 

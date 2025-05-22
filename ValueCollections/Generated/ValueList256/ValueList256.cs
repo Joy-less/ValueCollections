@@ -349,6 +349,7 @@ public partial struct ValueList256<T> : IList<T>, IReadOnlyList<T> {
     /// <summary>
     /// Gets a span over the elements in the list.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Span<T> AsSpan(ref ValueList256<T> valueList) {
         return valueList.Buffer[..valueList.BufferPosition];
     }

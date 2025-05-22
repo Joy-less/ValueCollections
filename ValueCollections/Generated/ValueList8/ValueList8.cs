@@ -349,6 +349,7 @@ public partial struct ValueList8<T> : IList<T>, IReadOnlyList<T> {
     /// <summary>
     /// Gets a span over the elements in the list.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Span<T> AsSpan(ref ValueList8<T> valueList) {
         return valueList.Buffer[..valueList.BufferPosition];
     }

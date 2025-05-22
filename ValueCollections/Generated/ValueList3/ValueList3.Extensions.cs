@@ -10,6 +10,7 @@ public static class ValueList3Extensions {
     /// <summary>
     /// Gets a span over the elements in the list.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Span<T> AsSpan<T>(this ref ValueList3<T> valueList) {
         return ValueList3<T>.AsSpan(ref valueList);
     }

@@ -12,6 +12,58 @@ public class Program {
 }
 
 [MemoryDiagnoser]
+public class FixedSizeBenchmarks {
+    [Benchmark]
+    public int SmallListOfStruct() {
+        List<int> list = [1, 2, 3, 4, 5];
+        list.Add(6);
+        list.Add(7);
+        list.Add(8);
+        return list.IndexOf(3);
+    }
+    [Benchmark]
+    public int SmallValueListOfStruct() {
+        using ValueList<int> list = [1, 2, 3, 4, 5];
+        list.Add(6);
+        list.Add(7);
+        list.Add(8);
+        return list.IndexOf(3);
+    }
+    [Benchmark]
+    public int SmallValueList8OfStruct() {
+        ValueList8<int> list = [1, 2, 3, 4, 5];
+        list.Add(6);
+        list.Add(7);
+        list.Add(8);
+        return list.IndexOf(3);
+    }
+    [Benchmark]
+    public int SmallValueList16OfStruct() {
+        ValueList16<int> list = [1, 2, 3, 4, 5];
+        list.Add(6);
+        list.Add(7);
+        list.Add(8);
+        return list.IndexOf(3);
+    }
+    [Benchmark]
+    public int SmallValueList32OfStruct() {
+        ValueList32<int> list = [1, 2, 3, 4, 5];
+        list.Add(6);
+        list.Add(7);
+        list.Add(8);
+        return list.IndexOf(3);
+    }
+    [Benchmark]
+    public int SmallValueList128OfStruct() {
+        ValueList128<int> list = [1, 2, 3, 4, 5];
+        list.Add(6);
+        list.Add(7);
+        list.Add(8);
+        return list.IndexOf(3);
+    }
+}
+
+[MemoryDiagnoser]
 public class ListBenchmarks {
     [Benchmark]
     public int SmallListOfStruct() {

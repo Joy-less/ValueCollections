@@ -551,10 +551,9 @@ public ref partial struct ValueDictionary<TKey, TValue> : IDisposable, IDictiona
     private readonly bool TryFindIndex(TKey key, out int index) {
         int hashCode = GetHashCode(key);
 
-        int startIndex = HashCodes.BinarySearch(hashCode);
+        int startIndex = HashCodes[..BufferPosition].BinarySearch(hashCode);
         if (startIndex < 0) {
-            index = default;
-            return false;
+            startIndex = ~startIndex;
         }
 
         for (index = startIndex; index < BufferPosition; index++) {

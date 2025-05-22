@@ -616,10 +616,9 @@ public ref partial struct ValueHashSet<T> : IDisposable, ISet<T>, IReadOnlySet<T
     private readonly bool TryFindIndex(T value, out int index) {
         int hashCode = GetHashCode(value);
 
-        int startIndex = HashCodes.BinarySearch(hashCode);
+        int startIndex = HashCodes[..BufferPosition].BinarySearch(hashCode);
         if (startIndex < 0) {
-            index = default;
-            return false;
+            startIndex = ~startIndex;
         }
 
         for (index = startIndex; index < BufferPosition; index++) {

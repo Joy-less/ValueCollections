@@ -545,6 +545,9 @@ public ref partial struct ValueDictionary<TKey, TValue> : IDisposable, IDictiona
         if (startIndex < 0) {
             startIndex = ~startIndex;
         }
+        while (startIndex > 0 && HashCodes[startIndex - 1] == hashCode) {
+            startIndex--;
+        }
 
         for (index = startIndex; index < BufferPosition; index++) {
             int existingHashCode = HashCodes[index];

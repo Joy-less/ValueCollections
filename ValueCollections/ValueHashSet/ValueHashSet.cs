@@ -610,6 +610,9 @@ public ref partial struct ValueHashSet<T> : IDisposable, ISet<T>, IReadOnlySet<T
         if (startIndex < 0) {
             startIndex = ~startIndex;
         }
+        while (startIndex > 0 && HashCodes[startIndex - 1] == hashCode) {
+            startIndex--;
+        }
 
         for (index = startIndex; index < BufferPosition; index++) {
             int existingHashCode = HashCodes[index];

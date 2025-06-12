@@ -16,7 +16,7 @@ public partial struct ValueList4<T> : IList<T>, IReadOnlyList<T> {
     public const int Capacity = 4;
 
     /// <summary>
-    /// Constructs a value list with a default capacity of 0.
+    /// Constructs a value list with no elements.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ValueList4() {

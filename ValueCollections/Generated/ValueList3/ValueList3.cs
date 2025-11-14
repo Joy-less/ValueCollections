@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 namespace ValueCollections.FixedSize;
 
 /// <summary>
-/// A version of <see cref="List{T}"/> which has a fixed capacity of 128 elements.
+/// A version of <see cref="List{T}"/> which has a fixed capacity of <see cref="Capacity"/> elements.
 /// </summary>
 public partial struct ValueList3<T> : IList<T>, IReadOnlyList<T> {
     private InlineBuffer Buffer;

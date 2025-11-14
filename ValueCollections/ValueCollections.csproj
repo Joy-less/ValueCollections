@@ -22,6 +22,7 @@
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Title>Value Collections</Title>
+    <Authors>Joyless</Authors>
     <Description>A set of collections implemented as ref struct to minimize heap allocations.</Description>
     <PackageProjectUrl>https://github.com/Joy-less/ValueCollections</PackageProjectUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>

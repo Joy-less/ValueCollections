@@ -99,7 +99,7 @@ Console.WriteLine(string.Join(", ", strings.ToArray())); // [food, pizza], [drin
 
 ## Gotchas
 
-Value collections should be disposed after use, otherwise the internal rented array will not be returned to the pool.
+Value collections (except fixed-size collections) should be disposed after use, otherwise the internal rented array will not be returned to the pool.
 ```cs
 using ValueList<string> strings = ["a", "b", "c"];
 using ValueList<string> whitespaceStrings = strings.Where(string.IsNullOrWhiteSpace);

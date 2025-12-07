@@ -472,6 +472,10 @@ public ref partial struct ValueHashSet<T> : IDisposable, ISet<T>, IReadOnlySet<T
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly bool SetEquals(scoped ValueHashSet<T> other) {
+        if (Count != other.Count) {
+            return false;
+        }
+
         for (int index = 0; index < BufferPosition; index++) {
             if (!other.Contains(Buffer[index])) {
                 return false;
@@ -488,6 +492,17 @@ public ref partial struct ValueHashSet<T> : IDisposable, ISet<T>, IReadOnlySet<T
     /// <inheritdoc cref="SetEquals(ValueHashSet{T})"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly bool SetEquals(IEnumerable<T> other) {
+        if (other is ICollection<T> otherCollectionOfT) {
+            if (Count != otherCollectionOfT.Count) {
+                return false;
+            }
+        }
+        else if (other is ICollection otherCollection) {
+            if (Count != otherCollection.Count) {
+                return false;
+            }
+        }
+
         for (int index = 0; index < BufferPosition; index++) {
             if (!other.Contains(Buffer[index])) {
                 return false;

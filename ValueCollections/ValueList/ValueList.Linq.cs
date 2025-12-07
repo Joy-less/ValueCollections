@@ -333,7 +333,7 @@ partial struct ValueList<T> {
     /// <exception cref="IndexOutOfRangeException"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly T First() {
-        return Buffer[0];
+        return this[0];
     }
 
     /// <summary>
@@ -382,7 +382,7 @@ partial struct ValueList<T> {
     /// <exception cref="IndexOutOfRangeException"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly T Last() {
-        return Buffer[^1];
+        return this[^1];
     }
 
     /// <summary>

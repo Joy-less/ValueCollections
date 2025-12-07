@@ -333,7 +333,10 @@ partial struct ValueList<T> {
     /// <exception cref="IndexOutOfRangeException"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly T First() {
-        return this[0];
+        if (Count <= 0) {
+            throw new IndexOutOfRangeException("The value list contains no elements.");
+        }
+        return Buffer[0];
     }
 
     /// <summary>
@@ -382,7 +385,10 @@ partial struct ValueList<T> {
     /// <exception cref="IndexOutOfRangeException"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly T Last() {
-        return this[^1];
+        if (Count <= 0) {
+            throw new IndexOutOfRangeException("The value list contains no elements.");
+        }
+        return Buffer[^1];
     }
 
     /// <summary>

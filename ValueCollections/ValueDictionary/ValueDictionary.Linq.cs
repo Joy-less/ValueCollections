@@ -150,7 +150,7 @@ partial struct ValueDictionary<TKey, TValue> {
     /// <inheritdoc cref="ValueList{T}.Any()"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly bool Any() {
-        return this.ToValueList().Any();
+        return Count > 0;
     }
 
     /// <inheritdoc cref="ValueList{T}.Any(Func{T, bool})"/>
@@ -162,7 +162,10 @@ partial struct ValueDictionary<TKey, TValue> {
     /// <inheritdoc cref="ValueList{T}.First()"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly KeyValuePair<TKey, TValue> First() {
-        return this.ToValueList().First();
+        if (Count <= 0) {
+            throw new IndexOutOfRangeException("The value dictionary contains no elements.");
+        }
+        return Buffer[0];
     }
 
     /// <inheritdoc cref="ValueList{T}.First(Func{T, bool})"/>
@@ -174,7 +177,10 @@ partial struct ValueDictionary<TKey, TValue> {
     /// <inheritdoc cref="ValueList{T}.FirstOrDefault(T)"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly KeyValuePair<TKey, TValue> FirstOrDefault(KeyValuePair<TKey, TValue> defaultValue = default) {
-        return this.ToValueList().FirstOrDefault(defaultValue);
+        if (Count <= 0) {
+            return defaultValue;
+        }
+        return Buffer[0];
     }
 
     /// <inheritdoc cref="ValueList{T}.FirstOrDefault(Func{T, bool}, T)"/>
@@ -186,7 +192,10 @@ partial struct ValueDictionary<TKey, TValue> {
     /// <inheritdoc cref="ValueList{T}.Last()"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly KeyValuePair<TKey, TValue> Last() {
-        return this.ToValueList().Last();
+        if (Count <= 0) {
+            throw new IndexOutOfRangeException("The value dictionary contains no elements.");
+        }
+        return Buffer[^1];
     }
 
     /// <inheritdoc cref="ValueList{T}.Last(Func{T, bool})"/>
@@ -198,7 +207,10 @@ partial struct ValueDictionary<TKey, TValue> {
     /// <inheritdoc cref="ValueList{T}.LastOrDefault(T)"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly KeyValuePair<TKey, TValue> LastOrDefault(KeyValuePair<TKey, TValue> defaultValue = default) {
-        return this.ToValueList().LastOrDefault(defaultValue);
+        if (Count <= 0) {
+            return defaultValue;
+        }
+        return Buffer[^1];
     }
 
     /// <inheritdoc cref="ValueList{T}.LastOrDefault(Func{T, bool}, T)"/>

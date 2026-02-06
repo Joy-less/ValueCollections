@@ -680,9 +680,10 @@ public ref partial struct ValueHashSet<T> : IDisposable, ISet<T>, IReadOnlySet<T
 
         Buffer[(index + 1)..].CopyTo(Buffer[index..]);
         HashCodes[(index + 1)..].CopyTo(HashCodes[index..]);
+
+        BufferPosition--;
         Buffer[BufferPosition] = default!;
         HashCodes[BufferPosition] = default!;
-        BufferPosition--;
     }
 
     /// <summary>

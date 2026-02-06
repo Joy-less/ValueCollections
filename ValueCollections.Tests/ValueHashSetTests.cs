@@ -24,6 +24,23 @@ public class ValueHashSetTests {
         strings.Count.ShouldBe(2);
     }
     [Fact]
+    public void AddTest() {
+        using ValueHashSet<int> hashSet = ValueHashSet<int>.FromBuffer(stackalloc int[64], stackalloc int[64]);
+        for (int i = 0; i < 100; i++) {
+            hashSet.Add(i);
+        }
+        hashSet.Count.ShouldBe(100);
+        hashSet.Capacity.ShouldBeGreaterThanOrEqualTo(hashSet.Count);
+    }
+    [Fact]
+    public void RemoveTest() {
+        using ValueHashSet<int> hashSet = [2, 4, 6];
+        hashSet.TrimExcess();
+        hashSet.Remove(2);
+        hashSet.Count.ShouldBe(2);
+        hashSet.ToHashSet().ShouldBe([4, 6]);
+    }
+    [Fact]
     public void WhereTest() {
         List<int> list = [1, 2, 3];
         list.ToValueHashSet().Where(num => num % 2 == 0).ToList().ShouldBe([2]);

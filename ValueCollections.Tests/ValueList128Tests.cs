@@ -58,6 +58,14 @@ public class ValueList128Tests {
         ValueList128<int>.Capacity.ShouldBeGreaterThanOrEqualTo(list.Count);
     }
     [Fact]
+    public void RemoveTest() {
+        ValueList128<int> list = [2, 4, 6];
+        list.RemoveAt(2);
+        list.Count.ShouldBe(2);
+        list[0].ShouldBe(2);
+        list[1].ShouldBe(4);
+    }
+    [Fact]
     public void WhereTest() {
         List<int> list = [1, 2, 3];
         list.ToValueList().Where(num => num % 2 == 0).ToList().ShouldBe([2]);

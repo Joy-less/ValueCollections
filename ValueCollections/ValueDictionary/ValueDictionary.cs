@@ -591,9 +591,10 @@ public ref partial struct ValueDictionary<TKey, TValue> : IDisposable, IDictiona
 
         Buffer[(index + 1)..].CopyTo(Buffer[index..]);
         HashCodes[(index + 1)..].CopyTo(HashCodes[index..]);
+
+        BufferPosition--;
         Buffer[BufferPosition] = default!;
         HashCodes[BufferPosition] = default!;
-        BufferPosition--;
     }
 
     /// <summary>

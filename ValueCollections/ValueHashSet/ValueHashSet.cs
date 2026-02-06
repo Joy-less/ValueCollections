@@ -131,31 +131,40 @@ public ref partial struct ValueHashSet<T> : IDisposable, ISet<T>, IReadOnlySet<T
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         readonly get => Buffer.Length;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        set {
-            if (value == Capacity) {
-                return;
-            }
+        set => ResizeBuffer(value);
+    }
 
-            T[] rentedBuffer = ArrayPool<T>.Shared.Rent(value);
-            int[] rentedHashCodes = ArrayPool<int>.Shared.Rent(value);
-
-            if (BufferPosition > 0) {
-                Buffer.CopyTo(rentedBuffer);
-                HashCodes.CopyTo(rentedHashCodes);
-            }
-
-            if (RentedBuffer is not null) {
-                ArrayPool<T>.Shared.Return(RentedBuffer);
-            }
-            if (RentedHashCodes is not null) {
-                ArrayPool<int>.Shared.Return(RentedHashCodes);
-            }
-
-            Buffer = rentedBuffer;
-            RentedBuffer = rentedBuffer;
-            HashCodes = rentedHashCodes;
-            RentedHashCodes = rentedHashCodes;
+    /// <summary>
+    /// Resizes the buffer to the given capacity.
+    /// </summary>
+    private void ResizeBuffer(int capacity, bool allowExtra = true) {
+        if (capacity == Capacity) {
+            return;
         }
+
+        T[] rentedBuffer = allowExtra
+            ? ArrayPool<T>.Shared.Rent(capacity)
+            : new T[capacity];
+        int[] rentedHashCodes = allowExtra
+            ? ArrayPool<int>.Shared.Rent(capacity)
+            : new int[capacity];
+
+        if (BufferPosition > 0) {
+            Buffer[..BufferPosition].CopyTo(rentedBuffer);
+            HashCodes[..BufferPosition].CopyTo(rentedHashCodes);
+        }
+
+        if (RentedBuffer is not null) {
+            ArrayPool<T>.Shared.Return(RentedBuffer);
+        }
+        if (RentedHashCodes is not null) {
+            ArrayPool<int>.Shared.Return(RentedHashCodes);
+        }
+
+        Buffer = rentedBuffer;
+        RentedBuffer = rentedBuffer;
+        HashCodes = rentedHashCodes;
+        RentedHashCodes = rentedHashCodes;
     }
 
     /// <inheritdoc/>
@@ -244,7 +253,7 @@ public ref partial struct ValueHashSet<T> : IDisposable, ISet<T>, IReadOnlySet<T
         if (Capacity >= newCapacity) {
             return;
         }
-        Capacity = FindSmallestPowerOf2Above(newCapacity);
+        ResizeBuffer(FindSmallestPowerOf2Above(newCapacity));
     }
 
     /// <summary>
@@ -264,7 +273,7 @@ public ref partial struct ValueHashSet<T> : IDisposable, ISet<T>, IReadOnlySet<T
         if (Count >= Capacity) {
             return;
         }
-        Capacity = Count;
+        ResizeBuffer(Count, allowExtra: false);
     }
 
     /// <summary>

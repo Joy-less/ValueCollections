@@ -114,24 +114,31 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         readonly get => Buffer.Length;
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        set {
-            if (value == Capacity) {
-                return;
-            }
+        set => ResizeBuffer(value);
+    }
 
-            T[] rentedBuffer = ArrayPool<T>.Shared.Rent(value);
-
-            if (BufferPosition > 0) {
-                Buffer.CopyTo(rentedBuffer);
-            }
-
-            if (RentedBuffer is not null) {
-                ArrayPool<T>.Shared.Return(RentedBuffer);
-            }
-
-            Buffer = rentedBuffer;
-            RentedBuffer = rentedBuffer;
+    /// <summary>
+    /// Resizes the buffer to the given capacity.
+    /// </summary>
+    private void ResizeBuffer(int capacity, bool allowExtra = true) {
+        if (capacity == Capacity) {
+            return;
         }
+
+        T[] rentedBuffer = allowExtra
+            ? ArrayPool<T>.Shared.Rent(capacity)
+            : new T[capacity];
+
+        if (BufferPosition > 0) {
+            Buffer[..BufferPosition].CopyTo(rentedBuffer);
+        }
+
+        if (RentedBuffer is not null) {
+            ArrayPool<T>.Shared.Return(RentedBuffer);
+        }
+
+        Buffer = rentedBuffer;
+        RentedBuffer = rentedBuffer;
     }
 
     /// <inheritdoc/>
@@ -240,7 +247,7 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
         if (Capacity >= newCapacity) {
             return;
         }
-        Capacity = FindSmallestPowerOf2Above(newCapacity);
+        ResizeBuffer(FindSmallestPowerOf2Above(newCapacity));
     }
 
     /// <summary>
@@ -260,7 +267,7 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
         if (Count >= Capacity) {
             return;
         }
-        Capacity = Count;
+        ResizeBuffer(Count, allowExtra: false);
     }
 
     /// <summary>

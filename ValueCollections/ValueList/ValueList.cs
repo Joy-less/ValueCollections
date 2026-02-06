@@ -329,8 +329,9 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
         ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, BufferPosition);
 
         Buffer[(index + 1)..].CopyTo(Buffer[index..]);
-        Buffer[BufferPosition] = default!;
+        
         BufferPosition--;
+        Buffer[BufferPosition] = default!;
     }
 
     /// <summary>

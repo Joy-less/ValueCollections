@@ -40,7 +40,7 @@ public class ValueListTests {
         });
     }
     [Fact]
-    public void IndexOf() {
+    public void IndexOfTest() {
         using ValueList<string> strings = ["a", "b", "c"];
         strings.IndexOf("a").ShouldBe(0);
         strings.IndexOf("b").ShouldBe(1);
@@ -48,7 +48,7 @@ public class ValueListTests {
         strings.IndexOf("d").ShouldBe(-1);
     }
     [Fact]
-    public void Add() {
+    public void AddTest() {
         using ValueList<int> list = ValueList<int>.FromBuffer(stackalloc int[64]);
         for (int i = 0; i < 100; i++) {
             list.Add(i);
@@ -57,25 +57,25 @@ public class ValueListTests {
         list.Capacity.ShouldBeGreaterThanOrEqualTo(list.Count);
     }
     [Fact]
-    public void Where() {
+    public void WhereTest() {
         List<int> list = [1, 2, 3];
         list.ToValueList().Where(num => num % 2 == 0).ToList().ShouldBe([2]);
     }
     [Fact]
-    public void Select() {
+    public void SelectTest() {
         List<int> list = [1, 2, 3];
         list.ToValueList().Select(num => num + 1).ToList().ShouldBe([2, 3, 4]);
         list.ToValueList().Select((num, index) => num + index).ToList().ShouldBe([1, 3, 5]);
         list.ToValueList().Select((num, index) => num / 2.0).ToList().ShouldBe([0.5, 1.0, 1.5]);
     }
     [Fact]
-    public void Except() {
+    public void ExceptTest() {
         List<int> list = [1, 2, 3];
         list.ToValueList().Except(2).ToList().ShouldBe([1, 3]);
         list.ToValueList().Except([2, 1]).ToList().ShouldBe([3]);
     }
     [Fact]
-    public void OrderBy() {
+    public void OrderByTest() {
         List<int> list = [4, 2, 5, 1, 3];
         list.ToValueList().Order().ToList().ShouldBe([1, 2, 3, 4, 5]);
         list.ToValueList().OrderDescending().ToList().ShouldBe([5, 4, 3, 2, 1]);

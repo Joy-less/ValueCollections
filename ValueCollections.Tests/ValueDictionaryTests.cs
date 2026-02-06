@@ -28,7 +28,7 @@ public class ValueDictionaryTests {
         strings.Count.ShouldBe(2);
     }
     [Fact]
-    public void Where() {
+    public void WhereTest() {
         List<KeyValuePair<int, char>> list = [new(1, 'a'), new(2, 'b'), new(3, 'c')];
         list.ToValueDictionary().Where(entry => entry.Key % 2 == 0).ToList().ShouldBe([new(2, 'b')]);
     }

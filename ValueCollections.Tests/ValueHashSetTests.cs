@@ -24,7 +24,7 @@ public class ValueHashSetTests {
         strings.Count.ShouldBe(2);
     }
     [Fact]
-    public void Where() {
+    public void WhereTest() {
         List<int> list = [1, 2, 3];
         list.ToValueHashSet().Where(num => num % 2 == 0).ToList().ShouldBe([2]);
     }

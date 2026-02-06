@@ -104,7 +104,7 @@ public ref partial struct ValueDictionary<TKey, TValue> : IDisposable, IDictiona
     /// <exception cref="ArgumentException"/>
     public static ValueDictionary<TKey, TValue> FromBuffer(Span<KeyValuePair<TKey, TValue>> buffer, Span<int> hashCodesBuffer) {
         if (buffer.Length != hashCodesBuffer.Length) {
-            throw new ArgumentException($"{nameof(buffer)}.Length should equal {nameof(hashCodesBuffer)}.Length");
+            throw new ArgumentException($"{nameof(buffer)}.Length must equal {nameof(hashCodesBuffer)}.Length");
         }
 
         return new ValueDictionary<TKey, TValue>() {

@@ -93,7 +93,7 @@ public ref partial struct ValueHashSet<T> : IDisposable, ISet<T>, IReadOnlySet<T
     /// <exception cref="ArgumentException"/>
     public static ValueHashSet<T> FromBuffer(Span<T> buffer, Span<int> hashCodesBuffer) {
         if (buffer.Length != hashCodesBuffer.Length) {
-            throw new ArgumentException($"{nameof(buffer)}.Length should equal {nameof(hashCodesBuffer)}.Length");
+            throw new ArgumentException($"{nameof(buffer)}.Length must equal {nameof(hashCodesBuffer)}.Length");
         }
 
         return new ValueHashSet<T>() {

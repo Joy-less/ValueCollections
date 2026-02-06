@@ -162,9 +162,13 @@ public ref partial struct ValueHashSet<T> : IDisposable, ISet<T>, IReadOnlySet<T
         }
 
         Buffer = rentedBuffer;
-        RentedBuffer = rentedBuffer;
+        if (allowExtra) {
+            RentedBuffer = rentedBuffer;
+        }
         HashCodes = rentedHashCodes;
-        RentedHashCodes = rentedHashCodes;
+        if (allowExtra) {
+            RentedHashCodes = rentedHashCodes;
+        }
     }
 
     /// <inheritdoc/>

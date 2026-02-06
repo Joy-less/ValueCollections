@@ -138,7 +138,9 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
         }
 
         Buffer = rentedBuffer;
-        RentedBuffer = rentedBuffer;
+        if (allowExtra) {
+            RentedBuffer = rentedBuffer;
+        }
     }
 
     /// <inheritdoc/>

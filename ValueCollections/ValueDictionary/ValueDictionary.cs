@@ -173,9 +173,13 @@ public ref partial struct ValueDictionary<TKey, TValue> : IDisposable, IDictiona
         }
 
         Buffer = rentedBuffer;
-        RentedBuffer = rentedBuffer;
+        if (allowExtra) {
+            RentedBuffer = rentedBuffer;
+        }
         HashCodes = rentedHashCodes;
-        RentedHashCodes = rentedHashCodes;
+        if (allowExtra) {
+            RentedHashCodes = rentedHashCodes;
+        }
     }
 
     /// <inheritdoc/>

@@ -21,13 +21,13 @@
     <PropertyGroup>
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
         <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-        <Title>ValueCollections</Title>
+        <Title>ValueCollections.FixedSize</Title>
         <Authors>Joyless</Authors>
-        <Description>A set of collections implemented as ref struct to minimize heap allocations.</Description>
+        <Description>A set of collections implemented as structs with inline arrays to minimize heap allocations.</Description>
         <PackageProjectUrl>https://github.com/Joy-less/ValueCollections</PackageProjectUrl>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <RepositoryUrl>https://github.com/Joy-less/ValueCollections</RepositoryUrl>
-        <PackageTags>collection;list;value list;ref struct;span;array pool;hash set;dictionary</PackageTags>
+        <PackageTags>collection;list;value list;inline array;fixed size</PackageTags>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     </PropertyGroup>

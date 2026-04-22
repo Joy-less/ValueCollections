@@ -2,7 +2,8 @@
   <Folder Name="/Solution Items/">
     <File Path="README.md" />
   </Folder>
+  <Project Path="ValueCollections/ValueCollections.csproj" />
+  <Project Path="ValueCollections.FixedSize/ValueCollections.FixedSize.csproj" />
   <Project Path="ValueCollections.Benchmarks/ValueCollections.Benchmarks.csproj" />
   <Project Path="ValueCollections.Tests/ValueCollections.Tests.csproj" />
-  <Project Path="ValueCollections/ValueCollections.csproj" />
 </Solution>

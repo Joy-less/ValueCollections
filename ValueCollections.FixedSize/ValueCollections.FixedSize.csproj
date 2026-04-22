@@ -33,9 +33,18 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Compile Remove="ValueList1/ValueList1.cs" />
+        <Compile Remove="ValueList1/ValueList1.Extensions.cs" />
+        <Compile Remove="ValueList1/ValueList1.Linq.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
         <None Include="../README.md">
             <Pack>True</Pack>
             <PackagePath>/</PackagePath>
         </None>
+        <None Include="ValueList1/ValueList1.cs" />
+        <None Include="ValueList1/ValueList1.Extensions.cs" />
+        <None Include="ValueList1/ValueList1.Linq.cs" />
     </ItemGroup>
 </Project>

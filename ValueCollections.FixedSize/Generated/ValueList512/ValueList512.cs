@@ -48,26 +48,6 @@ public partial struct ValueList512<T> : IList<T>, IReadOnlyList<T> {
     public ValueList512(IEnumerable<T> initialElements) {
         AddRange(initialElements);
     }
-    /// <summary>
-    /// Constructs a value list with the given elements.
-    /// </summary>
-#if NET9_0_OR_GREATER
-    [OverloadResolutionPriority(-2)]
-#endif
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueList512(scoped ValueList<T> initialElements) {
-        AddRange(initialElements.AsSpan());
-    }
-    /// <summary>
-    /// Constructs a value list with the given elements.
-    /// </summary>
-#if NET9_0_OR_GREATER
-    [OverloadResolutionPriority(-3)]
-#endif
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueList512(scoped ValueHashSet<T> initialElements) {
-        AddRange(initialElements.AsSpan());
-    }
 
     /// <summary>
     /// Returns the current number of elements in the list.
@@ -353,7 +333,7 @@ public partial struct ValueList512<T> : IList<T>, IReadOnlyList<T> {
     }
 
     /// <summary>
-    /// Enumerates the elements of a <see cref="ValueList{T}"/>.
+    /// Enumerates the elements of a <see cref="ValueList512{T}"/>.
     /// </summary>
     public struct Enumerator : IEnumerator<T> {
         private readonly ValueList512<T> List;

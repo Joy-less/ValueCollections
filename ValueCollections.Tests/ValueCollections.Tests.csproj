@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../ValueCollections/ValueCollections.csproj" />
+    <ProjectReference Include="../ValueCollections.FixedSize/ValueCollections.FixedSize.csproj" />
   </ItemGroup>
 
   <ItemGroup>

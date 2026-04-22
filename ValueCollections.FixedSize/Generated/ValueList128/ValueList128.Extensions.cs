@@ -16,7 +16,7 @@ public static class ValueList128Extensions {
     }
 
     /// <summary>
-    /// Copies the contents of <paramref name="enumerable"/> to a new <see cref="ValueList{T}"/>.
+    /// Copies the contents of <paramref name="enumerable"/> to a new <see cref="ValueList128{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #if NET9_0_OR_GREATER
@@ -27,7 +27,7 @@ public static class ValueList128Extensions {
     }
 
     /// <summary>
-    /// Copies the contents of <paramref name="span"/> to a new <see cref="ValueList{T}"/>.
+    /// Copies the contents of <paramref name="span"/> to a new <see cref="ValueList128{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ValueList128<T> ToValueList128<T>(this scoped ReadOnlySpan<T> span) {
@@ -35,7 +35,7 @@ public static class ValueList128Extensions {
     }
 
     /// <summary>
-    /// Copies the contents of <paramref name="memory"/> to a new <see cref="ValueList{T}"/>.
+    /// Copies the contents of <paramref name="memory"/> to a new <see cref="ValueList128{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #if NET9_0_OR_GREATER
@@ -46,7 +46,7 @@ public static class ValueList128Extensions {
     }
 
     /// <summary>
-    /// Copies the contents of <paramref name="valueList"/> to a new <see cref="ValueList{T}"/>.
+    /// Copies the contents of <paramref name="valueList"/> to a new <see cref="ValueList128{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #if NET9_0_OR_GREATER
@@ -57,42 +57,7 @@ public static class ValueList128Extensions {
     }
 
     /// <summary>
-    /// Copies the contents of <paramref name="valueList"/> to a new <see cref="ValueList{T}"/>.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#if NET9_0_OR_GREATER
-    [OverloadResolutionPriority(-3)]
-#endif
-    public static ValueList128<T> ToValueList128<T>(this ValueList<T> valueList) {
-        return new ValueList128<T>(valueList);
-    }
-
-    /// <summary>
-    /// Copies the contents of <paramref name="valueHashSet"/> to a new <see cref="ValueList{T}"/>.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#if NET9_0_OR_GREATER
-    [OverloadResolutionPriority(-4)]
-#endif
-    public static ValueList128<T> ToValueList128<T>(this scoped ValueHashSet<T> valueHashSet) {
-        return new ValueList128<T>(valueHashSet);
-    }
-
-    /// <summary>
-    /// Copies the contents of <paramref name="valueDictionary"/> to a new <see cref="ValueList{T}"/>.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#if NET9_0_OR_GREATER
-    [OverloadResolutionPriority(-5)]
-#endif
-    public static ValueList128<KeyValuePair<TKey, TValue>> ToValueList128<TKey, TValue>(this scoped ValueDictionary<TKey, TValue> valueDictionary) {
-        ValueList128<KeyValuePair<TKey, TValue>> valueList = new();
-        valueList.AddRange(valueDictionary.AsSpan());
-        return valueList;
-    }
-
-    /// <summary>
-    /// Copies the contents of <paramref name="enumerable"/> matching <paramref name="predicate"/> to a new <see cref="ValueList{T}"/>.
+    /// Copies the contents of <paramref name="enumerable"/> matching <paramref name="predicate"/> to a new <see cref="ValueList128{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ValueList128<T> ToValueList128Where<T>(this IEnumerable<T> enumerable, Func<T, bool> predicate) {
@@ -106,7 +71,7 @@ public static class ValueList128Extensions {
     }
 
     /// <summary>
-    /// Copies the contents of <paramref name="enumerable"/> of type <typeparamref name="T"/> to a new <see cref="ValueList{T}"/>.
+    /// Copies the contents of <paramref name="enumerable"/> of type <typeparamref name="T"/> to a new <see cref="ValueList128{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ValueList128<T> ToValueList128OfType<T>(this IEnumerable enumerable) {

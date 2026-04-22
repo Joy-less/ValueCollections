@@ -16,7 +16,7 @@ public static class ValueList4Extensions {
     }
 
     /// <summary>
-    /// Copies the contents of <paramref name="enumerable"/> to a new <see cref="ValueList{T}"/>.
+    /// Copies the contents of <paramref name="enumerable"/> to a new <see cref="ValueList4{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #if NET9_0_OR_GREATER
@@ -27,7 +27,7 @@ public static class ValueList4Extensions {
     }
 
     /// <summary>
-    /// Copies the contents of <paramref name="span"/> to a new <see cref="ValueList{T}"/>.
+    /// Copies the contents of <paramref name="span"/> to a new <see cref="ValueList4{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ValueList4<T> ToValueList4<T>(this scoped ReadOnlySpan<T> span) {
@@ -35,7 +35,7 @@ public static class ValueList4Extensions {
     }
 
     /// <summary>
-    /// Copies the contents of <paramref name="memory"/> to a new <see cref="ValueList{T}"/>.
+    /// Copies the contents of <paramref name="memory"/> to a new <see cref="ValueList4{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #if NET9_0_OR_GREATER
@@ -46,7 +46,7 @@ public static class ValueList4Extensions {
     }
 
     /// <summary>
-    /// Copies the contents of <paramref name="valueList"/> to a new <see cref="ValueList{T}"/>.
+    /// Copies the contents of <paramref name="valueList"/> to a new <see cref="ValueList4{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #if NET9_0_OR_GREATER
@@ -57,42 +57,7 @@ public static class ValueList4Extensions {
     }
 
     /// <summary>
-    /// Copies the contents of <paramref name="valueList"/> to a new <see cref="ValueList{T}"/>.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#if NET9_0_OR_GREATER
-    [OverloadResolutionPriority(-3)]
-#endif
-    public static ValueList4<T> ToValueList4<T>(this ValueList<T> valueList) {
-        return new ValueList4<T>(valueList);
-    }
-
-    /// <summary>
-    /// Copies the contents of <paramref name="valueHashSet"/> to a new <see cref="ValueList{T}"/>.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#if NET9_0_OR_GREATER
-    [OverloadResolutionPriority(-4)]
-#endif
-    public static ValueList4<T> ToValueList4<T>(this scoped ValueHashSet<T> valueHashSet) {
-        return new ValueList4<T>(valueHashSet);
-    }
-
-    /// <summary>
-    /// Copies the contents of <paramref name="valueDictionary"/> to a new <see cref="ValueList{T}"/>.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-#if NET9_0_OR_GREATER
-    [OverloadResolutionPriority(-5)]
-#endif
-    public static ValueList4<KeyValuePair<TKey, TValue>> ToValueList4<TKey, TValue>(this scoped ValueDictionary<TKey, TValue> valueDictionary) {
-        ValueList4<KeyValuePair<TKey, TValue>> valueList = new();
-        valueList.AddRange(valueDictionary.AsSpan());
-        return valueList;
-    }
-
-    /// <summary>
-    /// Copies the contents of <paramref name="enumerable"/> matching <paramref name="predicate"/> to a new <see cref="ValueList{T}"/>.
+    /// Copies the contents of <paramref name="enumerable"/> matching <paramref name="predicate"/> to a new <see cref="ValueList4{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ValueList4<T> ToValueList4Where<T>(this IEnumerable<T> enumerable, Func<T, bool> predicate) {
@@ -106,7 +71,7 @@ public static class ValueList4Extensions {
     }
 
     /// <summary>
-    /// Copies the contents of <paramref name="enumerable"/> of type <typeparamref name="T"/> to a new <see cref="ValueList{T}"/>.
+    /// Copies the contents of <paramref name="enumerable"/> of type <typeparamref name="T"/> to a new <see cref="ValueList4{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ValueList4<T> ToValueList4OfType<T>(this IEnumerable enumerable) {

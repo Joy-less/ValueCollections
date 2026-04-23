@@ -7,7 +7,7 @@ A set of collections in C# implemented as `struct` to minimize heap allocations.
 
 ## ValueList
 
-An implementation of `IList<T>` using spans and array pools.
+An implementation of `List<T>` using spans and array pools.
 
 ```cs
 using ValueList<int> numbers = [];
@@ -23,7 +23,7 @@ Console.WriteLine(string.Join(", ", evenNumbers.ToList())); // 0, 2, 4, 6, 8
 
 ## ValueHashSet
 
-An implementation of `ISet<T>` using spans and array pools.
+An implementation of `HashSet<T>` using spans and array pools.
 
 ```cs
 using ValueHashSet<int> numbers = [];
@@ -40,7 +40,7 @@ Console.WriteLine(string.Join(", ", numbers.ToArray())); // 1, 2, 3, 4, 5, 6, 7
 
 ## ValueDictionary
 
-An implementation of `IDictionary<TKey, TValue>` using spans and array pools.
+An implementation of `Dictionary<TKey, TValue>` using spans and array pools.
 
 ```cs
 using ValueDictionary<string, string> strings = [];
@@ -68,7 +68,7 @@ Console.WriteLine(string.Join(", ", numbers.ToArray())); // 1, 3, 3
 
 ## ValueList (Fixed Size)
 
-A set of implementations of `IList<T>` using fixed-size inlined arrays.
+A set of implementations of `List<T>` using fixed-size inlined arrays.
 
 Supported for capacities of `[1, 2, 3, 4, 8, 16, 32, 64, 128, 256, 512]`.
 

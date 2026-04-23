@@ -38,25 +38,36 @@ public static class ValueSetExtensions {
     }
 
     /// <summary>
-    /// Copies the contents of <paramref name="valueHashSet"/> to a new <see cref="ValueHashSet{T}"/>.
+    /// Copies the contents of <paramref name="valueList"/> to a new <see cref="ValueHashSet{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #if NET9_0_OR_GREATER
     [OverloadResolutionPriority(-2)]
+#endif
+    public static ValueHashSet<T> ToValueHashSet<T>(this scoped ValueList<T> valueList) {
+        return new ValueHashSet<T>(valueList);
+    }
+
+    /// <summary>
+    /// Copies the contents of <paramref name="valueHashSet"/> to a new <see cref="ValueHashSet{T}"/>.
+    /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-3)]
 #endif
     public static ValueHashSet<T> ToValueHashSet<T>(this scoped ValueHashSet<T> valueHashSet) {
         return new ValueHashSet<T>(valueHashSet);
     }
 
     /// <summary>
-    /// Copies the contents of <paramref name="valueList"/> to a new <see cref="ValueHashSet{T}"/>.
+    /// Copies the contents of <paramref name="valueStack"/> to a new <see cref="ValueHashSet{T}"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #if NET9_0_OR_GREATER
-    [OverloadResolutionPriority(-3)]
+    [OverloadResolutionPriority(-4)]
 #endif
-    public static ValueHashSet<T> ToValueHashSet<T>(this scoped ValueList<T> valueList) {
-        return new ValueHashSet<T>(valueList);
+    public static ValueHashSet<T> ToValueHashSet<T>(this scoped ValueStack<T> valueStack) {
+        return new ValueHashSet<T>(valueStack);
     }
 
     /// <summary>
@@ -64,7 +75,7 @@ public static class ValueSetExtensions {
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #if NET9_0_OR_GREATER
-    [OverloadResolutionPriority(-4)]
+    [OverloadResolutionPriority(-5)]
 #endif
     public static ValueHashSet<KeyValuePair<TKey, TValue>> ToValueHashSet<TKey, TValue>(this scoped ValueDictionary<TKey, TValue> valueDictionary) {
         ValueHashSet<KeyValuePair<TKey, TValue>> valueHashSet = new();

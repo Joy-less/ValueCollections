@@ -1,99 +1,100 @@
 using System.Collections;
 using System.Buffers;
 using System.Runtime.CompilerServices;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ValueCollections;
 
 /// <summary>
-/// A version of <see cref="List{T}"/> which minimizes as many heap allocations as possible.
+/// A version of <see cref="Stack{T}"/> which minimizes as many heap allocations as possible.
 /// </summary>
 /// <remarks>
 /// You should dispose it after use to ensure the rented buffer is returned to the array pool.
 /// </remarks>
-public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T> {
+public ref partial struct ValueStack<T> : IDisposable, IEnumerable<T>, IReadOnlyCollection<T> {
     private Span<T> Buffer;
     private int BufferPosition;
     private T[]? RentedBuffer;
 
     /// <summary>
-    /// Constructs a value list with a default capacity of 0.
+    /// Constructs a value stack with a default capacity of 0.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueList() {
+    public ValueStack() {
     }
     /// <summary>
-    /// Constructs a value list with the given capacity.
+    /// Constructs a value stack with the given capacity.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueList(int capacity) {
+    public ValueStack(int capacity) {
         EnsureCapacity(capacity);
     }
     /// <summary>
-    /// Constructs a value list with the given elements.
+    /// Constructs a value stack with the given elements.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueList(scoped ReadOnlySpan<T> initialElements) {
-        AddRange(initialElements);
+    public ValueStack(scoped ReadOnlySpan<T> initialElements) {
+        PushRange(initialElements);
     }
     /// <summary>
-    /// Constructs a value list with the given elements.
+    /// Constructs a value stack with the given elements.
     /// </summary>
 #if NET9_0_OR_GREATER
     [OverloadResolutionPriority(-1)]
 #endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueList(ReadOnlyMemory<T> initialElements) {
-        AddRange(initialElements);
+    public ValueStack(ReadOnlyMemory<T> initialElements) {
+        PushRange(initialElements);
     }
     /// <summary>
-    /// Constructs a value list with the given elements.
+    /// Constructs a value stack with the given elements.
     /// </summary>
 #if NET9_0_OR_GREATER
     [OverloadResolutionPriority(-2)]
 #endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueList(scoped ValueList<T> initialElements) {
-        AddRange(initialElements.AsSpan());
+    public ValueStack(scoped ValueList<T> initialElements) {
+        PushRange(initialElements.AsSpan());
     }
     /// <summary>
-    /// Constructs a value list with the given elements.
+    /// Constructs a value stack with the given elements.
     /// </summary>
 #if NET9_0_OR_GREATER
     [OverloadResolutionPriority(-3)]
 #endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueList(scoped ValueHashSet<T> initialElements) {
-        AddRange(initialElements.AsSpan());
+    public ValueStack(scoped ValueHashSet<T> initialElements) {
+        PushRange(initialElements.AsSpan());
     }
     /// <summary>
-    /// Constructs a value list with the given elements.
+    /// Constructs a value stack with the given elements.
     /// </summary>
 #if NET9_0_OR_GREATER
     [OverloadResolutionPriority(-4)]
 #endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueList(scoped ValueStack<T> initialElements) {
-        AddRange(initialElements.AsSpan());
+    public ValueStack(scoped ValueStack<T> initialElements) {
+        PushRange(initialElements.AsSpan());
     }
     /// <summary>
-    /// Constructs a value list with the given elements.
+    /// Constructs a value stack with the given elements.
     /// </summary>
 #if NET9_0_OR_GREATER
     [OverloadResolutionPriority(-5)]
 #endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueList(IEnumerable<T> initialElements) {
-        AddRange(initialElements);
+    public ValueStack(IEnumerable<T> initialElements) {
+        PushRange(initialElements);
     }
 
     /// <summary>
-    /// Constructs a value list from the given buffer.
+    /// Constructs a value stack from the given buffer.
     /// </summary>
     /// <remarks>
     /// The elements in the buffer are ignored. This is useful if you want to use the <see langword="stackalloc"/> keyword.
     /// </remarks>
-    public static ValueList<T> FromBuffer(Span<T> buffer) {
-        return new ValueList<T>() {
+    public static ValueStack<T> FromBuffer(Span<T> buffer) {
+        return new ValueStack<T>() {
             Buffer = buffer,
         };
     }
@@ -110,7 +111,7 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     }
 
     /// <summary>
-    /// Returns the current number of elements in the list.
+    /// Returns the current number of elements in the stack.
     /// </summary>
     public readonly int Count {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -153,89 +154,69 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
         }
     }
 
-    /// <inheritdoc/>
-    readonly bool ICollection<T>.IsReadOnly {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => false;
-    }
-
     /// <summary>
     /// Returns the element at the given index.
     /// </summary>
     /// <exception cref="IndexOutOfRangeException"/>
-    public readonly ref T this[int index] {
+    internal readonly ref T this[int index] {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get {
             if (index < 0 || index >= BufferPosition) {
-                throw new IndexOutOfRangeException("The index is outside the bounds of the value list.");
+                throw new IndexOutOfRangeException("The index is outside the bounds of the value stack.");
             }
 
             return ref Buffer[index];
         }
     }
 
-    /// <inheritdoc/>
-    T IList<T>.this[int index] {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        readonly get => this[index];
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        set => this[index] = value;
-    }
-
-    /// <inheritdoc/>
-    readonly T IReadOnlyList<T>.this[int index] {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        get => this[index];
-    }
-
     /// <summary>
-    /// Gets a span over the elements in the list.
+    /// Gets a span over the elements in the stack.
     /// </summary>
     /// <remarks>
-    /// Do not change the capacity of the list while the span is in use, because the span will continue pointing to the old buffer.
+    /// Do not change the capacity of the stack while the span is in use, because the span will continue pointing to the old buffer.
     /// </remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly Span<T> AsSpan() => Buffer[..BufferPosition];
 
     /// <summary>
-    /// Adds an element to the list.
+    /// Adds an element to the top of the stack.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void Add(T value) {
+    public void Push(T value) {
         EnsureCapacity(BufferPosition + 1);
         Buffer[BufferPosition] = value;
         BufferPosition++;
     }
 
     /// <summary>
-    /// Adds multiple elements to the list.
+    /// Adds multiple elements to the top of the stack.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void AddRange(scoped ReadOnlySpan<T> values) {
+    public void PushRange(scoped ReadOnlySpan<T> values) {
         EnsureCapacity(BufferPosition + values.Length);
         values.CopyTo(Buffer[BufferPosition..]);
         BufferPosition += values.Length;
     }
 
     /// <summary>
-    /// Adds multiple elements to the list.
+    /// Adds multiple elements to the top of the stack.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #if NET9_0_OR_GREATER
     [OverloadResolutionPriority(-1)]
 #endif
-    public void AddRange(ReadOnlyMemory<T> values) {
-        AddRange(values.Span);
+    public void PushRange(ReadOnlyMemory<T> values) {
+        PushRange(values.Span);
     }
 
     /// <summary>
-    /// Adds multiple elements to the list.
+    /// Adds multiple elements to the top of the stack.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
 #if NET9_0_OR_GREATER
     [OverloadResolutionPriority(-2)]
 #endif
-    public void AddRange(IEnumerable<T> values) {
+    public void PushRange(IEnumerable<T> values) {
         if (values.TryGetNonEnumeratedCount(out int count)) {
             EnsureCapacity(BufferPosition + count);
             foreach (T value in values) {
@@ -245,14 +226,64 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
         }
         else {
             foreach (T value in values) {
-                Add(value);
+                Push(value);
             }
         }
     }
 
     /// <summary>
-    /// Ensure's the list's capacity is at least <paramref name="newCapacity"/>, renting a larger buffer if not.<br/>
-    /// This is useful when adding a predetermined number of items to the list.
+    /// Removes an element from the top of the stack.
+    /// </summary>
+    public T Pop() {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(Count);
+
+        BufferPosition--;
+        T result = Buffer[BufferPosition];
+        Buffer[BufferPosition] = default!;
+        return result;
+    }
+
+    /// <summary>
+    /// Removes an element from the top of the stack if possible.
+    /// </summary>
+    public bool TryPop([MaybeNullWhen(false)] out T result) {
+        if (Count <= 0) {
+            result = default;
+            return false;
+        }
+
+        BufferPosition--;
+        result = Buffer[BufferPosition];
+        Buffer[BufferPosition] = default!;
+        return true;
+    }
+
+    /// <summary>
+    /// Returns an element from the top of the stack without removing it.
+    /// </summary>
+    public readonly T Peek() {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(Count);
+
+        T result = Buffer[BufferPosition - 1];
+        return result;
+    }
+
+    /// <summary>
+    /// Returns an element from the top of the stack if possible without removing it.
+    /// </summary>
+    public readonly bool TryPeek([MaybeNullWhen(false)] out T result) {
+        if (Count <= 0) {
+            result = default;
+            return false;
+        }
+
+        result = Buffer[BufferPosition - 1];
+        return true;
+    }
+
+    /// <summary>
+    /// Ensure's the stack's capacity is at least <paramref name="newCapacity"/>, renting a larger buffer if not.<br/>
+    /// This is useful when adding a predetermined number of items to the stack.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void EnsureCapacity(int newCapacity) {
@@ -271,8 +302,8 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     }
 
     /// <summary>
-    /// Ensures the list's capacity is equal to its count, renting a smaller buffer if not.<br/>
-    /// This is useful for reducing memory overhead when it is known that no more elements will be added to the list.
+    /// Ensures the stack's capacity is equal to its count, renting a smaller buffer if not.<br/>
+    /// This is useful for reducing memory overhead when it is known that no more elements will be added to the stack.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void TrimExcess() {
@@ -286,7 +317,7 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     /// Returns the index of <paramref name="value"/> or -1 if not found.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly int IndexOf(T value) {
+    internal readonly int IndexOf(T value) {
         EqualityComparer<T> comparer = EqualityComparer<T>.Default;
         for (int index = 0; index < BufferPosition; index++) {
             if (comparer.Equals(Buffer[index], value)) {
@@ -297,85 +328,11 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     }
 
     /// <summary>
-    /// Returns the index of <paramref name="value"/> or -1 if not found.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly int LastIndexOf(T value) {
-        EqualityComparer<T> comparer = EqualityComparer<T>.Default;
-        for (int index = BufferPosition - 1; index >= 0; index--) {
-            if (comparer.Equals(Buffer[index], value)) {
-                return index;
-            }
-        }
-        return -1;
-    }
-
-    /// <summary>
-    /// Returns whether <paramref name="value"/> is found in the list.
+    /// Returns whether <paramref name="value"/> is found in the stack.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly bool Contains(T value) {
         return IndexOf(value) >= 0;
-    }
-
-    /// <summary>
-    /// Inserts <paramref name="value"/> at <paramref name="index"/>.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void Insert(int index, T value) {
-        ArgumentOutOfRangeException.ThrowIfLessThan(index, 0);
-        ArgumentOutOfRangeException.ThrowIfGreaterThan(index, BufferPosition);
-
-        EnsureCapacity(BufferPosition + 1);
-        Buffer[index..BufferPosition].CopyTo(Buffer[(index + 1)..]);
-        Buffer[index] = value;
-        BufferPosition++;
-    }
-
-    /// <summary>
-    /// Removes an element at <paramref name="index"/>.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void RemoveAt(int index) {
-        ArgumentOutOfRangeException.ThrowIfLessThan(index, 0);
-        ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, BufferPosition);
-
-        Buffer[(index + 1)..].CopyTo(Buffer[index..]);
-        
-        BufferPosition--;
-        Buffer[BufferPosition] = default!;
-    }
-
-    /// <summary>
-    /// Finds and removes the first instance of <paramref name="value"/> from the list.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool Remove(T value) {
-        int index = IndexOf(value);
-        if (index < 0) {
-            return false;
-        }
-        RemoveAt(index);
-        return true;
-    }
-
-    /// <summary>
-    /// Removes every element matching <paramref name="predicate"/> from the list.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public int RemoveWhere(Func<T, bool> predicate) {
-        int counter = 0;
-        int index = 0;
-        while (index < BufferPosition) {
-            if (predicate(Buffer[index])) {
-                RemoveAt(index);
-                counter++;
-            }
-            else {
-                index++;
-            }
-        }
-        return counter;
     }
 
     /// <summary>
@@ -385,22 +342,6 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     public void Clear() {
         Buffer[..BufferPosition].Clear();
         BufferPosition = 0;
-    }
-
-    /// <summary>
-    /// Sorts the elements using the default comparer.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly void Sort() {
-        Buffer[..BufferPosition].Sort();
-    }
-
-    /// <summary>
-    /// Sorts the elements using <paramref name="comparer"/>.
-    /// </summary>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly void Sort<TComparer>(TComparer comparer) where TComparer : IComparer<T> {
-        Buffer[..BufferPosition].Sort(comparer);
     }
 
     /// <summary>
@@ -420,7 +361,7 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     }
 
     /// <summary>
-    /// Returns an enumerator that iterates over the elements of the list.
+    /// Returns an enumerator that iterates over the elements of the stack.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly Enumerator GetEnumerator() {
@@ -440,27 +381,27 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     }
 
     /// <summary>
-    /// Enumerates the elements of a <see cref="ValueList{T}"/>.
+    /// Enumerates the elements of a <see cref="ValueStack{T}"/>.
     /// </summary>
     public ref struct Enumerator : IEnumerator<T> {
-        private readonly ValueList<T> List;
+        private readonly ValueStack<T> Stack;
         private int Index;
 
         /// <summary>
-        /// Constructs a new enumerator over the elements of <paramref name="list"/>.
+        /// Constructs a new enumerator over the elements of <paramref name="stack"/>.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        internal Enumerator(ValueList<T> list) {
-            List = list;
+        internal Enumerator(ValueStack<T> stack) {
+            Stack = stack;
             Index = -1;
         }
 
         /// <summary>
-        /// Returns the element at the current position of the list.
+        /// Returns the element at the current position of the stack.
         /// </summary>
         public readonly T Current {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => List[Index];
+            get => Stack[Index];
         }
 
         /// <inheritdoc/>
@@ -475,19 +416,19 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
         }
 
         /// <summary>
-        /// Advances the enumerator to the next element of the list.
+        /// Advances the enumerator to the next element of the stack.
         /// </summary>
         /// <returns>
-        /// <see langword="true"/> if the enumerator successfully advanced to the next element; <see langword="false"/> if the enumerator reached the end of the list.
+        /// <see langword="true"/> if the enumerator successfully advanced to the next element; <see langword="false"/> if the enumerator reached the end of the stack.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool MoveNext() {
             Index++;
-            return Index < List.Count;
+            return Index < Stack.Count;
         }
 
         /// <summary>
-        /// Sets the enumerator to its initial position, which is before the first element in the list.
+        /// Sets the enumerator to its initial position, which is before the first element in the stack.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Reset() {

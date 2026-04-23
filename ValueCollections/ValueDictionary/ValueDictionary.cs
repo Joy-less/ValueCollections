@@ -58,16 +58,6 @@ public ref partial struct ValueDictionary<TKey, TValue> : IDisposable, IDictiona
     /// Constructs a value dictionary with the given entries.
     /// </summary>
 #if NET9_0_OR_GREATER
-    [OverloadResolutionPriority(-5)]
-#endif
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public ValueDictionary(IEnumerable<KeyValuePair<TKey, TValue>> initialEntries) {
-        AddRange(initialEntries);
-    }
-    /// <summary>
-    /// Constructs a value dictionary with the given entries.
-    /// </summary>
-#if NET9_0_OR_GREATER
     [OverloadResolutionPriority(-2)]
 #endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -93,6 +83,26 @@ public ref partial struct ValueDictionary<TKey, TValue> : IDisposable, IDictiona
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ValueDictionary(scoped ValueHashSet<KeyValuePair<TKey, TValue>> initialEntries) {
         AddRange(initialEntries.AsSpan());
+    }
+    /// <summary>
+    /// Constructs a value dictionary with the given entries.
+    /// </summary>
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-5)]
+#endif
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public ValueDictionary(scoped ValueStack<KeyValuePair<TKey, TValue>> initialEntries) {
+        AddRange(initialEntries.AsSpan());
+    }
+    /// <summary>
+    /// Constructs a value dictionary with the given entries.
+    /// </summary>
+#if NET9_0_OR_GREATER
+    [OverloadResolutionPriority(-6)]
+#endif
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public ValueDictionary(IEnumerable<KeyValuePair<TKey, TValue>> initialEntries) {
+        AddRange(initialEntries);
     }
 
     /// <summary>
@@ -355,7 +365,7 @@ public ref partial struct ValueDictionary<TKey, TValue> : IDisposable, IDictiona
     /// Returns the value at <paramref name="key"/>.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly bool TryGetValue(TKey key, [NotNullWhen(true)] out TValue? value) {
+    public readonly bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value) {
         if (TryFindIndex(key, out int index)) {
             value = Buffer[index].Value!;
             return true;
@@ -400,7 +410,7 @@ public ref partial struct ValueDictionary<TKey, TValue> : IDisposable, IDictiona
     /// Removes <paramref name="key"/> from the dictionary.
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool Remove(TKey key, [NotNullWhen(true)] out TValue? value) {
+    public bool Remove(TKey key, [MaybeNullWhen(false)] out TValue value) {
         if (TryFindIndex(key, out int index)) {
             value = Buffer[index].Value!;
             RemoveAt(index);

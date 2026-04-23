@@ -198,3 +198,65 @@ public class DictionaryBenchmarks {
         return dictionary.Count;
     }
 }
+
+[MemoryDiagnoser]
+public class StackBenchmarks {
+    [Benchmark]
+    public bool SmallStackOfStruct() {
+        Stack<int> stack = new(capacity: 5);
+        stack.Push(1);
+        stack.Push(2);
+        stack.Push(3);
+        stack.Push(4);
+        stack.Push(5);
+        return stack.Contains(3);
+    }
+    [Benchmark]
+    public bool SmallValueStackOfStruct() {
+        using ValueStack<int> stack = new(capacity: 5);
+        stack.Push(1);
+        stack.Push(2);
+        stack.Push(3);
+        stack.Push(4);
+        stack.Push(5);
+        return stack.Contains(3);
+    }
+
+    [Benchmark]
+    public bool SmallStackOfClass() {
+        Stack<string> stack = new(capacity: 5);
+        stack.Push("1");
+        stack.Push("2");
+        stack.Push("3");
+        stack.Push("4");
+        stack.Push("5");
+        return stack.Contains("3");
+    }
+    [Benchmark]
+    public bool SmallValueStackOfClass() {
+        using ValueStack<string> stack = new(capacity: 5);
+        stack.Push("1");
+        stack.Push("2");
+        stack.Push("3");
+        stack.Push("4");
+        stack.Push("5");
+        return stack.Contains("3");
+    }
+
+    [Benchmark]
+    public int LargeStackOfStruct() {
+        Stack<int> stack = [];
+        for (int i = 0; i < 10_000; i++) {
+            stack.Push(i);
+        }
+        return stack.Count;
+    }
+    [Benchmark]
+    public int LargeValueStackOfStruct() {
+        using ValueStack<int> stack = [];
+        for (int i = 0; i < 10_000; i++) {
+            stack.Push(i);
+        }
+        return stack.Count;
+    }
+}

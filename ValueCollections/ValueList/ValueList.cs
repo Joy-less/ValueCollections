@@ -96,6 +96,7 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     /// <remarks>
     /// The elements in the buffer are ignored. This is useful if you want to use the <see langword="stackalloc"/> keyword.
     /// </remarks>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ValueList<T> FromBuffer(Span<T> buffer) {
         return new ValueList<T>() {
             Buffer = buffer,
@@ -134,6 +135,7 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     /// <summary>
     /// Resizes the buffer to the given capacity.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void ResizeBuffer(int capacity, bool allowExtra = true) {
         if (capacity == Capacity) {
             return;

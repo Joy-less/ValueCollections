@@ -97,6 +97,7 @@ public ref partial struct ValueStack<T> : IDisposable, IEnumerable<T>, IReadOnly
     /// <remarks>
     /// The elements in the buffer are ignored. This is useful if you want to use the <see langword="stackalloc"/> keyword.
     /// </remarks>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ValueStack<T> FromBuffer(Span<T> buffer) {
         return new ValueStack<T>() {
             Buffer = buffer,
@@ -135,6 +136,7 @@ public ref partial struct ValueStack<T> : IDisposable, IEnumerable<T>, IReadOnly
     /// <summary>
     /// Resizes the buffer to the given capacity.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void ResizeBuffer(int capacity, bool allowExtra = true) {
         if (capacity == Capacity) {
             return;
@@ -238,6 +240,7 @@ public ref partial struct ValueStack<T> : IDisposable, IEnumerable<T>, IReadOnly
     /// <summary>
     /// Removes an element from the top of the stack.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public T Pop() {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(Count);
 
@@ -250,6 +253,7 @@ public ref partial struct ValueStack<T> : IDisposable, IEnumerable<T>, IReadOnly
     /// <summary>
     /// Removes an element from the top of the stack if possible.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool TryPop([MaybeNullWhen(false)] out T result) {
         if (Count <= 0) {
             result = default;
@@ -265,6 +269,7 @@ public ref partial struct ValueStack<T> : IDisposable, IEnumerable<T>, IReadOnly
     /// <summary>
     /// Returns an element from the top of the stack without removing it.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly T Peek() {
         ArgumentOutOfRangeException.ThrowIfNegativeOrZero(Count);
 
@@ -275,6 +280,7 @@ public ref partial struct ValueStack<T> : IDisposable, IEnumerable<T>, IReadOnly
     /// <summary>
     /// Returns an element from the top of the stack if possible without removing it.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly bool TryPeek([MaybeNullWhen(false)] out T result) {
         if (Count <= 0) {
             result = default;

@@ -116,6 +116,7 @@ public ref partial struct ValueDictionary<TKey, TValue> : IDisposable, IDictiona
     /// The entries in the buffer are ignored. This is useful if you want to use the <see langword="stackalloc"/> keyword.
     /// </remarks>
     /// <exception cref="ArgumentException"/>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static ValueDictionary<TKey, TValue> FromBuffer(Span<KeyValuePair<TKey, TValue>> buffer, Span<int> hashCodesBuffer) {
         if (buffer.Length != hashCodesBuffer.Length) {
             throw new ArgumentException($"{nameof(buffer)}.Length must equal {nameof(hashCodesBuffer)}.Length");
@@ -162,6 +163,7 @@ public ref partial struct ValueDictionary<TKey, TValue> : IDisposable, IDictiona
     /// <summary>
     /// Resizes the buffer to the given capacity.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void ResizeBuffer(int capacity, bool allowExtra = true) {
         if (capacity == Capacity) {
             return;

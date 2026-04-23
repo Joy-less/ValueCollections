@@ -70,7 +70,7 @@ Console.WriteLine(string.Join(", ", numbers.ToArray())); // 3, 3, 1
 
 A set of implementations of `List<T>` using fixed-size inlined arrays.
 
-Supported for capacities of `[1, 2, 3, 4, 8, 16, 32, 64, 128, 256, 512]`.
+Supported for capacities of `[8, 16, 32, 64, 128, 256]`.
 
 ```cs
 ValueList128<int> numbers = [];

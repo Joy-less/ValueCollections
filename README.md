@@ -63,7 +63,7 @@ numbers.PushRange([3, 3]);
 numbers.Push(7);
 numbers.Pop();
 
-Console.WriteLine(string.Join(", ", numbers.ToArray())); // 1, 3, 3
+Console.WriteLine(string.Join(", ", numbers.ToArray())); // 3, 3, 1
 ```
 
 ## ValueList (Fixed Size)

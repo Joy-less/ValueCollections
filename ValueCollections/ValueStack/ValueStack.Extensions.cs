@@ -116,9 +116,9 @@ public static class ValueStackExtensions {
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static T[] ToArray<T>(this scoped ValueStack<T> valueStack) {
-        T[] array = new T[valueStack.Count];
-        for (int index = valueStack.Count - 1; index >= 0; index--) {
-            int arrayIndex = valueStack.Count - 1 - index;
+        T[] array = GC.AllocateUninitializedArray<T>(valueStack.Count);
+        for (int index = array.Length - 1; index >= 0; index--) {
+            int arrayIndex = array.Length - 1 - index;
 
             array[arrayIndex] = valueStack[index];
         }

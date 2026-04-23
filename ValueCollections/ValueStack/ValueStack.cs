@@ -74,7 +74,11 @@ public ref partial struct ValueStack<T> : IDisposable, IEnumerable<T>, IReadOnly
 #endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ValueStack(scoped ValueStack<T> initialElements) {
-        PushRange(initialElements.AsSpan());
+        EnsureCapacity(BufferPosition + initialElements.Count);
+        foreach (T value in initialElements) {
+            Buffer[BufferPosition] = value;
+            BufferPosition++;
+        }
     }
     /// <summary>
     /// Constructs a value stack with the given elements.
@@ -170,13 +174,13 @@ public ref partial struct ValueStack<T> : IDisposable, IEnumerable<T>, IReadOnly
     }
 
     /// <summary>
-    /// Gets a span over the elements in the stack.
+    /// Gets a span over the elements in the stack. The elements in the span are in the reverse order to enumerating the stack.
     /// </summary>
     /// <remarks>
     /// Do not change the capacity of the stack while the span is in use, because the span will continue pointing to the old buffer.
     /// </remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public readonly Span<T> AsSpan() => Buffer[..BufferPosition];
+    public readonly Span<T> AsSpanReversed() => Buffer[..BufferPosition];
 
     /// <summary>
     /// Adds an element to the top of the stack.
@@ -393,7 +397,7 @@ public ref partial struct ValueStack<T> : IDisposable, IEnumerable<T>, IReadOnly
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal Enumerator(ValueStack<T> stack) {
             Stack = stack;
-            Index = -1;
+            Index = stack.Count;
         }
 
         /// <summary>
@@ -423,8 +427,8 @@ public ref partial struct ValueStack<T> : IDisposable, IEnumerable<T>, IReadOnly
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool MoveNext() {
-            Index++;
-            return Index < Stack.Count;
+            Index--;
+            return Index >= 0;
         }
 
         /// <summary>
@@ -432,7 +436,7 @@ public ref partial struct ValueStack<T> : IDisposable, IEnumerable<T>, IReadOnly
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Reset() {
-            Index = -1;
+            Index = Stack.Count;
         }
     }
 }

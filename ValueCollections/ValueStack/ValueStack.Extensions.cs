@@ -116,7 +116,13 @@ public static class ValueStackExtensions {
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static T[] ToArray<T>(this scoped ValueStack<T> valueStack) {
-        return valueStack.AsSpan().ToArray();
+        T[] array = new T[valueStack.Count];
+        for (int index = valueStack.Count - 1; index >= 0; index--) {
+            int arrayIndex = valueStack.Count - 1 - index;
+
+            array[arrayIndex] = valueStack[index];
+        }
+        return array;
     }
 
     /// <summary>
@@ -125,7 +131,9 @@ public static class ValueStackExtensions {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static List<T> ToList<T>(this scoped ValueStack<T> valueStack) {
         List<T> list = new(valueStack.Count);
-        list.AddRange(valueStack.AsSpan());
+        foreach (T element in valueStack) {
+            list.Add(element);
+        }
         return list;
     }
 

@@ -9,7 +9,7 @@ partial struct ValueStack<T> {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly ValueList<T> Where(Func<T, bool> predicate) {
         ValueList<T> result = new();
-        for (int index = 0; index < Count; index++) {
+        for (int index = Count - 1; index >= 0; index--) {
             T element = Buffer[index];
             if (predicate(element)) {
                 result.Add(element);
@@ -24,7 +24,7 @@ partial struct ValueStack<T> {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly ValueList<TResult> Select<TResult>(Func<T, TResult> selector) {
         ValueList<TResult> result = new(Count);
-        for (int index = 0; index < Count; index++) {
+        for (int index = Count - 1; index >= 0; index--) {
             T element = Buffer[index];
             result.Add(selector(element));
         }
@@ -37,7 +37,7 @@ partial struct ValueStack<T> {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly ValueList<TResult> Select<TResult>(Func<T, int, TResult> selector) {
         ValueList<TResult> result = new(Count);
-        for (int index = 0; index < Count; index++) {
+        for (int index = Count - 1; index >= 0; index--) {
             T element = Buffer[index];
             result.Add(selector(element, index));
         }
@@ -50,7 +50,7 @@ partial struct ValueStack<T> {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly ValueList<TResult> SelectMany<TResult>(Func<T, IEnumerable<TResult>> selector) {
         ValueList<TResult> result = new();
-        for (int index = 0; index < Count; index++) {
+        for (int index = Count - 1; index >= 0; index--) {
             T element = Buffer[index];
             result.AddRange(selector(element));
         }
@@ -63,7 +63,7 @@ partial struct ValueStack<T> {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly ValueList<TResult> SelectMany<TResult>(Func<T, int, IEnumerable<TResult>> selector) {
         ValueList<TResult> result = new();
-        for (int index = 0; index < Count; index++) {
+        for (int index = Count - 1; index >= 0; index--) {
             T element = Buffer[index];
             result.AddRange(selector(element, index));
         }
@@ -106,7 +106,7 @@ partial struct ValueStack<T> {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly ValueList<TFilter> OfType<TFilter>() {
         ValueList<TFilter> result = new();
-        for (int index = 0; index < Count; index++) {
+        for (int index = Count - 1; index >= 0; index--) {
             T element = Buffer[index];
             if (element is TFilter elementOfTFilter) {
                 result.Add(elementOfTFilter);
@@ -121,7 +121,7 @@ partial struct ValueStack<T> {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly ValueList<TResult> Cast<TResult>() {
         ValueList<TResult> result = new(Count);
-        for (int index = 0; index < Count; index++) {
+        for (int index = Count - 1; index >= 0; index--) {
             T element = Buffer[index];
             if (element is TResult elementOfTResult) {
                 result.Add(elementOfTResult);
@@ -140,7 +140,7 @@ partial struct ValueStack<T> {
     public readonly ValueList<T> Except(T value) {
         EqualityComparer<T> comparer = EqualityComparer<T>.Default;
         ValueList<T> result = new(Count);
-        for (int index = 0; index < Count; index++) {
+        for (int index = Count - 1; index >= 0; index--) {
             T element = Buffer[index];
             if (!comparer.Equals(element, value)) {
                 result.Add(element);
@@ -156,7 +156,7 @@ partial struct ValueStack<T> {
     public readonly ValueList<T> Except(scoped ReadOnlySpan<T> values) {
         EqualityComparer<T> comparer = EqualityComparer<T>.Default;
         ValueList<T> result = new();
-        for (int index = 0; index < Count; index++) {
+        for (int index = Count - 1; index >= 0; index--) {
             T element = Buffer[index];
             bool shouldAdd = true;
             foreach (T value in values) {
@@ -193,7 +193,7 @@ partial struct ValueStack<T> {
     public readonly ValueList<T> Except(IEnumerable<T> values) {
         EqualityComparer<T> comparer = EqualityComparer<T>.Default;
         ValueList<T> result = new();
-        for (int index = 0; index < Count; index++) {
+        for (int index = Count - 1; index >= 0; index--) {
             T element = Buffer[index];
             bool shouldAdd = true;
             foreach (T value in values) {
@@ -298,7 +298,7 @@ partial struct ValueStack<T> {
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly bool All(Func<T, bool> predicate) {
-        for (int index = 0; index < Count; index++) {
+        for (int index = Count - 1; index >= 0; index--) {
             if (!predicate(Buffer[index])) {
                 return false;
             }
@@ -319,7 +319,7 @@ partial struct ValueStack<T> {
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly bool Any(Func<T, bool> predicate) {
-        for (int index = 0; index < Count; index++) {
+        for (int index = Count - 1; index >= 0; index--) {
             if (predicate(Buffer[index])) {
                 return true;
             }
@@ -336,7 +336,7 @@ partial struct ValueStack<T> {
         if (Count <= 0) {
             throw new IndexOutOfRangeException("The value stack contains no elements.");
         }
-        return Buffer[0];
+        return Buffer[Count - 1];
     }
 
     /// <summary>
@@ -345,7 +345,7 @@ partial struct ValueStack<T> {
     /// <exception cref="Exception"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly T First(Func<T, bool> predicate) {
-        for (int index = 0; index < Count; index++) {
+        for (int index = Count - 1; index >= 0; index--) {
             T element = Buffer[index];
             if (predicate(element)) {
                 return element;
@@ -362,7 +362,7 @@ partial struct ValueStack<T> {
         if (Count <= 0) {
             return defaultValue;
         }
-        return Buffer[0];
+        return Buffer[Count - 1];
     }
 
     /// <summary>
@@ -370,7 +370,7 @@ partial struct ValueStack<T> {
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly T? FirstOrDefault(Func<T, bool> predicate, T? defaultValue = default) {
-        for (int index = 0; index < Count; index++) {
+        for (int index = Count - 1; index >= 0; index--) {
             T element = Buffer[index];
             if (predicate(element)) {
                 return element;
@@ -388,7 +388,7 @@ partial struct ValueStack<T> {
         if (Count <= 0) {
             throw new IndexOutOfRangeException("The value stack contains no elements.");
         }
-        return Buffer[^1];
+        return Buffer[0];
     }
 
     /// <summary>
@@ -397,7 +397,7 @@ partial struct ValueStack<T> {
     /// <exception cref="Exception"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly T Last(Func<T, bool> predicate) {
-        for (int index = Count - 1; index >= 0; index--) {
+        for (int index = 0; index < Count; index++) {
             T element = Buffer[index];
             if (predicate(element)) {
                 return element;
@@ -414,7 +414,7 @@ partial struct ValueStack<T> {
         if (Count <= 0) {
             return defaultValue;
         }
-        return Buffer[^1];
+        return Buffer[0];
     }
 
     /// <summary>
@@ -422,7 +422,7 @@ partial struct ValueStack<T> {
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public readonly T? LastOrDefault(Func<T, bool> predicate, T? defaultValue = default) {
-        for (int index = Count - 1; index >= 0; index--) {
+        for (int index = 0; index < Count; index++) {
             T element = Buffer[index];
             if (predicate(element)) {
                 return element;
@@ -451,7 +451,7 @@ partial struct ValueStack<T> {
     public readonly T Single(Func<T, bool> predicate) {
         bool found = false;
         T result = default!;
-        for (int index = 0; index < Count; index++) {
+        for (int index = Count - 1; index >= 0; index--) {
             T element = Buffer[index];
             if (predicate(element)) {
                 if (found) {
@@ -485,7 +485,7 @@ partial struct ValueStack<T> {
     public readonly T? SingleOrDefault(Func<T, bool> predicate, T? defaultValue = default) {
         bool found = false;
         T result = default!;
-        for (int index = 0; index < Count; index++) {
+        for (int index = Count - 1; index >= 0; index--) {
             T element = Buffer[index];
             if (predicate(element)) {
                 if (found) {

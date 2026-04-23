@@ -81,7 +81,11 @@ public ref partial struct ValueHashSet<T> : IDisposable, ISet<T>, IReadOnlySet<T
 #endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ValueHashSet(scoped ValueStack<T> initialElements) {
-        AddRange(initialElements.AsSpan());
+        EnsureCapacity(BufferPosition + initialElements.Count);
+        foreach (T value in initialElements) {
+            Buffer[BufferPosition] = value;
+            BufferPosition++;
+        }
     }
     /// <summary>
     /// Constructs a value hash set with the given elements.

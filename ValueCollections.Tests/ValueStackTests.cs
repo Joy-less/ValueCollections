@@ -6,14 +6,14 @@ public class ValueStackTests {
         using ValueStack<double> doubles = new([1, 2, 3]);
         doubles.Push(4);
         doubles.PushRange([5, 6]);
-        doubles.ToList().ShouldBe([1, 2, 3, 4, 5, 6]);
+        doubles.ToList().ShouldBe([6, 5, 4, 3, 2, 1]);
     }
     [Fact]
     public void ConstructorsTest() {
         new ValueStack<string>().ToList().ShouldBe([]);
         new ValueStack<string>(4).Capacity.ShouldBeGreaterThanOrEqualTo(4);
         ValueStack<char>.FromBuffer(stackalloc char[3]).Capacity.ShouldBe(3);
-        new ValueStack<char>("abc").ToList().ShouldBe(['a', 'b', 'c']);
+        new ValueStack<char>("abc").ToList().ShouldBe(['c', 'b', 'a']);
     }
     [Fact]
     public void PushPopPeekTest() {
@@ -28,7 +28,7 @@ public class ValueStackTests {
         strings.Push("zyzzyva");
 
         strings.Peek().ShouldBe("zyzzyva");
-        strings.ToList().ShouldBe(["abacus", "zyzzyva"]);
+        strings.ToList().ShouldBe(["zyzzyva", "abacus"]);
 
         strings.TryPeek(out string? peekResult).ShouldBeTrue();
         peekResult.ShouldBe("zyzzyva");
@@ -40,6 +40,14 @@ public class ValueStackTests {
 
         strings.TryPeek(out string? _).ShouldBeFalse();
         strings.TryPop(out string? _).ShouldBeFalse();
+    }
+    [Fact]
+    public void EnumerateOrderTest() {
+        new Stack<int>([1, 2, 3]).ToList().ShouldBe([3, 2, 1]);
+        new ValueStack<int>([1, 2, 3]).ToList().ShouldBe([3, 2, 1]);
+
+        new Stack<int>([1, 2, 3]).ToArray().ShouldBe([3, 2, 1]);
+        new ValueStack<int>([1, 2, 3]).ToArray().ShouldBe([3, 2, 1]);
     }
     [Fact]
     public void PushTest() {

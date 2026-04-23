@@ -92,7 +92,11 @@ public ref partial struct ValueDictionary<TKey, TValue> : IDisposable, IDictiona
 #endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ValueDictionary(scoped ValueStack<KeyValuePair<TKey, TValue>> initialEntries) {
-        AddRange(initialEntries.AsSpan());
+        EnsureCapacity(BufferPosition + initialEntries.Count);
+        foreach (KeyValuePair<TKey, TValue> keyValuePair in initialEntries) {
+            Buffer[BufferPosition] = keyValuePair;
+            BufferPosition++;
+        }
     }
     /// <summary>
     /// Constructs a value dictionary with the given entries.

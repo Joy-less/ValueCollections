@@ -73,7 +73,11 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
 #endif
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public ValueList(scoped ValueStack<T> initialElements) {
-        AddRange(initialElements.AsSpan());
+        EnsureCapacity(BufferPosition + initialElements.Count);
+        foreach (T value in initialElements) {
+            Buffer[BufferPosition] = value;
+            BufferPosition++;
+        }
     }
     /// <summary>
     /// Constructs a value list with the given elements.

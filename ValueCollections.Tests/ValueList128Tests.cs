@@ -68,27 +68,27 @@ public class ValueList128Tests {
     [Fact]
     public void WhereTest() {
         List<int> list = [1, 2, 3];
-        list.ToValueList().Where(num => num % 2 == 0).ToList().ShouldBe([2]);
+        list.ToValueList128().Where(num => num % 2 == 0).ToList().ShouldBe([2]);
     }
     [Fact]
     public void SelectTest() {
         List<int> list = [1, 2, 3];
-        list.ToValueList().Select(num => num + 1).ToList().ShouldBe([2, 3, 4]);
-        list.ToValueList().Select((num, index) => num + index).ToList().ShouldBe([1, 3, 5]);
-        list.ToValueList().Select((num, index) => num / 2.0).ToList().ShouldBe([0.5, 1.0, 1.5]);
+        list.ToValueList128().Select(num => num + 1).ToList().ShouldBe([2, 3, 4]);
+        list.ToValueList128().Select((num, index) => num + index).ToList().ShouldBe([1, 3, 5]);
+        list.ToValueList128().Select((num, index) => num / 2.0).ToList().ShouldBe([0.5, 1.0, 1.5]);
     }
     [Fact]
     public void ExceptTest() {
         List<int> list = [1, 2, 3];
-        list.ToValueList().Except(2).ToList().ShouldBe([1, 3]);
-        list.ToValueList().Except([2, 1]).ToList().ShouldBe([3]);
+        list.ToValueList128().Except(2).ToList().ShouldBe([1, 3]);
+        list.ToValueList128().Except([2, 1]).ToList().ShouldBe([3]);
     }
     [Fact]
     public void OrderByTest() {
         List<int> list = [4, 2, 5, 1, 3];
-        list.ToValueList().Order().ToList().ShouldBe([1, 2, 3, 4, 5]);
-        list.ToValueList().OrderDescending().ToList().ShouldBe([5, 4, 3, 2, 1]);
-        list.ToValueList().OrderBy(element => 10 - element).ToList().ShouldBe([5, 4, 3, 2, 1]);
-        list.ToValueList().OrderByDescending(element => 10 - element).ToList().ShouldBe([1, 2, 3, 4, 5]);
+        list.ToValueList128().Order().ToList().ShouldBe([1, 2, 3, 4, 5]);
+        list.ToValueList128().OrderDescending().ToList().ShouldBe([5, 4, 3, 2, 1]);
+        list.ToValueList128().OrderBy(element => 10 - element).ToList().ShouldBe([5, 4, 3, 2, 1]);
+        list.ToValueList128().OrderByDescending(element => 10 - element).ToList().ShouldBe([1, 2, 3, 4, 5]);
     }
 }

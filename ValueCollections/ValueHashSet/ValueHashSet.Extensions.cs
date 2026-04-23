@@ -6,7 +6,7 @@ namespace ValueCollections;
 /// <summary>
 /// Extension methods for <see cref="ValueHashSet{T}"/>.
 /// </summary>
-public static class ValueSetExtensions {
+public static class ValueHashSetExtensions {
     /// <summary>
     /// Copies the contents of <paramref name="enumerable"/> to a new <see cref="ValueHashSet{T}"/>.
     /// </summary>

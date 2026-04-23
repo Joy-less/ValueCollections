@@ -388,7 +388,7 @@ partial struct ValueList<T> {
         if (Count <= 0) {
             throw new IndexOutOfRangeException("The value list contains no elements.");
         }
-        return Buffer[^1];
+        return Buffer[Count - 1];
     }
 
     /// <summary>
@@ -414,7 +414,7 @@ partial struct ValueList<T> {
         if (Count <= 0) {
             return defaultValue;
         }
-        return Buffer[^1];
+        return Buffer[Count - 1];
     }
 
     /// <summary>

@@ -91,4 +91,17 @@ public class ValueListTests {
         list.ToValueList().OrderBy(element => 10 - element).ToList().ShouldBe([5, 4, 3, 2, 1]);
         list.ToValueList().OrderByDescending(element => 10 - element).ToList().ShouldBe([1, 2, 3, 4, 5]);
     }
+    [Fact]
+    public void FirstLastSingleTest() {
+        using ValueList<int> list = [4, 2, 5, 1, 3];
+        list.EnsureCapacity(100);
+
+        list.First().ShouldBe(4);
+        list.Last().ShouldBe(3);
+        list.SingleOrDefault().ShouldBe(default);
+
+        list.Clear();
+        list.Add(7);
+        list.Single().ShouldBe(7);
+    }
 }

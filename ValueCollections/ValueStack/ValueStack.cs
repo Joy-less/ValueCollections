@@ -110,6 +110,7 @@ public ref partial struct ValueStack<T> : IDisposable, IEnumerable<T>, IReadOnly
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Dispose() {
         if (RentedBuffer is not null) {
+            Buffer[..BufferPosition].Clear();
             ArrayPool<T>.Shared.Return(RentedBuffer);
         }
         this = default;
@@ -151,6 +152,7 @@ public ref partial struct ValueStack<T> : IDisposable, IEnumerable<T>, IReadOnly
         }
 
         if (RentedBuffer is not null) {
+            Buffer[..BufferPosition].Clear();
             ArrayPool<T>.Shared.Return(RentedBuffer);
         }
 

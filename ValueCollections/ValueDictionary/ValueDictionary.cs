@@ -134,11 +134,12 @@ public ref partial struct ValueDictionary<TKey, TValue> : IDisposable, IDictiona
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Dispose() {
         if (RentedBuffer is not null) {
-            Buffer[..BufferPosition].Clear();
+            if (RuntimeHelpers.IsReferenceOrContainsReferences<KeyValuePair<TKey, TValue>>()) {
+                Buffer[..BufferPosition].Clear();
+            }
             ArrayPool<KeyValuePair<TKey, TValue>>.Shared.Return(RentedBuffer);
         }
         if (RentedHashCodes is not null) {
-            HashCodes[..BufferPosition].Clear();
             ArrayPool<int>.Shared.Return(RentedHashCodes);
         }
         this = default;
@@ -184,11 +185,12 @@ public ref partial struct ValueDictionary<TKey, TValue> : IDisposable, IDictiona
         }
 
         if (RentedBuffer is not null) {
-            Buffer[..BufferPosition].Clear();
+            if (RuntimeHelpers.IsReferenceOrContainsReferences<KeyValuePair<TKey, TValue>>()) {
+                Buffer[..BufferPosition].Clear();
+            }
             ArrayPool<KeyValuePair<TKey, TValue>>.Shared.Return(RentedBuffer);
         }
         if (RentedHashCodes is not null) {
-            HashCodes[..BufferPosition].Clear();
             ArrayPool<int>.Shared.Return(RentedHashCodes);
         }
 
@@ -485,7 +487,9 @@ public ref partial struct ValueDictionary<TKey, TValue> : IDisposable, IDictiona
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Clear() {
-        Buffer[..BufferPosition].Clear();
+        if (RuntimeHelpers.IsReferenceOrContainsReferences<KeyValuePair<TKey, TValue>>()) {
+            Buffer[..BufferPosition].Clear();
+        }
         BufferPosition = 0;
     }
 

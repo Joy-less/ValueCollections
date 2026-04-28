@@ -109,7 +109,9 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Dispose() {
         if (RentedBuffer is not null) {
-            Buffer[..BufferPosition].Clear();
+            if (RuntimeHelpers.IsReferenceOrContainsReferences<T>()) {
+                Buffer[..BufferPosition].Clear();
+            }
             ArrayPool<T>.Shared.Return(RentedBuffer);
         }
         this = default;
@@ -151,7 +153,9 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
         }
 
         if (RentedBuffer is not null) {
-            Buffer[..BufferPosition].Clear();
+            if (RuntimeHelpers.IsReferenceOrContainsReferences<T>()) {
+                Buffer[..BufferPosition].Clear();
+            }
             ArrayPool<T>.Shared.Return(RentedBuffer);
         }
 
@@ -391,7 +395,9 @@ public ref partial struct ValueList<T> : IDisposable, IList<T>, IReadOnlyList<T>
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Clear() {
-        Buffer[..BufferPosition].Clear();
+        if (RuntimeHelpers.IsReferenceOrContainsReferences<T>()) {
+            Buffer[..BufferPosition].Clear();
+        }
         BufferPosition = 0;
     }
 

@@ -110,7 +110,9 @@ public ref partial struct ValueStack<T> : IDisposable, IEnumerable<T>, IReadOnly
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Dispose() {
         if (RentedBuffer is not null) {
-            Buffer[..BufferPosition].Clear();
+            if (RuntimeHelpers.IsReferenceOrContainsReferences<T>()) {
+                Buffer[..BufferPosition].Clear();
+            }
             ArrayPool<T>.Shared.Return(RentedBuffer);
         }
         this = default;
@@ -152,7 +154,9 @@ public ref partial struct ValueStack<T> : IDisposable, IEnumerable<T>, IReadOnly
         }
 
         if (RentedBuffer is not null) {
-            Buffer[..BufferPosition].Clear();
+            if (RuntimeHelpers.IsReferenceOrContainsReferences<T>()) {
+                Buffer[..BufferPosition].Clear();
+            }
             ArrayPool<T>.Shared.Return(RentedBuffer);
         }
 
@@ -352,7 +356,9 @@ public ref partial struct ValueStack<T> : IDisposable, IEnumerable<T>, IReadOnly
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Clear() {
-        Buffer[..BufferPosition].Clear();
+        if (RuntimeHelpers.IsReferenceOrContainsReferences<T>()) {
+            Buffer[..BufferPosition].Clear();
+        }
         BufferPosition = 0;
     }
 

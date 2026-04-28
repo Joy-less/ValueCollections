@@ -260,7 +260,9 @@ public partial struct ValueList256<T> : IList<T>, IReadOnlyList<T> {
     /// </summary>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Clear() {
-        Buffer[..BufferPosition].Clear();
+        if (RuntimeHelpers.IsReferenceOrContainsReferences<T>()) {
+            Buffer[..BufferPosition].Clear();
+        }
         BufferPosition = 0;
     }
 
